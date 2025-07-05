@@ -169,55 +169,63 @@
     </div>
 
     <script>
-        // Import MRT Station Data
+        // Import MRT Station Data - Updated 2024
         const MRT_LINES = {
           blue: {
             id: 'blue',
             nameTH: 'สายสีน้ำเงิน',
-            nameEN: 'Blue Line',
+            nameEN: 'Blue Line (Chaloem Ratchamongkhon)',
             color: '#0066CC',
+            totalStations: 38,
+            operational: true,
             stations: [
-              { id: 'LAK', nameTH: 'หลักสอง', nameEN: 'Lak Song', code: 'BL01' },
-              { id: 'PHO', nameTH: 'โพธิ์นิมิตร', nameEN: 'Pho Nimit', code: 'BL02' },
-              { id: 'TAL', nameTH: 'ตลาดพลู', nameEN: 'Talad Phlu', code: 'BL03' },
-              { id: 'WUT', nameTH: 'วุฒากาศ', nameEN: 'Wutthakat', code: 'BL04' },
-              { id: 'BNG', nameTH: 'บางไผ่', nameEN: 'Bang Phai', code: 'BL05' },
-              { id: 'BAW', nameTH: 'บางหว้า', nameEN: 'Bang Wa', code: 'BL06' },
-              { id: 'PET', nameTH: 'เพชรเกษม 48', nameEN: 'Phetkasem 48', code: 'BL07' },
-              { id: 'BKM', nameTH: 'บางแค-หมอชิต', nameEN: 'Bang Khae', code: 'BL08' },
-              { id: 'LAT', nameTH: 'ลาดยาว', nameEN: 'Lat Yao', code: 'BL09' },
-              { id: 'BAN', nameTH: 'บางซื่อ', nameEN: 'Bang Sue', code: 'BL10' },
-              { id: 'KAM', nameTH: 'กำแพงเพชร', nameEN: 'Kamphaeng Phet', code: 'BL11' },
-              { id: 'CHA', nameTH: 'จตุจักร', nameEN: 'Chatuchak Park', code: 'BL12' },
-              { id: 'PAH', nameTH: 'พหลโยธิน', nameEN: 'Phahon Yothin', code: 'BL13' },
-              { id: 'LAD', nameTH: 'ลาดพร้าว', nameEN: 'Lat Phrao', code: 'BL14' },
-              { id: 'RAT', nameTH: 'รัชดาภิเษก', nameEN: 'Ratchadaphisek', code: 'BL15' },
-              { id: 'SUT', nameTH: 'สุทธิสาร', nameEN: 'Sutthisan', code: 'BL16' },
-              { id: 'HUA', nameTH: 'ห้วยขวาง', nameEN: 'Huai Khwang', code: 'BL17' },
-              { id: 'CUL', nameTH: 'ศูนย์วัฒนธรรมแห่งประเทศไทย', nameEN: 'Thailand Cultural Centre', code: 'BL18' },
-              { id: 'PRA', nameTH: 'พระราม 9', nameEN: 'Phra Ram 9', code: 'BL19' },
-              { id: 'PET2', nameTH: 'เพชรบุรี', nameEN: 'Phetchaburi', code: 'BL20' },
-              { id: 'SUK', nameTH: 'สุขุมวิท', nameEN: 'Sukhumvit', code: 'BL21' },
-              { id: 'QSI', nameTH: 'ควีนสิริกิติ์', nameEN: 'Queen Sirikit', code: 'BL22' },
-              { id: 'KLO', nameTH: 'คลองเตย', nameEN: 'Khlong Toei', code: 'BL23' },
-              { id: 'LUM', nameTH: 'ลุมพินี', nameEN: 'Lumphini', code: 'BL24' },
-              { id: 'SIL', nameTH: 'สีลม', nameEN: 'Silom', code: 'BL25' },
-              { id: 'SAM', nameTH: 'สามย่าน', nameEN: 'Sam Yan', code: 'BL26' },
-              { id: 'HUL', nameTH: 'หัวลำโพง', nameEN: 'Hua Lamphong', code: 'BL27' },
-              { id: 'WAT', nameTH: 'วัดมังกร', nameEN: 'Wat Mangkon', code: 'BL28' },
-              { id: 'SAY', nameTH: 'สามยอด', nameEN: 'Sam Yot', code: 'BL29' },
-              { id: 'SAN', nameTH: 'สนามไชย', nameEN: 'Sanam Chai', code: 'BL30' },
-              { id: 'ISA', nameTH: 'อิสรภาพ', nameEN: 'Itsaraphap', code: 'BL31' },
-              { id: 'THO', nameTH: 'ธนบุรี', nameEN: 'Thonburi', code: 'BL32' },
-              { id: 'WON', nameTH: 'วงเวียนใหญ่', nameEN: 'Wongwian Yai', code: 'BL33' },
-              { id: 'KRU', nameTH: 'กรุงธนบุรี', nameEN: 'Krung Thon Buri', code: 'BL34' }
+              { id: 'THA', nameTH: 'ท่าพระ', nameEN: 'Tha Phra', code: 'BL01' },
+              { id: 'CHA1', nameTH: 'จรัลสนิทวงศ์ 13', nameEN: 'Charan Sanit Wong 13', code: 'BL02' },
+              { id: 'FAR', nameTH: 'ฟาร์ัน พงษ์', nameEN: 'Faran Phong', code: 'BL03' },
+              { id: 'KHB', nameTH: 'คลองบางไผ่', nameEN: 'Khlong Bang Phai', code: 'BL04' },
+              { id: 'BAN7', nameTH: 'บางยี่ขัน', nameEN: 'Bang Yi Khan', code: 'BL05' },
+              { id: 'SIR', nameTH: 'ศิริราช', nameEN: 'Siriraj', code: 'BL06' },
+              { id: 'THO1', nameTH: 'ธนบุรี', nameEN: 'Thonburi', code: 'BL07' },
+              { id: 'ISA1', nameTH: 'อิสรภาพ', nameEN: 'Itsaraphap', code: 'BL08' },
+              { id: 'SAN1', nameTH: 'สนามไชย', nameEN: 'Sanam Chai', code: 'BL09' },
+              { id: 'SAY1', nameTH: 'สามยอด', nameEN: 'Sam Yot', code: 'BL10' },
+              { id: 'WAT1', nameTH: 'วัดมังกร', nameEN: 'Wat Mangkon', code: 'BL11' },
+              { id: 'HUL1', nameTH: 'หัวลำโพง', nameEN: 'Hua Lamphong', code: 'BL12' },
+              { id: 'SAM1', nameTH: 'สามย่าน', nameEN: 'Sam Yan', code: 'BL13' },
+              { id: 'SIL1', nameTH: 'สีลม', nameEN: 'Silom', code: 'BL14' },
+              { id: 'LUM1', nameTH: 'ลุมพินี', nameEN: 'Lumphini', code: 'BL15' },
+              { id: 'KLO1', nameTH: 'คลองเตย', nameEN: 'Khlong Toei', code: 'BL16' },
+              { id: 'QSI1', nameTH: 'ควีนสิริกิติ์', nameEN: 'Queen Sirikit', code: 'BL17' },
+              { id: 'SUK1', nameTH: 'สุขุมวิท', nameEN: 'Sukhumvit', code: 'BL18' },
+              { id: 'PET1', nameTH: 'เพชรบุรี', nameEN: 'Phetchaburi', code: 'BL19' },
+              { id: 'PRA1', nameTH: 'พระราม 9', nameEN: 'Phra Ram 9', code: 'BL20' },
+              { id: 'CUL1', nameTH: 'ศูนย์วัฒนธรรม', nameEN: 'Thailand Cultural Centre', code: 'BL21' },
+              { id: 'HUA1', nameTH: 'ห้วยขวาง', nameEN: 'Huai Khwang', code: 'BL22' },
+              { id: 'SUT1', nameTH: 'สุทธิสาร', nameEN: 'Sutthisan', code: 'BL23' },
+              { id: 'RAT1', nameTH: 'รัชดาภิเษก', nameEN: 'Ratchadaphisek', code: 'BL24' },
+              { id: 'LAD1', nameTH: 'ลาดพร้าว', nameEN: 'Lat Phrao', code: 'BL25' },
+              { id: 'PAH1', nameTH: 'พหลโยธิน', nameEN: 'Phahon Yothin', code: 'BL26' },
+              { id: 'CHA2', nameTH: 'จตุจักร', nameEN: 'Chatuchak Park', code: 'BL27' },
+              { id: 'KAM1', nameTH: 'กำแพงเพชร', nameEN: 'Kamphaeng Phet', code: 'BL28' },
+              { id: 'BAN1', nameTH: 'บางซื่อ', nameEN: 'Bang Sue', code: 'BL29' },
+              { id: 'LAT1', nameTH: 'ลาดยาว', nameEN: 'Lat Yao', code: 'BL30' },
+              { id: 'BKM1', nameTH: 'บางแค', nameEN: 'Bang Khae', code: 'BL31' },
+              { id: 'PET2', nameTH: 'เพชรเกษม 48', nameEN: 'Phetkasem 48', code: 'BL32' },
+              { id: 'BAW1', nameTH: 'บางหว้า', nameEN: 'Bang Wa', code: 'BL33' },
+              { id: 'BNG1', nameTH: 'บางไผ่', nameEN: 'Bang Phai', code: 'BL34' },
+              { id: 'WUT1', nameTH: 'วุฒากาศ', nameEN: 'Wutthakat', code: 'BL35' },
+              { id: 'TAL1', nameTH: 'ตลาดพลู', nameEN: 'Talad Phlu', code: 'BL36' },
+              { id: 'PHO1', nameTH: 'โพธิ์นิมิตร', nameEN: 'Pho Nimit', code: 'BL37' },
+              { id: 'LAK1', nameTH: 'หลักสอง', nameEN: 'Lak Song', code: 'BL38' }
             ]
           },
           purple: {
             id: 'purple',
             nameTH: 'สายสีม่วง',
-            nameEN: 'Purple Line',
+            nameEN: 'Purple Line (Chaloem Ratchadham)',
             color: '#663399',
+            totalStations: 16,
+            operational: true,
             stations: [
               { id: 'KLO2', nameTH: 'คลองบางไผ่', nameEN: 'Khlong Bang Phai', code: 'PP01' },
               { id: 'TAL2', nameTH: 'ตลาดบางใหญ่', nameEN: 'Talad Bang Yai', code: 'PP02' },
@@ -231,18 +239,95 @@
               { id: 'NON', nameTH: 'หนองปรือ', nameEN: 'Nong Prue', code: 'PP10' },
               { id: 'YAE', nameTH: 'แยกติวานนท์', nameEN: 'Yaek Tiwanon', code: 'PP11' },
               { id: 'TIW', nameTH: 'ติวานนท์', nameEN: 'Tiwanon', code: 'PP12' },
-              { id: 'THA', nameTH: 'ท่าอิฐ', nameEN: 'Tha It', code: 'PP13' },
+              { id: 'THA2', nameTH: 'ท่าอิฐ', nameEN: 'Tha It', code: 'PP13' },
               { id: 'PAK', nameTH: 'ปากเกร็ด', nameEN: 'Pak Kret', code: 'PP14' },
               { id: 'KHA', nameTH: 'แขวงเวียงพา', nameEN: 'Khaeng Wiang Pha', code: 'PP15' },
-              { id: 'TAO', nameTH: 'เตาปูน', nameEN: 'Tao Pun', code: 'PP16' }
+              { id: 'TAO', nameTH: 'เตาปูน', nameEN: 'Tao Poon', code: 'PP16' }
+            ]
+          },
+          
+          yellow: {
+            id: 'yellow',
+            nameTH: 'สายสีเหลือง',
+            nameEN: 'Yellow Line (Nakhon Phiphat)',
+            color: '#FFD700',
+            totalStations: 23,
+            operational: true,
+            stations: [
+              { id: 'LAD2', nameTH: 'ลาดพร้าว', nameEN: 'Lat Phrao', code: 'YL01' },
+              { id: 'PHW', nameTH: 'พหลโยธิน 24', nameEN: 'Phahon Yothin 24', code: 'YL02' },
+              { id: 'CHO', nameTH: 'โชคชัย 4', nameEN: 'Chok Chai 4', code: 'YL03' },
+              { id: 'LAD3', nameTH: 'ลาดพร้าว 71', nameEN: 'Lat Phrao 71', code: 'YL04' },
+              { id: 'LAD4', nameTH: 'ลาดพร้าว 83', nameEN: 'Lat Phrao 83', code: 'YL05' },
+              { id: 'MAL', nameTH: 'มาลัยแมน', nameEN: 'Malai Man', code: 'YL06' },
+              { id: 'RAM', nameTH: 'รามอินทรา 4 กม.', nameEN: 'Ram Inthra Km.4', code: 'YL07' },
+              { id: 'LAD5', nameTH: 'ลาดปลาเค้า', nameEN: 'Lat Plakhao', code: 'YL08' },
+              { id: 'RAM2', nameTH: 'รามอินทรา 6 กม.', nameEN: 'Ram Inthra Km.6', code: 'YL09' },
+              { id: 'KRU2', nameTH: 'กรุงเทพกรีฑา', nameEN: 'Krungthep Kreetha', code: 'YL10' },
+              { id: 'HUA2', nameTH: 'หัวหมาก', nameEN: 'Hua Mak', code: 'YL11' },
+              { id: 'RAM3', nameTH: 'รามคำแหง', nameEN: 'Ram Khamhaeng', code: 'YL12' },
+              { id: 'RAJ', nameTH: 'ราชมังคลากีฬาสถาน', nameEN: 'Rajamangala Stadium', code: 'YL13' },
+              { id: 'SRI', nameTH: 'ศรีนวล', nameEN: 'Si Nuan', code: 'YL14' },
+              { id: 'HUA3', nameTH: 'หัวตะเข้', nameEN: 'Hua Takhe', code: 'YL15' },
+              { id: 'BAN8', nameTH: 'บางอ้อ', nameEN: 'Bang O', code: 'YL16' },
+              { id: 'SAM4', nameTH: 'สำโรงกลาง', nameEN: 'Samrong Klang', code: 'YL17' },
+              { id: 'SAM5', nameTH: 'สำโรง', nameEN: 'Samrong', code: 'YL18' },
+              { id: 'SAM6', nameTH: 'สำโรง กม.3', nameEN: 'Samrong Km.3', code: 'YL19' },
+              { id: 'SAM7', nameTH: 'สำโรง กม.6', nameEN: 'Samrong Km.6', code: 'YL20' },
+              { id: 'SAM8', nameTH: 'สำโรง กม.9', nameEN: 'Samrong Km.9', code: 'YL21' },
+              { id: 'SAM9', nameTH: 'สำโรง กม.12', nameEN: 'Samrong Km.12', code: 'YL22' },
+              { id: 'KEH', nameTH: 'เคหะ', nameEN: 'Kheha', code: 'YL23' }
+            ]
+          },
+          
+          pink: {
+            id: 'pink',
+            nameTH: 'สายสีชมพู',
+            nameEN: 'Pink Line',
+            color: '#FF1493',
+            totalStations: 32,
+            operational: true,
+            stations: [
+              { id: 'KHR', nameTH: 'แคราย', nameEN: 'Khae Rai', code: 'PK01' },
+              { id: 'MUT', nameTH: 'เมืองทองธานี', nameEN: 'Muang Thong Thani', code: 'PK02' },
+              { id: 'IMP', nameTH: 'อิมแพ็ค เมืองทองธานี', nameEN: 'IMPACT Muang Thong Thani', code: 'PK03' },
+              { id: 'COS', nameTH: 'คอสโมบาซาร์', nameEN: 'Cosmo Bazaar', code: 'PK04' },
+              { id: 'GOV', nameTH: 'ศูนย์ราชการนนทบุรี', nameEN: 'Government Complex', code: 'PK05' },
+              { id: 'MIN', nameTH: 'กระทรวงสาธารณสุข', nameEN: 'Ministry of Public Health', code: 'PK06' },
+              { id: 'YAE2', nameTH: 'แยกติวานนท์', nameEN: 'Yaek Tiwanon', code: 'PK07' },
+              { id: 'SAM10', nameTH: 'สามัคคี', nameEN: 'Samakkhi', code: 'PK08' },
+              { id: 'ROY', nameTH: 'โรงพยาบาลราชวิถี', nameEN: 'Rajavithi Hospital', code: 'PK09' },
+              { id: 'RAN2', nameTH: 'รางน้ำ', nameEN: 'Rang Nam', code: 'PK10' },
+              { id: 'PRA2', nameTH: 'ประตูน้ำ', nameEN: 'Pratunam', code: 'PK11' },
+              { id: 'RAT2', nameTH: 'ราชปรารภ', nameEN: 'Ratchaprarop', code: 'PK12' },
+              { id: 'MAK', nameTH: 'มักกะสัน', nameEN: 'Makkasan', code: 'PK13' },
+              { id: 'RAM4', nameTH: 'รามคำแหง 12', nameEN: 'Ram Khamhaeng 12', code: 'PK14' },
+              { id: 'LAM', nameTH: 'ลาดมะยม', nameEN: 'Lad Mayom', code: 'PK15' },
+              { id: 'RAM5', nameTH: 'รามคำแหง 34', nameEN: 'Ram Khamhaeng 34', code: 'PK16' },
+              { id: 'WAT3', nameTH: 'วัดเทพลีลา', nameEN: 'Wat Thep Lila', code: 'PK17' },
+              { id: 'KLO3', nameTH: 'คลองบ้านม้า', nameEN: 'Khlong Ban Ma', code: 'PK18' },
+              { id: 'HIP', nameTH: 'ฮิปโปโดรม', nameEN: 'Hippodrome', code: 'PK19' },
+              { id: 'CHO2', nameTH: 'ช่องนนทรี', nameEN: 'Chong Nonsi', code: 'PK20' },
+              { id: 'KLO4', nameTH: 'คลองเตย', nameEN: 'Khlong Toei', code: 'PK21' },
+              { id: 'WAT4', nameTH: 'วัดทะเลทอง', nameEN: 'Wat Tha Le Thong', code: 'PK22' },
+              { id: 'MIN2', nameTH: 'มีนบุรี', nameEN: 'Min Buri', code: 'PK23' },
+              { id: 'MIN3', nameTH: 'มีนบุรี กม.7', nameEN: 'Min Buri Km.7', code: 'PK24' },
+              { id: 'MIN4', nameTH: 'มีนบุรี กม.8', nameEN: 'Min Buri Km.8', code: 'PK25' },
+              { id: 'LAT6', nameTH: 'ลาดกระบัง', nameEN: 'Lat Krabang', code: 'PK26' },
+              { id: 'LAT7', nameTH: 'ลาดกระบัง กม.2', nameEN: 'Lat Krabang Km.2', code: 'PK27' },
+              { id: 'LAT8', nameTH: 'ลาดกระบัง กม.4.5', nameEN: 'Lat Krabang Km.4.5', code: 'PK28' },
+              { id: 'LAT9', nameTH: 'ลาดกระบัง กม.7.5', nameEN: 'Lat Krabang Km.7.5', code: 'PK29' },
+              { id: 'LAT10', nameTH: 'ลาดกระบัง กม.10', nameEN: 'Lat Krabang Km.10', code: 'PK30' },
+              { id: 'LAT11', nameTH: 'ลาดกระบัง กม.12', nameEN: 'Lat Krabang Km.12', code: 'PK31' },
+              { id: 'MIN5', nameTH: 'มีนบุรี กม.14', nameEN: 'Min Buri Km.14', code: 'PK32' }
             ]
           }
         };
 
         const INTERCHANGE_STATIONS = [
-          { station: 'บางซื่อ', lines: ['blue', 'red'], codes: ['BL10', 'RL10'] },
-          { station: 'จตุจักร', lines: ['blue', 'red'], codes: ['BL12', 'RL08'] },
-          { station: 'วงเวียนใหญ่', lines: ['blue', 'red'], codes: ['BL33', 'RL11'] }
+          { station: 'ลาดพร้าว', lines: ['blue', 'yellow'], codes: ['BL25', 'YL01'] },
+          { station: 'เตาปูน', lines: ['purple'], codes: ['PP16'] },
+          { station: 'แยกติวานนท์', lines: ['purple', 'pink'], codes: ['PP11', 'PK07'] }
         ];
 
         const TRAVEL_INFO = {
@@ -263,6 +348,28 @@
           if (fromIndex === -1 || toIndex === -1) return null;
           
           return Math.abs(toIndex - fromIndex);
+        }
+        
+        function getRouteStations(fromStationId, toStationId, lineId) {
+          const line = MRT_LINES[lineId];
+          if (!line || !line.stations) return [];
+          
+          const fromIndex = line.stations.findIndex(s => s.id === fromStationId);
+          const toIndex = line.stations.findIndex(s => s.id === toStationId);
+          
+          if (fromIndex === -1 || toIndex === -1) return [];
+          
+          const start = Math.min(fromIndex, toIndex);
+          const end = Math.max(fromIndex, toIndex);
+          
+          const routeStations = line.stations.slice(start, end + 1);
+          
+          // หากเดินทางจากสถานีที่อยู่หลังไปหน้า ให้กลับลำดับ
+          if (fromIndex > toIndex) {
+            routeStations.reverse();
+          }
+          
+          return routeStations;
         }
 
         function calculateFare(distance) {
@@ -382,12 +489,129 @@
               </div>
             </div>
           `;
-        } function calculateMRT() {
+        }
+
+        // Global variables to store current route data
+        let currentRouteData = null;
+        
+        function toggleRouteDetails() {
+          // หา elements ใหม่ทุกครั้ง เพราะ innerHTML อาจสร้างใหม่
+          const routeContainer = document.getElementById('routeDetails');
+          const toggleIcon = document.getElementById('routeToggleIcon');
+          const isEnglish = currentLanguage === 'en';
+          
+          if (!routeContainer) {
+            alert('กรุณาคำนวณเส้นทางใหม่อีกครั้ง');
+            return;
+          }
+          
+          if (!currentRouteData) {
+            alert('กรุณาเลือกสถานีและคำนวณเส้นทางก่อน');
+            return;
+          }
+          
+          // Check if route is currently expanded
+          const isExpanded = routeContainer.style.maxHeight !== '0px' && routeContainer.style.maxHeight !== '';
+          
+          if (!isExpanded) {
+            // Expand route details
+            const { fromStationId, toStationId, lineId } = currentRouteData;
+            const routeStations = getRouteStations(fromStationId, toStationId, lineId);
+            
+            if (routeStations.length === 0) {
+              const innerDiv = routeContainer.querySelector('div');
+              if (innerDiv) {
+                innerDiv.innerHTML = `<p class="text-red-500">${isEnglish ? 'Unable to calculate route' : 'ไม่สามารถคำนวณเส้นทางได้'}</p>`;
+              }
+              return;
+            }
+              
+              let routeHTML = `
+                <div class="bg-white p-4 rounded border">
+                  <h4 class="font-semibold mb-3 text-gray-800">${isEnglish ? 'Route Details' : 'รายละเอียดเส้นทาง'}</h4>
+                  <div class="space-y-2">
+              `;
+              
+              routeStations.forEach((station, index) => {
+                const stationName = isEnglish ? station.nameEN : station.nameTH;
+                const lineInfo = MRT_LINES[lineId];
+                const lineColor = lineInfo.color;
+                
+                let timeInfo = '';
+                if (index > 0) {
+                  const timeFromPrevious = 2; // 2 minutes per station
+                  timeInfo = `<span class="text-sm text-gray-500 ml-2">(+${timeFromPrevious} ${isEnglish ? 'min' : 'นาที'})</span>`;
+                } else {
+                  timeInfo = `<span class="text-sm text-gray-500 ml-2">(${isEnglish ? 'Start' : 'เริ่มต้น'})</span>`;
+                }
+                
+                const isStart = index === 0;
+                const isEnd = index === routeStations.length - 1;
+                
+                routeHTML += `
+                  <div class="flex items-center py-2 ${isStart ? 'bg-green-50' : isEnd ? 'bg-red-50' : 'bg-blue-50'} rounded px-3">
+                    <div class="w-3 h-3 rounded-full mr-3" style="background-color: ${lineColor}"></div>
+                    <div class="flex-1">
+                      <strong>${station.code}</strong> - ${stationName}
+                      ${timeInfo}
+                    </div>
+                    ${isStart ? '<span class="text-green-600 text-sm font-medium">🚇 ' + (isEnglish ? 'Start' : 'เริ่มต้น') + '</span>' : ''}
+                    ${isEnd ? '<span class="text-red-600 text-sm font-medium">🏁 ' + (isEnglish ? 'End' : 'ปลายทาง') + '</span>' : ''}
+                  </div>
+                `;
+              });
+              
+              routeHTML += `
+                  </div>
+                  <div class="mt-3 p-2 bg-gray-100 rounded text-sm">
+                    <strong>${isEnglish ? 'Total stations:' : 'จำนวนสถานีรวม:'}</strong> ${routeStations.length}<br>
+                    <strong>${isEnglish ? 'Estimated time:' : 'เวลาโดยประมาณ:'}</strong> ${(routeStations.length - 1) * 2 + 3} ${isEnglish ? 'minutes' : 'นาที'}
+                  </div>
+                </div>
+              `;
+              
+              // Set content first
+              const innerDiv = routeContainer.querySelector('div');
+              if (innerDiv) {
+                innerDiv.innerHTML = routeHTML;
+              } else {
+                return;
+              }
+              
+              // Force reflow to calculate actual height
+              routeContainer.style.maxHeight = 'none';
+              const actualHeight = routeContainer.scrollHeight;
+              routeContainer.style.maxHeight = '0px';
+              
+              // Trigger expansion with slight delay for smooth animation
+              setTimeout(() => {
+                routeContainer.style.maxHeight = actualHeight + 'px';
+              }, 10);
+              
+              // Rotate icon
+              if (toggleIcon) {
+                toggleIcon.style.transform = 'rotate(180deg)';
+              }
+          } else {
+            // Collapse route details
+            routeContainer.style.maxHeight = '0px';
+            
+            // Rotate icon back
+            if (toggleIcon) {
+              toggleIcon.style.transform = 'rotate(0deg)';
+            }
+          }
+        }
+
+        function calculateMRT() {
           const fromStationId = document.getElementById('fromStation').value;
           const toStationId = document.getElementById('toStation').value;
           const isPeakHour = document.getElementById('isPeakHour').checked;
           const results = document.getElementById('mrtResults');
           const isEnglish = currentLanguage === 'en';
+          
+          // Reset route details state
+          currentRouteData = null;
           
           if (!fromStationId || !toStationId) {
             results.innerHTML = `<p class="text-red-500">${isEnglish ? 'Please select both stations' : 'กรุณาเลือกสถานีทั้งสอง'}</p>`;
@@ -432,6 +656,13 @@
           if (fromLine === toLine) {
             // Same line - direct calculation
             distance = calculateDistance(fromStationId, toStationId, fromLine);
+            
+            // Store route data for toggle function
+            currentRouteData = {
+              fromStationId: fromStationId,
+              toStationId: toStationId,
+              lineId: fromLine
+            };
           } else {
             // Different lines - need transfer (simplified calculation)
             // For now, we'll calculate approximate distance via interchange stations
@@ -439,6 +670,13 @@
             transferInfo = isEnglish 
               ? `<div class="p-2 bg-yellow-100 rounded text-sm"><strong>Note:</strong> Transfer required between lines</div>`
               : `<div class="p-2 bg-yellow-100 rounded text-sm"><strong>หมายเหตุ:</strong> ต้องเปลี่ยนสาย</div>`;
+              
+            // Store route data for toggle function (use primary line for now)
+            currentRouteData = {
+              fromStationId: fromStationId,
+              toStationId: toStationId,
+              lineId: fromLine
+            };
           }
           
           const time = calculateTravelTime(distance, isPeakHour);
@@ -462,8 +700,24 @@
                 <strong>${isEnglish ? 'Travel Time:' : 'เวลาเดินทาง:'}</strong> ${time} ${isEnglish ? 'minutes' : 'นาที'}
                 ${isPeakHour ? `<br><small class="text-gray-600">${isEnglish ? '(Including peak hour delay)' : '(รวมความล่าช้าช่วงชั่วโมงเร่งด่วน)'}</small>` : ''}
               </div>
-              <div class="p-3 bg-yellow-50 rounded">
-                <strong>${isEnglish ? 'Distance:' : 'ระยะทาง:'}</strong> ${distance} ${isEnglish ? 'stations' : 'สถานี'}
+              <div class="p-3 bg-yellow-50 rounded cursor-pointer hover:bg-yellow-100 transition-colors" onclick="toggleRouteDetails()">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <strong>${isEnglish ? 'Distance:' : 'ระยะทาง:'}</strong> 
+                    <span class="text-blue-600 hover:text-blue-800 underline">${distance} ${isEnglish ? 'stations' : 'สถานี'}</span>
+                  </div>
+                  <div class="flex items-center">
+                    <span class="text-sm text-gray-500 mr-2">(${isEnglish ? 'Click to view route' : 'คลิกดูเส้นทาง'})</span>
+                    <svg id="routeToggleIcon" class="w-5 h-5 text-gray-400 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <div id="routeDetails" class="overflow-hidden transition-all duration-300 ease-in-out" style="max-height: 0;">
+                <div class="p-3 bg-gray-50 rounded border mt-3">
+                  <!-- Route details will be inserted here -->
+                </div>
               </div>
               <div class="p-3 bg-purple-50 rounded">
                 <strong>${isEnglish ? 'Fare:' : 'ค่าโดยสาร:'}</strong> ฿${fare}

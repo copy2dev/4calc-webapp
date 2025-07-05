@@ -7,11 +7,11 @@ exports.handler = async (event, context) => {
     },
     body: JSON.stringify({
       status: 'healthy',
-      version: '1.0.0',
-      buildDate: '2025-07-05T01:35:09.503Z',
+      version: '1.1.0',
+      buildDate: '2025-07-05T02:15:00.000Z',
       environment: 'production',
       branch: 'main',
-      commit: 'local',
+      commit: 'enhanced-mrt-calculator',
       timestamp: new Date().toISOString()
     })
   };

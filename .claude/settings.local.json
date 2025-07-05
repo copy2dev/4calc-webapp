@@ -15,7 +15,14 @@
       "Bash(PORT=3001 npm run dev)",
       "Bash(node:*)",
       "Bash(explorer.exe test-preview.html)",
-      "Bash(chmod:*)"
+      "Bash(chmod:*)",
+      "Bash(git commit:*)",
+      "Bash(git config:*)",
+      "Bash(git remote add:*)",
+      "Bash(git push:*)",
+      "WebFetch(domain:www.mrta.co.th)",
+      "Bash(python3:*)",
+      "Bash(git add:*)"
     ],
     "deny": []
   }

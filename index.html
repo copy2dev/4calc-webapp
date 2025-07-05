@@ -14,11 +14,11 @@
         .lang-dropdown.show { display: block; }
     </style>
 
-<!-- 4Calc v1.0.0 -->
-<!-- Built: 2025-07-05T01:35:09.503Z -->
+<!-- 4Calc v1.1.0 -->
+<!-- Built: 2025-07-05T02:15:00.000Z -->
 <!-- Environment: production -->
 <!-- Branch: main -->
-<!-- Commit: local -->
+<!-- Commit: enhanced-mrt-calculator -->
 <!-- Deployed on Netlify -->
 </head>
 <body class="bg-gray-50 min-h-screen">
@@ -168,7 +168,309 @@
         </div>
     </div>
 
-    <script>let currentLanguage = localStorage.getItem('language') || 'th'; let selectedCategory = null; const translations = { th: { siteSubtitle: 'ศูนย์รวมเครื่องคิดเลขครบครัน', welcomeText: 'ยินดีต้อนรับสู่', welcomeDescription: 'ศูนย์รวมเครื่องคิดเลขครบครันสำหรับการคำนวณในชีวิตประจำวันของคุณ', searchPlaceholder: 'ค้นหาเครื่องคิดเลข...', navHome: 'หน้าแรก', navCategories: 'หมวดหมู่', navAbout: 'เกี่ยวกับเรา', allCategories: 'ทุกหมวดหมู่', transportation: 'คมนาคม', health: 'สุขภาพ', finance: 'การเงิน', utilities: 'สาธารณูปโภค', geography: 'ภูมิศาสตร์', needNewCalc: 'ต้องการเครื่องคิดเลขใหม่?', newCalcDesc: 'เราเพิ่มเครื่องคิดเลขใหม่อย่างต่อเนื่องตามความต้องการของผู้ใช้', requestCalcBtn: 'ขอเครื่องคิดเลข', footerText: '© 2024 4Calc สงวนลิขสิทธิ์ เพื่อนคู่ใจในการคำนวณ', noResultsTitle: 'ไม่พบเครื่องคิดเลข', noResultsDesc: 'ลองปรับเปลี่ยนคำค้นหาหรือเลือกหมวดหมู่อื่น' }, en: { siteSubtitle: 'All-in-One Calculator Hub', welcomeText: 'Welcome to', welcomeDescription: 'Your comprehensive calculator hub for all your daily calculations', searchPlaceholder: 'Search calculators...', navHome: 'Home', navCategories: 'Categories', navAbout: 'About', allCategories: 'All Categories', transportation: 'Transportation', health: 'Health', finance: 'Finance', utilities: 'Utilities', geography: 'Geography', needNewCalc: 'Need a New Calculator?', newCalcDesc: "We're constantly adding new calculators based on user needs", requestCalcBtn: 'Request Calculator', footerText: '© 2024 4Calc. All rights reserved. Your trusted calculator companion', noResultsTitle: 'No calculators found', noResultsDesc: 'Try adjusting your search or selecting a different category' } }; const calculators = { th: [ { id: 'mrt-time', name: 'คำนวณเวลาเดินทาง MRT', description: 'คำนวณเวลาเดินทางระหว่างสถานี MRT', emoji: '🚇', category: 'transportation' }, { id: 'taxi-fare', name: 'คำนวณค่าแท็กซี่', description: 'คำนวณค่าแท็กซี่ตามระยะทางและเวลา', emoji: '🚕', category: 'transportation' }, { id: 'pregnancy', name: 'คำนวณอายุครรภ์', description: 'คำนวณกำหนดคลอดและ milestone สำคัญ', emoji: '🤱', category: 'health' }, { id: 'interest', name: 'คำนวณดอกเบี้ย', description: 'คำนวณดอกเบี้ยแบบง่ายและทบต้น', emoji: '💰', category: 'finance' }, { id: 'btu', name: 'คำนวณ BTU', description: 'คำนวณความต้องการ BTU สำหรับเครื่องปรับอากาศ', emoji: '❄️', category: 'utilities' }, { id: 'distance', name: 'คำนวณระยะทาง', description: 'คำนวณระยะทางระหว่างสองจุด', emoji: '📍', category: 'geography' } ], en: [ { id: 'mrt-time', name: 'MRT Time Calculator', description: 'Calculate travel time between MRT stations', emoji: '🚇', category: 'transportation' }, { id: 'taxi-fare', name: 'Taxi Fare Calculator', description: 'Calculate taxi fare based on distance and time', emoji: '🚕', category: 'transportation' }, { id: 'pregnancy', name: 'Pregnancy Calculator', description: 'Calculate due date and pregnancy milestones', emoji: '🤱', category: 'health' }, { id: 'interest', name: 'Interest Calculator', description: 'Calculate simple and compound interest', emoji: '💰', category: 'finance' }, { id: 'btu', name: 'BTU Calculator', description: 'Calculate BTU requirements for air conditioning', emoji: '❄️', category: 'utilities' }, { id: 'distance', name: 'Distance Calculator', description: 'Calculate distance between two points', emoji: '📍', category: 'geography' } ] }; document.addEventListener('DOMContentLoaded', function() { updateLanguage(); renderCalculators(); setupEventListeners(); }); function setupEventListeners() { document.getElementById('langButton').addEventListener('click', function() { const dropdown = document.getElementById('langDropdown'); dropdown.classList.toggle('show'); }); document.addEventListener('click', function(event) { if (!event.target.closest('.lang-btn')) { document.getElementById('langDropdown').classList.remove('show'); } }); document.getElementById('searchInput').addEventListener('input', function(e) { renderCalculators(e.target.value); }); document.querySelectorAll('.category-btn').forEach(btn => { btn.addEventListener('click', function() { const category = this.dataset.category; document.querySelectorAll('.category-btn').forEach(b => { b.className = 'category-btn px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors'; }); this.className = 'category-btn px-4 py-2 bg-blue-600 text-white border border-blue-600 rounded-lg hover:bg-blue-700 transition-colors'; selectedCategory = category === 'all' ? null : category; renderCalculators(); }); }); } function switchLanguage(lang) { currentLanguage = lang; localStorage.setItem('language', lang); const flagMap = { th: '🇹🇭', en: '🇺🇸' }; const nameMap = { th: 'ไทย', en: 'English' }; document.getElementById('currentFlag').textContent = flagMap[lang]; document.getElementById('currentLang').textContent = nameMap[lang]; document.getElementById('langDropdown').classList.remove('show'); updateLanguage(); renderCalculators(); } function updateLanguage() { const t = translations[currentLanguage]; document.getElementById('siteSubtitle').textContent = t.siteSubtitle; document.getElementById('welcomeText').textContent = t.welcomeText; document.getElementById('welcomeDescription').textContent = t.welcomeDescription; document.getElementById('searchInput').placeholder = t.searchPlaceholder; document.getElementById('nav-home').textContent = t.navHome; document.getElementById('nav-categories').textContent = t.navCategories; document.getElementById('nav-about').textContent = t.navAbout; document.getElementById('needNewCalc').textContent = t.needNewCalc; document.getElementById('newCalcDesc').textContent = t.newCalcDesc; document.getElementById('requestCalcBtn').textContent = t.requestCalcBtn; document.getElementById('footerText').textContent = t.footerText; const categoryTexts = [t.allCategories, t.transportation, t.health, t.finance, t.utilities, t.geography]; document.querySelectorAll('.category-btn span:last-child').forEach((span, index) => { span.textContent = categoryTexts[index]; }); } function renderCalculators(searchTerm = '') { const grid = document.getElementById('calculatorGrid'); const noResults = document.getElementById('noResults'); const currentCalculators = calculators[currentLanguage]; let filtered = currentCalculators.filter(calc => { const matchesSearch = calc.name.toLowerCase().includes(searchTerm.toLowerCase()) || calc.description.toLowerCase().includes(searchTerm.toLowerCase()); const matchesCategory = !selectedCategory || calc.category === selectedCategory; return matchesSearch && matchesCategory; }); if (filtered.length === 0) { grid.classList.add('hidden'); noResults.classList.remove('hidden'); return; } grid.classList.remove('hidden'); noResults.classList.add('hidden'); grid.innerHTML = filtered.map(calc => ` <div class="calculator-card bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer" onclick="showCalculator('${calc.id}')"> <div class="text-3xl mb-4">${calc.emoji}</div> <h3 class="text-lg font-semibold mb-2">${calc.name}</h3> <p class="text-gray-600 mb-3">${calc.description}</p> <span class="text-sm text-blue-600 font-medium"> ${translations[currentLanguage][calc.category]} </span> </div> `).join(''); } function showCalculator(type) { const modal = document.getElementById('calculatorModal'); const title = document.getElementById('modalTitle'); const content = document.getElementById('modalContent'); modal.classList.remove('hidden'); modal.classList.add('flex'); if (type === 'mrt-time') { title.textContent = currentLanguage === 'th' ? '🚇 คำนวณเวลาเดินทาง MRT' : '🚇 MRT Time Calculator'; content.innerHTML = getMRTCalculatorHTML(); } else { title.textContent = currentLanguage === 'th' ? 'เครื่องคิดเลขกำลังพัฒนา!' : 'Calculator Coming Soon!'; content.innerHTML = `<p class="text-center py-8 text-gray-500">${currentLanguage === 'th' ? 'เครื่องคิดเลขนี้อยู่ระหว่างการพัฒนา กรุณากลับมาใหม่ภายหลัง!' : 'This calculator is under development. Please check back later!'}</p>`; } } function closeCalculator() { const modal = document.getElementById('calculatorModal'); modal.classList.add('hidden'); modal.classList.remove('flex'); } function getMRTCalculatorHTML() { const isEnglish = currentLanguage === 'en'; const stationOptions = [ 'Chatuchak Park', 'Phahon Yothin', 'Lat Phrao', 'Sukhumvit', 'Silom', 'Hua Lamphong' ].map(station => `<option value="${station}">${station}</option>`).join(''); return ` <div class="grid grid-cols-1 lg:grid-cols-2 gap-6"> <div class="bg-gray-50 p-4 rounded-lg"> <h3 class="font-semibold mb-4">${isEnglish ? 'Trip Details' : 'รายละเอียดการเดินทาง'}</h3> <div class="space-y-4"> <div> <label class="block text-sm font-medium mb-2">${isEnglish ? 'From Station' : 'จากสถานี'}</label> <select id="fromStation" class="w-full px-3 py-2 border rounded-lg"> <option value="">${isEnglish ? 'Select departure station' : 'เลือกสถานีต้นทาง'}</option> ${stationOptions} </select> </div> <div> <label class="block text-sm font-medium mb-2">${isEnglish ? 'To Station' : 'ไปสถานี'}</label> <select id="toStation" class="w-full px-3 py-2 border rounded-lg"> <option value="">${isEnglish ? 'Select destination station' : 'เลือกสถานีปลายทาง'}</option> ${stationOptions} </select> </div> <button onclick="calculateMRT()" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"> ${isEnglish ? 'Calculate' : 'คำนวณ'} </button> </div> </div> <div class="bg-gray-50 p-4 rounded-lg"> <h3 class="font-semibold mb-4">${isEnglish ? 'Results' : 'ผลลัพธ์'}</h3> <div id="mrtResults" class="text-center py-8 text-gray-500"> ${isEnglish ? 'Select stations and click calculate' : 'เลือกสถานีและกดคำนวณ'} </div> </div> </div> `; } function calculateMRT() { const from = document.getElementById('fromStation').value; const to = document.getElementById('toStation').value; const results = document.getElementById('mrtResults'); const isEnglish = currentLanguage === 'en'; if (!from || !to) { results.innerHTML = `<p class="text-red-500">${isEnglish ? 'Please select both stations' : 'กรุณาเลือกสถานีทั้งสอง'}</p>`; return; } const stations = ['Chatuchak Park', 'Phahon Yothin', 'Lat Phrao', 'Sukhumvit', 'Silom', 'Hua Lamphong']; const fromIndex = stations.indexOf(from); const toIndex = stations.indexOf(to); const distance = Math.abs(toIndex - fromIndex); const time = distance * 2 + 3; const fare = 15 + (distance * 2); results.innerHTML = ` <div class="space-y-3 text-left"> <div class="p-3 bg-blue-50 rounded"> <strong>${isEnglish ? 'From:' : 'จาก:'}</strong> ${from}<br> <strong>${isEnglish ? 'To:' : 'ไป:'}</strong> ${to} </div> <div class="p-3 bg-green-50 rounded"> <strong>${isEnglish ? 'Travel Time:' : 'เวลาเดินทาง:'}</strong> ${time} ${isEnglish ? 'minutes' : 'นาที'} </div> <div class="p-3 bg-yellow-50 rounded"> <strong>${isEnglish ? 'Distance:' : 'ระยะทาง:'}</strong> ${distance} ${isEnglish ? 'stations' : 'สถานี'} </div> <div class="p-3 bg-purple-50 rounded"> <strong>${isEnglish ? 'Fare:' : 'ค่าโดยสาร:'}</strong> ${fare} THB </div> </div> `; }</script>
+    <script>
+        // Import MRT Station Data
+        const MRT_LINES = {
+          blue: {
+            id: 'blue',
+            nameTH: 'สายสีน้ำเงิน',
+            nameEN: 'Blue Line',
+            color: '#0066CC',
+            stations: [
+              { id: 'LAK', nameTH: 'หลักสอง', nameEN: 'Lak Song', code: 'BL01' },
+              { id: 'PHO', nameTH: 'โพธิ์นิมิตร', nameEN: 'Pho Nimit', code: 'BL02' },
+              { id: 'TAL', nameTH: 'ตลาดพลู', nameEN: 'Talad Phlu', code: 'BL03' },
+              { id: 'WUT', nameTH: 'วุฒากาศ', nameEN: 'Wutthakat', code: 'BL04' },
+              { id: 'BNG', nameTH: 'บางไผ่', nameEN: 'Bang Phai', code: 'BL05' },
+              { id: 'BAW', nameTH: 'บางหว้า', nameEN: 'Bang Wa', code: 'BL06' },
+              { id: 'PET', nameTH: 'เพชรเกษม 48', nameEN: 'Phetkasem 48', code: 'BL07' },
+              { id: 'BKM', nameTH: 'บางแค-หมอชิต', nameEN: 'Bang Khae', code: 'BL08' },
+              { id: 'LAT', nameTH: 'ลาดยาว', nameEN: 'Lat Yao', code: 'BL09' },
+              { id: 'BAN', nameTH: 'บางซื่อ', nameEN: 'Bang Sue', code: 'BL10' },
+              { id: 'KAM', nameTH: 'กำแพงเพชร', nameEN: 'Kamphaeng Phet', code: 'BL11' },
+              { id: 'CHA', nameTH: 'จตุจักร', nameEN: 'Chatuchak Park', code: 'BL12' },
+              { id: 'PAH', nameTH: 'พหลโยธิน', nameEN: 'Phahon Yothin', code: 'BL13' },
+              { id: 'LAD', nameTH: 'ลาดพร้าว', nameEN: 'Lat Phrao', code: 'BL14' },
+              { id: 'RAT', nameTH: 'รัชดาภิเษก', nameEN: 'Ratchadaphisek', code: 'BL15' },
+              { id: 'SUT', nameTH: 'สุทธิสาร', nameEN: 'Sutthisan', code: 'BL16' },
+              { id: 'HUA', nameTH: 'ห้วยขวาง', nameEN: 'Huai Khwang', code: 'BL17' },
+              { id: 'CUL', nameTH: 'ศูนย์วัฒนธรรมแห่งประเทศไทย', nameEN: 'Thailand Cultural Centre', code: 'BL18' },
+              { id: 'PRA', nameTH: 'พระราม 9', nameEN: 'Phra Ram 9', code: 'BL19' },
+              { id: 'PET2', nameTH: 'เพชรบุรี', nameEN: 'Phetchaburi', code: 'BL20' },
+              { id: 'SUK', nameTH: 'สุขุมวิท', nameEN: 'Sukhumvit', code: 'BL21' },
+              { id: 'QSI', nameTH: 'ควีนสิริกิติ์', nameEN: 'Queen Sirikit', code: 'BL22' },
+              { id: 'KLO', nameTH: 'คลองเตย', nameEN: 'Khlong Toei', code: 'BL23' },
+              { id: 'LUM', nameTH: 'ลุมพินี', nameEN: 'Lumphini', code: 'BL24' },
+              { id: 'SIL', nameTH: 'สีลม', nameEN: 'Silom', code: 'BL25' },
+              { id: 'SAM', nameTH: 'สามย่าน', nameEN: 'Sam Yan', code: 'BL26' },
+              { id: 'HUL', nameTH: 'หัวลำโพง', nameEN: 'Hua Lamphong', code: 'BL27' },
+              { id: 'WAT', nameTH: 'วัดมังกร', nameEN: 'Wat Mangkon', code: 'BL28' },
+              { id: 'SAY', nameTH: 'สามยอด', nameEN: 'Sam Yot', code: 'BL29' },
+              { id: 'SAN', nameTH: 'สนามไชย', nameEN: 'Sanam Chai', code: 'BL30' },
+              { id: 'ISA', nameTH: 'อิสรภาพ', nameEN: 'Itsaraphap', code: 'BL31' },
+              { id: 'THO', nameTH: 'ธนบุรี', nameEN: 'Thonburi', code: 'BL32' },
+              { id: 'WON', nameTH: 'วงเวียนใหญ่', nameEN: 'Wongwian Yai', code: 'BL33' },
+              { id: 'KRU', nameTH: 'กรุงธนบุรี', nameEN: 'Krung Thon Buri', code: 'BL34' }
+            ]
+          },
+          purple: {
+            id: 'purple',
+            nameTH: 'สายสีม่วง',
+            nameEN: 'Purple Line',
+            color: '#663399',
+            stations: [
+              { id: 'KLO2', nameTH: 'คลองบางไผ่', nameEN: 'Khlong Bang Phai', code: 'PP01' },
+              { id: 'TAL2', nameTH: 'ตลาดบางใหญ่', nameEN: 'Talad Bang Yai', code: 'PP02' },
+              { id: 'SAM2', nameTH: 'สามแยกบางใหญ่', nameEN: 'Sam Yaek Bang Yai', code: 'PP03' },
+              { id: 'BAN2', nameTH: 'บางพลู', nameEN: 'Bang Phlu', code: 'PP04' },
+              { id: 'BAN3', nameTH: 'บางรักใหญ่', nameEN: 'Bang Rak Yai', code: 'PP05' },
+              { id: 'BAN4', nameTH: 'บางรักน้อย-ท่าอิฐ', nameEN: 'Bang Rak Noi Tha It', code: 'PP06' },
+              { id: 'SAI', nameTH: 'ไทรม้า', nameEN: 'Sai Ma', code: 'PP07' },
+              { id: 'PLI', nameTH: 'พลีเพลิน', nameEN: 'Pli Ploen', code: 'PP08' },
+              { id: 'MAN', nameTH: 'มัยลาภ', nameEN: 'Mai Lap', code: 'PP09' },
+              { id: 'NON', nameTH: 'หนองปรือ', nameEN: 'Nong Prue', code: 'PP10' },
+              { id: 'YAE', nameTH: 'แยกติวานนท์', nameEN: 'Yaek Tiwanon', code: 'PP11' },
+              { id: 'TIW', nameTH: 'ติวานนท์', nameEN: 'Tiwanon', code: 'PP12' },
+              { id: 'THA', nameTH: 'ท่าอิฐ', nameEN: 'Tha It', code: 'PP13' },
+              { id: 'PAK', nameTH: 'ปากเกร็ด', nameEN: 'Pak Kret', code: 'PP14' },
+              { id: 'KHA', nameTH: 'แขวงเวียงพา', nameEN: 'Khaeng Wiang Pha', code: 'PP15' },
+              { id: 'TAO', nameTH: 'เตาปูน', nameEN: 'Tao Pun', code: 'PP16' }
+            ]
+          }
+        };
+
+        const INTERCHANGE_STATIONS = [
+          { station: 'บางซื่อ', lines: ['blue', 'red'], codes: ['BL10', 'RL10'] },
+          { station: 'จตุจักร', lines: ['blue', 'red'], codes: ['BL12', 'RL08'] },
+          { station: 'วงเวียนใหญ่', lines: ['blue', 'red'], codes: ['BL33', 'RL11'] }
+        ];
+
+        const TRAVEL_INFO = {
+          averageTimePerStation: 2,
+          averageWaitTime: 3,
+          baseFare: 16,
+          farePerStation: 2,
+          maxFare: 42
+        };
+
+        function calculateDistance(fromStationId, toStationId, lineId) {
+          const line = MRT_LINES[lineId];
+          if (!line || !line.stations) return null;
+          
+          const fromIndex = line.stations.findIndex(station => station.id === fromStationId);
+          const toIndex = line.stations.findIndex(station => station.id === toStationId);
+          
+          if (fromIndex === -1 || toIndex === -1) return null;
+          
+          return Math.abs(toIndex - fromIndex);
+        }
+
+        function calculateFare(distance) {
+          if (distance === 0) return 0;
+          
+          const fare = TRAVEL_INFO.baseFare + (distance * TRAVEL_INFO.farePerStation);
+          return Math.min(fare, TRAVEL_INFO.maxFare);
+        }
+
+        function calculateTravelTime(distance, isPeakHour = false) {
+          if (distance === 0) return 0;
+          
+          const travelTime = (distance * TRAVEL_INFO.averageTimePerStation) + TRAVEL_INFO.averageWaitTime;
+          const peakMultiplier = isPeakHour ? 1.3 : 1;
+          
+          return Math.round(travelTime * peakMultiplier);
+        }
+
+        let currentLanguage = localStorage.getItem('language') || 'th'; 
+        let selectedCategory = null; 
+        
+        const translations = { 
+          th: { 
+            siteSubtitle: 'ศูนย์รวมเครื่องคิดเลขครบครัน', 
+            welcomeText: 'ยินดีต้อนรับสู่', 
+            welcomeDescription: 'ศูนย์รวมเครื่องคิดเลขครบครันสำหรับการคำนวณในชีวิตประจำวันของคุณ', 
+            searchPlaceholder: 'ค้นหาเครื่องคิดเลข...', 
+            navHome: 'หน้าแรก', 
+            navCategories: 'หมวดหมู่', 
+            navAbout: 'เกี่ยวกับเรา', 
+            allCategories: 'ทุกหมวดหมู่', 
+            transportation: 'คมนาคม', 
+            health: 'สุขภาพ', 
+            finance: 'การเงิน', 
+            utilities: 'สาธารณูปโภค', 
+            geography: 'ภูมิศาสตร์', 
+            needNewCalc: 'ต้องการเครื่องคิดเลขใหม่?', 
+            newCalcDesc: 'เราเพิ่มเครื่องคิดเลขใหม่อย่างต่อเนื่องตามความต้องการของผู้ใช้', 
+            requestCalcBtn: 'ขอเครื่องคิดเลข', 
+            footerText: '© 2024 4Calc สงวนลิขสิทธิ์ เพื่อนคู่ใจในการคำนวณ', 
+            noResultsTitle: 'ไม่พบเครื่องคิดเลข', 
+            noResultsDesc: 'ลองปรับเปลี่ยนคำค้นหาหรือเลือกหมวดหมู่อื่น' 
+          }, 
+          en: { 
+            siteSubtitle: 'All-in-One Calculator Hub', 
+            welcomeText: 'Welcome to', 
+            welcomeDescription: 'Your comprehensive calculator hub for all your daily calculations', 
+            searchPlaceholder: 'Search calculators...', 
+            navHome: 'Home', 
+            navCategories: 'Categories', 
+            navAbout: 'About', 
+            allCategories: 'All Categories', 
+            transportation: 'Transportation', 
+            health: 'Health', 
+            finance: 'Finance', 
+            utilities: 'Utilities', 
+            geography: 'Geography', 
+            needNewCalc: 'Need a New Calculator?', 
+            newCalcDesc: "We're constantly adding new calculators based on user needs", 
+            requestCalcBtn: 'Request Calculator', 
+            footerText: '© 2024 4Calc. All rights reserved. Your trusted calculator companion', 
+            noResultsTitle: 'No calculators found', 
+            noResultsDesc: 'Try adjusting your search or selecting a different category' 
+          } 
+        }; const calculators = { th: [ { id: 'mrt-time', name: 'คำนวณเวลาเดินทาง MRT', description: 'คำนวณเวลาเดินทางระหว่างสถานี MRT', emoji: '🚇', category: 'transportation' }, { id: 'taxi-fare', name: 'คำนวณค่าแท็กซี่', description: 'คำนวณค่าแท็กซี่ตามระยะทางและเวลา', emoji: '🚕', category: 'transportation' }, { id: 'pregnancy', name: 'คำนวณอายุครรภ์', description: 'คำนวณกำหนดคลอดและ milestone สำคัญ', emoji: '🤱', category: 'health' }, { id: 'interest', name: 'คำนวณดอกเบี้ย', description: 'คำนวณดอกเบี้ยแบบง่ายและทบต้น', emoji: '💰', category: 'finance' }, { id: 'btu', name: 'คำนวณ BTU', description: 'คำนวณความต้องการ BTU สำหรับเครื่องปรับอากาศ', emoji: '❄️', category: 'utilities' }, { id: 'distance', name: 'คำนวณระยะทาง', description: 'คำนวณระยะทางระหว่างสองจุด', emoji: '📍', category: 'geography' } ], en: [ { id: 'mrt-time', name: 'MRT Time Calculator', description: 'Calculate travel time between MRT stations', emoji: '🚇', category: 'transportation' }, { id: 'taxi-fare', name: 'Taxi Fare Calculator', description: 'Calculate taxi fare based on distance and time', emoji: '🚕', category: 'transportation' }, { id: 'pregnancy', name: 'Pregnancy Calculator', description: 'Calculate due date and pregnancy milestones', emoji: '🤱', category: 'health' }, { id: 'interest', name: 'Interest Calculator', description: 'Calculate simple and compound interest', emoji: '💰', category: 'finance' }, { id: 'btu', name: 'BTU Calculator', description: 'Calculate BTU requirements for air conditioning', emoji: '❄️', category: 'utilities' }, { id: 'distance', name: 'Distance Calculator', description: 'Calculate distance between two points', emoji: '📍', category: 'geography' } ] }; document.addEventListener('DOMContentLoaded', function() { updateLanguage(); renderCalculators(); setupEventListeners(); }); function setupEventListeners() { document.getElementById('langButton').addEventListener('click', function() { const dropdown = document.getElementById('langDropdown'); dropdown.classList.toggle('show'); }); document.addEventListener('click', function(event) { if (!event.target.closest('.lang-btn')) { document.getElementById('langDropdown').classList.remove('show'); } }); document.getElementById('searchInput').addEventListener('input', function(e) { renderCalculators(e.target.value); }); document.querySelectorAll('.category-btn').forEach(btn => { btn.addEventListener('click', function() { const category = this.dataset.category; document.querySelectorAll('.category-btn').forEach(b => { b.className = 'category-btn px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors'; }); this.className = 'category-btn px-4 py-2 bg-blue-600 text-white border border-blue-600 rounded-lg hover:bg-blue-700 transition-colors'; selectedCategory = category === 'all' ? null : category; renderCalculators(); }); }); } function switchLanguage(lang) { currentLanguage = lang; localStorage.setItem('language', lang); const flagMap = { th: '🇹🇭', en: '🇺🇸' }; const nameMap = { th: 'ไทย', en: 'English' }; document.getElementById('currentFlag').textContent = flagMap[lang]; document.getElementById('currentLang').textContent = nameMap[lang]; document.getElementById('langDropdown').classList.remove('show'); updateLanguage(); renderCalculators(); } function updateLanguage() { const t = translations[currentLanguage]; document.getElementById('siteSubtitle').textContent = t.siteSubtitle; document.getElementById('welcomeText').textContent = t.welcomeText; document.getElementById('welcomeDescription').textContent = t.welcomeDescription; document.getElementById('searchInput').placeholder = t.searchPlaceholder; document.getElementById('nav-home').textContent = t.navHome; document.getElementById('nav-categories').textContent = t.navCategories; document.getElementById('nav-about').textContent = t.navAbout; document.getElementById('needNewCalc').textContent = t.needNewCalc; document.getElementById('newCalcDesc').textContent = t.newCalcDesc; document.getElementById('requestCalcBtn').textContent = t.requestCalcBtn; document.getElementById('footerText').textContent = t.footerText; const categoryTexts = [t.allCategories, t.transportation, t.health, t.finance, t.utilities, t.geography]; document.querySelectorAll('.category-btn span:last-child').forEach((span, index) => { span.textContent = categoryTexts[index]; }); } function renderCalculators(searchTerm = '') { const grid = document.getElementById('calculatorGrid'); const noResults = document.getElementById('noResults'); const currentCalculators = calculators[currentLanguage]; let filtered = currentCalculators.filter(calc => { const matchesSearch = calc.name.toLowerCase().includes(searchTerm.toLowerCase()) || calc.description.toLowerCase().includes(searchTerm.toLowerCase()); const matchesCategory = !selectedCategory || calc.category === selectedCategory; return matchesSearch && matchesCategory; }); if (filtered.length === 0) { grid.classList.add('hidden'); noResults.classList.remove('hidden'); return; } grid.classList.remove('hidden'); noResults.classList.add('hidden'); grid.innerHTML = filtered.map(calc => ` <div class="calculator-card bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer" onclick="showCalculator('${calc.id}')"> <div class="text-3xl mb-4">${calc.emoji}</div> <h3 class="text-lg font-semibold mb-2">${calc.name}</h3> <p class="text-gray-600 mb-3">${calc.description}</p> <span class="text-sm text-blue-600 font-medium"> ${translations[currentLanguage][calc.category]} </span> </div> `).join(''); } function showCalculator(type) { const modal = document.getElementById('calculatorModal'); const title = document.getElementById('modalTitle'); const content = document.getElementById('modalContent'); modal.classList.remove('hidden'); modal.classList.add('flex'); if (type === 'mrt-time') { title.textContent = currentLanguage === 'th' ? '🚇 คำนวณเวลาเดินทาง MRT' : '🚇 MRT Time Calculator'; content.innerHTML = getMRTCalculatorHTML(); } else { title.textContent = currentLanguage === 'th' ? 'เครื่องคิดเลขกำลังพัฒนา!' : 'Calculator Coming Soon!'; content.innerHTML = `<p class="text-center py-8 text-gray-500">${currentLanguage === 'th' ? 'เครื่องคิดเลขนี้อยู่ระหว่างการพัฒนา กรุณากลับมาใหม่ภายหลัง!' : 'This calculator is under development. Please check back later!'}</p>`; } } function closeCalculator() { const modal = document.getElementById('calculatorModal'); modal.classList.add('hidden'); modal.classList.remove('flex'); } function getMRTCalculatorHTML() {
+          const isEnglish = currentLanguage === 'en';
+          
+          // Generate station options from comprehensive data
+          let stationOptions = '';
+          Object.keys(MRT_LINES).forEach(lineKey => {
+            const line = MRT_LINES[lineKey];
+            if (line.stations) {
+              stationOptions += `<optgroup label="${isEnglish ? line.nameEN : line.nameTH}">`;
+              line.stations.forEach(station => {
+                const stationName = isEnglish ? station.nameEN : station.nameTH;
+                stationOptions += `<option value="${station.id}" data-line="${lineKey}">${station.code} - ${stationName}</option>`;
+              });
+              stationOptions += '</optgroup>';
+            }
+          });
+          
+          return `
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div class="bg-gray-50 p-4 rounded-lg">
+                <h3 class="font-semibold mb-4">${isEnglish ? 'Trip Details' : 'รายละเอียดการเดินทาง'}</h3>
+                <div class="space-y-4">
+                  <div>
+                    <label class="block text-sm font-medium mb-2">${isEnglish ? 'From Station' : 'จากสถานี'}</label>
+                    <select id="fromStation" class="w-full px-3 py-2 border rounded-lg">
+                      <option value="">${isEnglish ? 'Select departure station' : 'เลือกสถานีต้นทาง'}</option>
+                      ${stationOptions}
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium mb-2">${isEnglish ? 'To Station' : 'ไปสถานี'}</label>
+                    <select id="toStation" class="w-full px-3 py-2 border rounded-lg">
+                      <option value="">${isEnglish ? 'Select destination station' : 'เลือกสถานีปลายทาง'}</option>
+                      ${stationOptions}
+                    </select>
+                  </div>
+                  <div>
+                    <label class="flex items-center">
+                      <input type="checkbox" id="isPeakHour" class="mr-2">
+                      <span class="text-sm">${isEnglish ? 'Peak hours (Rush hour)' : 'ช่วงชั่วโมงเร่งด่วน'}</span>
+                    </label>
+                  </div>
+                  <button onclick="calculateMRT()" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                    ${isEnglish ? 'Calculate' : 'คำนวณ'}
+                  </button>
+                </div>
+              </div>
+              <div class="bg-gray-50 p-4 rounded-lg">
+                <h3 class="font-semibold mb-4">${isEnglish ? 'Results' : 'ผลลัพธ์'}</h3>
+                <div id="mrtResults" class="text-center py-8 text-gray-500">
+                  ${isEnglish ? 'Select stations and click calculate' : 'เลือกสถานีและกดคำนวณ'}
+                </div>
+              </div>
+            </div>
+          `;
+        } function calculateMRT() {
+          const fromStationId = document.getElementById('fromStation').value;
+          const toStationId = document.getElementById('toStation').value;
+          const isPeakHour = document.getElementById('isPeakHour').checked;
+          const results = document.getElementById('mrtResults');
+          const isEnglish = currentLanguage === 'en';
+          
+          if (!fromStationId || !toStationId) {
+            results.innerHTML = `<p class="text-red-500">${isEnglish ? 'Please select both stations' : 'กรุณาเลือกสถานีทั้งสอง'}</p>`;
+            return;
+          }
+          
+          if (fromStationId === toStationId) {
+            results.innerHTML = `<p class="text-red-500">${isEnglish ? 'Please select different stations' : 'กรุณาเลือกสถานีที่แตกต่างกัน'}</p>`;
+            return;
+          }
+          
+          // Find stations and their lines
+          let fromStation = null, toStation = null;
+          let fromLine = null, toLine = null;
+          
+          Object.keys(MRT_LINES).forEach(lineKey => {
+            const line = MRT_LINES[lineKey];
+            if (line.stations) {
+              const foundFrom = line.stations.find(s => s.id === fromStationId);
+              const foundTo = line.stations.find(s => s.id === toStationId);
+              
+              if (foundFrom) {
+                fromStation = foundFrom;
+                fromLine = lineKey;
+              }
+              if (foundTo) {
+                toStation = foundTo;
+                toLine = lineKey;
+              }
+            }
+          });
+          
+          if (!fromStation || !toStation) {
+            results.innerHTML = `<p class="text-red-500">${isEnglish ? 'Station not found' : 'ไม่พบสถานี'}</p>`;
+            return;
+          }
+          
+          // Calculate if same line or need transfer
+          let distance = 0;
+          let transferInfo = '';
+          
+          if (fromLine === toLine) {
+            // Same line - direct calculation
+            distance = calculateDistance(fromStationId, toStationId, fromLine);
+          } else {
+            // Different lines - need transfer (simplified calculation)
+            // For now, we'll calculate approximate distance via interchange stations
+            distance = 8; // Estimated average for cross-line transfers
+            transferInfo = isEnglish 
+              ? `<div class="p-2 bg-yellow-100 rounded text-sm"><strong>Note:</strong> Transfer required between lines</div>`
+              : `<div class="p-2 bg-yellow-100 rounded text-sm"><strong>หมายเหตุ:</strong> ต้องเปลี่ยนสาย</div>`;
+          }
+          
+          const time = calculateTravelTime(distance, isPeakHour);
+          const fare = calculateFare(distance);
+          
+          const fromName = isEnglish ? fromStation.nameEN : fromStation.nameTH;
+          const toName = isEnglish ? toStation.nameEN : toStation.nameTH;
+          const fromLineDisplay = isEnglish ? MRT_LINES[fromLine].nameEN : MRT_LINES[fromLine].nameTH;
+          const toLineDisplay = isEnglish ? MRT_LINES[toLine].nameEN : MRT_LINES[toLine].nameTH;
+          
+          results.innerHTML = `
+            <div class="space-y-3 text-left">
+              <div class="p-3 bg-blue-50 rounded">
+                <strong>${isEnglish ? 'From:' : 'จาก:'}</strong> ${fromStation.code} - ${fromName}<br>
+                <small class="text-gray-600">${fromLineDisplay}</small><br>
+                <strong>${isEnglish ? 'To:' : 'ไป:'}</strong> ${toStation.code} - ${toName}<br>
+                <small class="text-gray-600">${toLineDisplay}</small>
+              </div>
+              ${transferInfo}
+              <div class="p-3 bg-green-50 rounded">
+                <strong>${isEnglish ? 'Travel Time:' : 'เวลาเดินทาง:'}</strong> ${time} ${isEnglish ? 'minutes' : 'นาที'}
+                ${isPeakHour ? `<br><small class="text-gray-600">${isEnglish ? '(Including peak hour delay)' : '(รวมความล่าช้าช่วงชั่วโมงเร่งด่วน)'}</small>` : ''}
+              </div>
+              <div class="p-3 bg-yellow-50 rounded">
+                <strong>${isEnglish ? 'Distance:' : 'ระยะทาง:'}</strong> ${distance} ${isEnglish ? 'stations' : 'สถานี'}
+              </div>
+              <div class="p-3 bg-purple-50 rounded">
+                <strong>${isEnglish ? 'Fare:' : 'ค่าโดยสาร:'}</strong> ฿${fare}
+              </div>
+            </div>
+          `;
+        }</script>
 
   <!-- Netlify Analytics -->
   <script defer src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>

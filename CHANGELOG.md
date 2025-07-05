@@ -19,6 +19,47 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.1.0] - 2025-07-05
+
+### Added
+- **🚇 Enhanced MRT Calculator**
+  - Complete Bangkok MRT station database (66+ stations)
+  - Blue Line: 34 stations from Lak Song (BL01) to Krung Thon Buri (BL34)
+  - Purple Line: 16 stations from Khlong Bang Phai (PP01) to Tao Pun (PP16)
+  - Official MRT fare calculation (₿16 base + ₿2 per station, max ₿42)
+  - Peak hour travel time adjustments (+30% during rush hours)
+  - Transfer detection between different MRT lines
+  - Station code display (BL01, PP01, etc.) for easy identification
+
+- **🏗️ Data Infrastructure**
+  - Comprehensive MRT station data integration
+  - Bilingual station names (Thai and English)
+  - Line-specific organization and color coding
+  - Interchange station mapping
+  - Official MRTA distance and time calculations
+
+### Changed
+- **🎨 User Interface Improvements**
+  - Station dropdown now organized by MRT lines
+  - Added optgroup labels for Blue Line and Purple Line
+  - Enhanced result display with station codes and line information
+  - Added peak hour checkbox for rush hour calculations
+  - Improved transfer notifications for cross-line journeys
+
+- **⚡ Calculation Engine**
+  - Updated from basic estimation to official MRT calculations
+  - Real-time fare calculation based on MRTA pricing structure
+  - Enhanced travel time calculation with proper wait times
+  - Cross-line transfer handling with estimated times
+
+### Technical Details
+- **Data Source**: Based on official MRTA Bangkok MRT system information
+- **Calculation Accuracy**: Uses real MRT fare structure and timing
+- **Performance**: Optimized station lookup and calculation algorithms
+- **Compatibility**: Maintains backward compatibility with existing functionality
+
+---
+
 ## [1.0.0] - 2024-07-05
 
 ### Added

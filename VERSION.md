@@ -1,5 +1,39 @@
 # 4Calc Version History
 
+## v1.2.0 - Expandable Route Details (2025-07-05)
+
+### ✨ Major New Features
+- **Expandable Route Details**: Click on station count to view detailed station-by-station breakdown
+- **Interactive Station List**: Shows all stations along the route with travel times
+- **Smooth Animations**: CSS-based expand/collapse with max-height transitions
+- **Visual Enhancements**: Color-coded stations, toggle icons, and hover effects
+
+### 🚇 MRT System Coverage
+- **Complete 4-Line System**: Blue (38), Purple (16), Yellow (23), Pink (32) = 109 total stations
+- **Real-Time Calculations**: 2 minutes per station + 3 minutes waiting time
+- **Station Codes**: Official MRT station codes (BL01, PP01, YL01, PK01)
+- **Bilingual Support**: Full Thai/English station names and interface
+
+### 🎨 User Experience Improvements
+- **Click-to-Expand**: Intuitive interaction for route details
+- **Station Timing**: Shows +2 minutes travel time from previous station
+- **Route Visualization**: Clear start/end markers and line colors
+- **Responsive Design**: Works seamlessly on all devices
+
+### 🔧 Technical Improvements
+- **DOM Handling**: Fixed element recreation issues in innerHTML updates
+- **Event Management**: Robust event listener handling for dynamic content
+- **Error Handling**: User-friendly alerts and fallback behaviors
+- **Performance**: Optimized height calculations and smooth animations
+
+### 🧪 Tested Features
+- Route calculation: Tha Phra → Sanam Chai (9 stations, 19 minutes)
+- Expand/collapse functionality with rotation animations
+- Multi-language support and station data accuracy
+- Cross-line transfer detection and notifications
+
+---
+
 ## v1.1.0 - Enhanced MRT Calculator (2025-07-05)
 
 ### ✨ New Features

@@ -878,6 +878,12 @@
           } else if (type === 'btu') {
             title.textContent = currentLanguage === 'th' ? '❄️ คำนวณ BTU เครื่องปรับอากาศ' : '❄️ BTU Air Conditioner Calculator';
             content.innerHTML = getBTUCalculatorHTML();
+          } else if (type === 'pregnancy') {
+            title.textContent = currentLanguage === 'th' ? '🤱 คำนวณอายุครรภ์' : '🤱 Pregnancy Calculator';
+            content.innerHTML = getPregnancyCalculatorHTML();
+          } else if (type === 'interest') {
+            title.textContent = currentLanguage === 'th' ? '💰 คำนวณดอกเบี้ย' : '💰 Interest Calculator';
+            content.innerHTML = getInterestCalculatorHTML();
           } else {
             title.textContent = currentLanguage === 'th' ? 'เครื่องคิดเลขกำลังพัฒนา!' : 'Calculator Coming Soon!';
             content.innerHTML = `<p class="text-center py-8 text-gray-500">${currentLanguage === 'th' ? 'เครื่องคิดเลขนี้อยู่ระหว่างการพัฒนา กรุณากลับมาใหม่ภายหลัง!' : 'This calculator is under development. Please check back later!'}</p>`;
@@ -1388,6 +1394,942 @@
             </div>
           `;
         }
+
+        // ======================
+        // PREGNANCY CALCULATOR
+        // ======================
+
+        // Pregnancy constants (inline version)
+        const PREGNANCY_CONSTANTS = {
+          STANDARD_PREGNANCY_DAYS: 280,
+          STANDARD_PREGNANCY_WEEKS: 40,
+          
+          TRIMESTERS: {
+            first: { start: 0, end: 13, name: 'ไตรมาสแรก', nameEN: 'First Trimester' },
+            second: { start: 14, end: 27, name: 'ไตรมาสที่สอง', nameEN: 'Second Trimester' },
+            third: { start: 28, end: 42, name: 'ไตรมาสที่สาม', nameEN: 'Third Trimester' }
+          },
+          
+          NORMAL_DELIVERY_RANGE: {
+            early: 37,
+            late: 42
+          }
+        };
+
+        const PREGNANCY_MILESTONES = {
+          4: {
+            th: "❤️ หัวใจเริ่มเต้น, ระบบประสาทเริ่มพัฒนา",
+            en: "❤️ Heart starts beating, nervous system begins developing"
+          },
+          8: {
+            th: "👶 อวัยวะหลักเริ่มเกิด, ขนาดประมาณ 1.6 ซม.",
+            en: "👶 Major organs begin forming, about 1.6 cm in size"
+          },
+          12: {
+            th: "🦴 กระดูกเริ่มแข็ง, เพศเริ่มชัดเจน",
+            en: "🦴 Bones start hardening, gender becomes clear"
+          },
+          16: {
+            th: "👂 หูเริ่มได้ยิน, ผมเริ่มเจริญ",
+            en: "👂 Ears start hearing, hair begins growing"
+          },
+          20: {
+            th: "🤱 แม่เริ่มรู้สึกเด็กดิ้น, ขนาดประมาณ 25 ซม.",
+            en: "🤱 Mother starts feeling movement, about 25 cm long"
+          },
+          24: {
+            th: "👁️ ตาเริ่มเปิดได้, ปอดเริ่มพัฒนา",
+            en: "👁️ Eyes can open, lungs start developing"
+          },
+          28: {
+            th: "🧠 สมองพัฒนาเร็ว, มีโอกาสรอดถ้าคลอดก่อนกำหนด",
+            en: "🧠 Rapid brain development, viable if born premature"
+          },
+          32: {
+            th: "💪 กล้ามเนื้อแข็งแรงขึ้น, เริ่มสะสมไขมัน",
+            en: "💪 Stronger muscles, fat storage begins"
+          },
+          36: {
+            th: "🫁 ปอดเกือบพร้อม, น้ำหนักประมาณ 2.5 กก.",
+            en: "🫁 Lungs nearly ready, weight about 2.5 kg"
+          },
+          40: {
+            th: "🍼 พร้อมคลอด! น้ำหนักประมาณ 3-3.5 กก.",
+            en: "🍼 Ready for birth! Weight about 3-3.5 kg"
+          }
+        };
+
+        const TRIMESTER_ADVICE = {
+          first: {
+            th: [
+              "🥗 รับประทานโฟลิกแอซิด 400-800 ไมโครกรัม/วัน",
+              "🚭 หลีกเลี่ยงบุหรี่ แอลกอฮอล์ และยาเสพติด",
+              "☕ จำกัดคาเฟอีนไม่เกิน 200 มก./วัน",
+              "😴 พักผ่อนให้เพียงพอ จัดการความเครียด"
+            ],
+            en: [
+              "🥗 Take 400-800 mcg folic acid daily",
+              "🚭 Avoid smoking, alcohol, and drugs",
+              "☕ Limit caffeine to under 200mg/day",
+              "😴 Get adequate rest, manage stress"
+            ]
+          },
+          second: {
+            th: [
+              "🏃‍♀️ ออกกำลังกายสม่ำเสมอ เช่น เดิน ว่ายน้ำ โยคะ",
+              "🩺 ตรวจครรภ์ทุก 4 สัปดาห์",
+              "🥛 ดื่มน้ำให้เพียงพอ อย่างน้อย 8-10 แก้ว/วัน",
+              "👕 ใส่เสื้อผ้าคลายท้อง รองเท้าส้นเตี้ย"
+            ],
+            en: [
+              "🏃‍♀️ Exercise regularly: walking, swimming, yoga",
+              "🩺 Prenatal checkups every 4 weeks",
+              "🥛 Stay hydrated, at least 8-10 glasses/day",
+              "👕 Wear loose clothing, low-heeled shoes"
+            ]
+          },
+          third: {
+            th: [
+              "🎒 เตรียมกระเป๋าคลอด ซื้อของใช้เด็ก",
+              "🏥 เรียนคลาสเตรียมคลอด เลือกโรงพยาบาล",
+              "😌 เตรียมจิตใจ เรียนรู้ท่าคลอด",
+              "👥 จัดระบบช่วยเหลือหลังคลอด"
+            ],
+            en: [
+              "🎒 Pack hospital bag, buy baby essentials",
+              "🏥 Attend birthing classes, choose hospital",
+              "😌 Mental preparation, learn birthing positions",
+              "👥 Arrange postpartum support system"
+            ]
+          }
+        };
+
+        function calculatePregnancyFromLMP(lmpDate, currentDate = new Date()) {
+          if (!lmpDate || !(lmpDate instanceof Date)) {
+            return {
+              error: 'วันที่ประจำเดือนไม่ถูกต้อง',
+              errorEN: 'Invalid LMP date'
+            };
+          }
+          
+          const daysDiff = Math.floor((currentDate - lmpDate) / (1000 * 60 * 60 * 24));
+          
+          if (daysDiff < 0) {
+            return {
+              error: 'วันที่ประจำเดือนต้องไม่เกินวันปัจจุบัน',
+              errorEN: 'LMP date cannot be in the future'
+            };
+          }
+          
+          if (daysDiff > 300) {
+            return {
+              error: 'อายุครรภ์เกินระยะเวลาปกติ',
+              errorEN: 'Pregnancy age exceeds normal range'
+            };
+          }
+          
+          const weeks = Math.floor(daysDiff / 7);
+          const days = daysDiff % 7;
+          
+          const eddDate = new Date(lmpDate);
+          eddDate.setDate(eddDate.getDate() + PREGNANCY_CONSTANTS.STANDARD_PREGNANCY_DAYS);
+          
+          const trimester = getPregnancyTrimester(weeks);
+          const progressPercent = Math.min((weeks / PREGNANCY_CONSTANTS.STANDARD_PREGNANCY_WEEKS) * 100, 100);
+          const daysRemaining = Math.max(0, Math.floor((eddDate - currentDate) / (1000 * 60 * 60 * 24)));
+          
+          return {
+            success: true,
+            gestationalAge: {
+              totalDays: daysDiff,
+              weeks,
+              days,
+              displayText: `${weeks} สัปดาห์ ${days} วัน`,
+              displayTextEN: `${weeks} weeks ${days} days`
+            },
+            trimester,
+            eddDate,
+            lmpDate,
+            currentDate,
+            progressPercent: Math.round(progressPercent),
+            daysRemaining,
+            weeksRemaining: Math.ceil(daysRemaining / 7),
+            milestone: getCurrentPregnancyMilestone(weeks),
+            advice: TRIMESTER_ADVICE[trimester.key],
+            isFullTerm: weeks >= PREGNANCY_CONSTANTS.NORMAL_DELIVERY_RANGE.early,
+            deliveryStatus: getPregnancyDeliveryStatus(weeks)
+          };
+        }
+
+        function getPregnancyTrimester(weeks) {
+          const trimesters = PREGNANCY_CONSTANTS.TRIMESTERS;
+          
+          if (weeks <= trimesters.first.end) {
+            return { ...trimesters.first, key: 'first' };
+          } else if (weeks <= trimesters.second.end) {
+            return { ...trimesters.second, key: 'second' };
+          } else {
+            return { ...trimesters.third, key: 'third' };
+          }
+        }
+
+        function getCurrentPregnancyMilestone(weeks) {
+          const milestoneWeeks = Object.keys(PREGNANCY_MILESTONES).map(Number).sort((a, b) => a - b);
+          const passedMilestone = milestoneWeeks.filter(week => week <= weeks).pop();
+          
+          if (passedMilestone) {
+            return {
+              week: passedMilestone,
+              ...PREGNANCY_MILESTONES[passedMilestone]
+            };
+          }
+          
+          const nextMilestone = milestoneWeeks.find(week => week > weeks);
+          if (nextMilestone) {
+            return {
+              week: nextMilestone,
+              isUpcoming: true,
+              ...PREGNANCY_MILESTONES[nextMilestone]
+            };
+          }
+          
+          return null;
+        }
+
+        function getPregnancyDeliveryStatus(weeks) {
+          const { early, late } = PREGNANCY_CONSTANTS.NORMAL_DELIVERY_RANGE;
+          
+          if (weeks < early) {
+            return {
+              status: 'preterm',
+              message: 'ยังไม่ถึงกำหนดคลอด',
+              messageEN: 'Preterm - not yet due',
+              color: 'blue'
+            };
+          } else if (weeks >= early && weeks <= late) {
+            return {
+              status: 'term',
+              message: 'ถึงกำหนดคลอดแล้ว',
+              messageEN: 'Full term - ready for delivery',
+              color: 'green'
+            };
+          } else {
+            return {
+              status: 'overdue',
+              message: 'เกินกำหนดคลอด',
+              messageEN: 'Overdue - past due date',
+              color: 'red'
+            };
+          }
+        }
+
+        function getPregnancyCalculatorHTML() {
+          const isEnglish = currentLanguage === 'en';
+          
+          return `
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div class="bg-gray-50 p-4 rounded-lg">
+                <h3 class="font-semibold mb-4">${isEnglish ? 'Pregnancy Calculation' : 'การคำนวณอายุครรภ์'}</h3>
+                <div class="space-y-4">
+                  <div>
+                    <label class="block text-sm font-medium mb-2">
+                      ${isEnglish ? 'Calculation Method' : 'วิธีการคำนวณ'}
+                    </label>
+                    <select id="pregnancyMethod" onchange="togglePregnancyInputs()" class="w-full px-3 py-2 border rounded-lg">
+                      <option value="lmp">${isEnglish ? 'Last Menstrual Period (LMP)' : 'วันแรกของประจำเดือนครั้งสุดท้าย (LMP)'}</option>
+                      <option value="conception">${isEnglish ? 'Conception Date' : 'วันตั้งครรภ์/ผสม'}</option>
+                    </select>
+                  </div>
+                  
+                  <div id="lmpInput">
+                    <label class="block text-sm font-medium mb-2">
+                      ${isEnglish ? 'Last Menstrual Period Date' : 'วันแรกของประจำเดือนครั้งสุดท้าย'}
+                    </label>
+                    <input type="date" id="lmpDate" class="w-full px-3 py-2 border rounded-lg">
+                    <p class="text-xs text-gray-500 mt-1">
+                      ${isEnglish ? 'Select the first day of your last menstrual period' : 'เลือกวันแรกของประจำเดือนครั้งสุดท้าย'}
+                    </p>
+                  </div>
+                  
+                  <div id="conceptionInput" style="display: none;">
+                    <label class="block text-sm font-medium mb-2">
+                      ${isEnglish ? 'Conception/Fertilization Date' : 'วันตั้งครรภ์/ผสม'}
+                    </label>
+                    <input type="date" id="conceptionDate" class="w-full px-3 py-2 border rounded-lg">
+                    <p class="text-xs text-gray-500 mt-1">
+                      ${isEnglish ? 'Select the estimated conception date' : 'เลือกวันที่คาดว่าตั้งครรภ์'}
+                    </p>
+                  </div>
+                  
+                  <button onclick="calculatePregnancy()" class="w-full px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700">
+                    ${isEnglish ? 'Calculate Pregnancy Age' : 'คำนวณอายุครรภ์'}
+                  </button>
+                  
+                  <div class="text-xs text-gray-500 space-y-1">
+                    <p>${isEnglish ? '• Results are estimates for information only' : '• ผลลัพธ์เป็นการประมาณเพื่อการศึกษาเท่านั้น'}</p>
+                    <p>${isEnglish ? '• Consult your doctor for accurate information' : '• ปรึกษาแพทย์เพื่อข้อมูลที่แม่นยำ'}</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="bg-gray-50 p-4 rounded-lg">
+                <h3 class="font-semibold mb-4">${isEnglish ? 'Pregnancy Information' : 'ข้อมูลการตั้งครรภ์'}</h3>
+                <div id="pregnancyResults" class="text-center py-8 text-gray-500">
+                  ${isEnglish ? 'Enter your last menstrual period date and calculate' : 'ใส่วันที่ประจำเดือนครั้งสุดท้ายและกดคำนวณ'}
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        function togglePregnancyInputs() {
+          const method = document.getElementById('pregnancyMethod').value;
+          const lmpInput = document.getElementById('lmpInput');
+          const conceptionInput = document.getElementById('conceptionInput');
+          
+          if (method === 'lmp') {
+            lmpInput.style.display = 'block';
+            conceptionInput.style.display = 'none';
+          } else {
+            lmpInput.style.display = 'none';
+            conceptionInput.style.display = 'block';
+          }
+        }
+
+        function calculatePregnancy() {
+          const method = document.getElementById('pregnancyMethod').value;
+          const results = document.getElementById('pregnancyResults');
+          const isEnglish = currentLanguage === 'en';
+          
+          let inputDate;
+          if (method === 'lmp') {
+            const lmpDateValue = document.getElementById('lmpDate').value;
+            if (!lmpDateValue) {
+              results.innerHTML = `<p class="text-red-500">${isEnglish ? 'Please select your last menstrual period date' : 'กรุณาเลือกวันที่ประจำเดือนครั้งสุดท้าย'}</p>`;
+              return;
+            }
+            inputDate = new Date(lmpDateValue);
+          } else {
+            const conceptionDateValue = document.getElementById('conceptionDate').value;
+            if (!conceptionDateValue) {
+              results.innerHTML = `<p class="text-red-500">${isEnglish ? 'Please select conception date' : 'กรุณาเลือกวันที่ตั้งครรภ์'}</p>`;
+              return;
+            }
+            inputDate = new Date(conceptionDateValue);
+            // แปลงเป็น LMP โดยลบ 14 วัน
+            inputDate.setDate(inputDate.getDate() - 14);
+          }
+          
+          const result = calculatePregnancyFromLMP(inputDate);
+          
+          if (result.error) {
+            results.innerHTML = `<p class="text-red-500">${isEnglish ? result.errorEN : result.error}</p>`;
+            return;
+          }
+          
+          const { gestationalAge, trimester, eddDate, progressPercent, daysRemaining, milestone, advice, deliveryStatus } = result;
+          
+          results.innerHTML = `
+            <div class="space-y-4 text-left">
+              <!-- อายุครรภ์ปัจจุบัน -->
+              <div class="p-4 bg-pink-50 rounded-lg border-l-4 border-pink-400">
+                <h4 class="font-semibold text-lg mb-2">${isEnglish ? 'Current Gestational Age' : 'อายุครรภ์ปัจจุบัน'}</h4>
+                <div class="text-2xl font-bold text-pink-600 mb-2">
+                  ${isEnglish ? gestationalAge.displayTextEN : gestationalAge.displayText}
+                </div>
+                <div class="text-sm text-gray-600">
+                  ${isEnglish ? trimester.nameEN : trimester.name} • ${progressPercent}% ${isEnglish ? 'complete' : 'เสร็จแล้ว'}
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                  <div class="bg-pink-600 h-2 rounded-full" style="width: ${progressPercent}%"></div>
+                </div>
+              </div>
+              
+              <!-- วันคลอดคาดการณ์ -->
+              <div class="p-4 bg-blue-50 rounded-lg">
+                <h4 class="font-semibold mb-2">${isEnglish ? 'Estimated Due Date' : 'วันคลอดคาดการณ์'}</h4>
+                <div class="text-lg font-semibold text-blue-600">
+                  ${eddDate.toLocaleDateString(isEnglish ? 'en-US' : 'th-TH', { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                  })}
+                </div>
+                <div class="text-sm text-gray-600 mt-1">
+                  ${isEnglish ? `${daysRemaining} days remaining` : `อีก ${daysRemaining} วัน`}
+                  ${result.weeksRemaining > 0 ? ` (${result.weeksRemaining} ${isEnglish ? 'weeks' : 'สัปดาห์'})` : ''}
+                </div>
+                <div class="mt-2">
+                  <span class="inline-block px-2 py-1 text-xs rounded-full bg-${deliveryStatus.color}-100 text-${deliveryStatus.color}-800">
+                    ${isEnglish ? deliveryStatus.messageEN : deliveryStatus.message}
+                  </span>
+                </div>
+              </div>
+              
+              <!-- พัฒนาการ -->
+              ${milestone ? `
+              <div class="p-4 bg-purple-50 rounded-lg">
+                <h4 class="font-semibold mb-2">${isEnglish ? 'Development Milestone' : 'พัฒนาการ'}</h4>
+                <div class="text-sm">
+                  <strong>${isEnglish ? 'Week' : 'สัปดาห์ที่'} ${milestone.week}:</strong>
+                  ${milestone.isUpcoming ? `<span class="text-orange-600">(${isEnglish ? 'Upcoming' : 'กำลังจะมาถึง'})</span>` : ''}
+                </div>
+                <div class="text-sm mt-1">
+                  ${isEnglish ? milestone.en : milestone.th}
+                </div>
+              </div>
+              ` : ''}
+              
+              <!-- คำแนะนำ -->
+              <div class="p-4 bg-green-50 rounded-lg">
+                <h4 class="font-semibold mb-2">${isEnglish ? 'Recommendations' : 'คำแนะนำ'}</h4>
+                <ul class="text-sm space-y-1">
+                  ${(isEnglish ? advice.en : advice.th).map(tip => `<li>${tip}</li>`).join('')}
+                </ul>
+              </div>
+              
+              <!-- คำเตือน -->
+              <div class="p-3 bg-yellow-50 rounded-lg text-sm border-l-4 border-yellow-400">
+                <strong>${isEnglish ? 'Important:' : 'ข้อสำคัญ:'}</strong>
+                ${isEnglish ? 'This calculator provides estimates only. Always consult your healthcare provider for accurate information and personalized care.' : 'เครื่องคิดเลขนี้ให้ข้อมูลประมาณการเท่านั้น ควรปรึกษาแพทย์เสมอเพื่อข้อมูลที่แม่นยำและการดูแลเฉพาะบุคคล'}
+              </div>
+            </div>
+          `;
+        }
+
+        // ======================
+        // INTEREST CALCULATOR
+        // ======================
+
+        // Interest constants (inline version)
+        const INTEREST_CONSTANTS_INLINE = {
+          COMPOUNDING_FREQUENCIES: {
+            annually: 1,
+            semiannually: 2,
+            quarterly: 4,
+            monthly: 12,
+            weekly: 52,
+            daily: 365
+          },
+          
+          MARKET_RATES: {
+            savings: { min: 0.1, max: 1.5, name: 'บัญชีออมทรัพย์', nameEN: 'Savings Account' },
+            fixed: { min: 1.0, max: 2.5, name: 'ฝากประจำ', nameEN: 'Fixed Deposit' },
+            loan: { min: 5.0, max: 20.0, name: 'สินเชื่อ', nameEN: 'Personal Loan' },
+            mortgage: { min: 3.0, max: 6.0, name: 'สินเชื่อบ้าน', nameEN: 'Mortgage' },
+            credit: { min: 18.0, max: 28.0, name: 'บัตรเครดิต', nameEN: 'Credit Card' }
+          }
+        };
+
+        function calculateSimpleInterestInline(principal, rate, time) {
+          if (principal <= 0 || rate < 0 || time <= 0) {
+            return {
+              error: 'ข้อมูลไม่ถูกต้อง: เงินต้นและระยะเวลาต้องมากกว่า 0, อัตราดอกเบี้ยต้องไม่ติดลบ',
+              errorEN: 'Invalid input: Principal and time must be > 0, rate must be ≥ 0'
+            };
+          }
+          
+          const rateDecimal = rate / 100;
+          const interest = principal * rateDecimal * time;
+          const totalAmount = principal + interest;
+          
+          return {
+            success: true,
+            type: 'simple',
+            calculation: {
+              principal,
+              rate,
+              time,
+              interest: Math.round(interest * 100) / 100,
+              totalAmount: Math.round(totalAmount * 100) / 100
+            }
+          };
+        }
+
+        function calculateCompoundInterestInline(principal, rate, time, compoundFrequency = 12) {
+          if (principal <= 0 || rate < 0 || time <= 0 || compoundFrequency <= 0) {
+            return {
+              error: 'ข้อมูลไม่ถูกต้อง',
+              errorEN: 'Invalid input'
+            };
+          }
+          
+          const rateDecimal = rate / 100;
+          const totalAmount = principal * Math.pow(1 + rateDecimal / compoundFrequency, compoundFrequency * time);
+          const compoundInterest = totalAmount - principal;
+          const simpleInterest = principal * rateDecimal * time;
+          const extraInterest = compoundInterest - simpleInterest;
+          
+          return {
+            success: true,
+            type: 'compound',
+            calculation: {
+              principal,
+              rate,
+              time,
+              compoundFrequency,
+              compoundInterest: Math.round(compoundInterest * 100) / 100,
+              totalAmount: Math.round(totalAmount * 100) / 100,
+              simpleInterest: Math.round(simpleInterest * 100) / 100,
+              extraInterest: Math.round(extraInterest * 100) / 100
+            }
+          };
+        }
+
+        function calculateMonthlySavingsInline(monthlyAmount, rate, years, initialAmount = 0) {
+          if (monthlyAmount < 0 || rate < 0 || years <= 0 || initialAmount < 0) {
+            return {
+              error: 'ข้อมูลไม่ถูกต้อง',
+              errorEN: 'Invalid input'
+            };
+          }
+          
+          const monthlyRate = rate / 100 / 12;
+          const totalMonths = years * 12;
+          
+          const initialWithInterest = initialAmount * Math.pow(1 + monthlyRate, totalMonths);
+          
+          let monthlySavingsTotal = 0;
+          if (monthlyAmount > 0 && rate > 0) {
+            monthlySavingsTotal = monthlyAmount * ((Math.pow(1 + monthlyRate, totalMonths) - 1) / monthlyRate);
+          } else if (monthlyAmount > 0) {
+            monthlySavingsTotal = monthlyAmount * totalMonths;
+          }
+          
+          const totalContributions = initialAmount + (monthlyAmount * totalMonths);
+          const totalAmount = initialWithInterest + monthlySavingsTotal;
+          const totalInterest = totalAmount - totalContributions;
+          
+          return {
+            success: true,
+            type: 'savings',
+            calculation: {
+              monthlyAmount,
+              rate,
+              years,
+              initialAmount,
+              totalContributions: Math.round(totalContributions * 100) / 100,
+              totalInterest: Math.round(totalInterest * 100) / 100,
+              totalAmount: Math.round(totalAmount * 100) / 100
+            }
+          };
+        }
+
+        function calculateLoanPaymentInline(loanAmount, rate, years) {
+          if (loanAmount <= 0 || rate < 0 || years <= 0) {
+            return {
+              error: 'ข้อมูลไม่ถูกต้อง',
+              errorEN: 'Invalid input'
+            };
+          }
+          
+          const monthlyRate = rate / 100 / 12;
+          const totalMonths = years * 12;
+          
+          let monthlyPayment;
+          if (rate === 0) {
+            monthlyPayment = loanAmount / totalMonths;
+          } else {
+            monthlyPayment = loanAmount * (monthlyRate * Math.pow(1 + monthlyRate, totalMonths)) / 
+                            (Math.pow(1 + monthlyRate, totalMonths) - 1);
+          }
+          
+          const totalPayment = monthlyPayment * totalMonths;
+          const totalInterest = totalPayment - loanAmount;
+          
+          return {
+            success: true,
+            type: 'loan',
+            calculation: {
+              loanAmount,
+              rate,
+              years,
+              monthlyPayment: Math.round(monthlyPayment * 100) / 100,
+              totalPayment: Math.round(totalPayment * 100) / 100,
+              totalInterest: Math.round(totalInterest * 100) / 100
+            }
+          };
+        }
+
+        function getInterestCalculatorHTML() {
+          const isEnglish = currentLanguage === 'en';
+          
+          return `
+            <div class="space-y-6">
+              <!-- Calculator Type Selection -->
+              <div class="bg-gray-50 p-4 rounded-lg">
+                <h3 class="font-semibold mb-4">${isEnglish ? 'Calculator Type' : 'เลือกประเภทการคำนวณ'}</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                  <button onclick="switchInterestType('simple')" id="btn-simple" class="p-3 text-sm border rounded-lg hover:bg-blue-50 transition-colors">
+                    <div class="font-medium">${isEnglish ? 'Simple Interest' : 'ดอกเบี้ยธรรมดา'}</div>
+                    <div class="text-xs text-gray-500">${isEnglish ? 'Basic calculation' : 'คำนวณพื้นฐาน'}</div>
+                  </button>
+                  <button onclick="switchInterestType('compound')" id="btn-compound" class="p-3 text-sm border rounded-lg hover:bg-blue-50 transition-colors">
+                    <div class="font-medium">${isEnglish ? 'Compound Interest' : 'ดอกเบี้ยทบต้น'}</div>
+                    <div class="text-xs text-gray-500">${isEnglish ? 'With compounding' : 'ดอกเบี้ยทบต้น'}</div>
+                  </button>
+                  <button onclick="switchInterestType('savings')" id="btn-savings" class="p-3 text-sm border rounded-lg hover:bg-blue-50 transition-colors">
+                    <div class="font-medium">${isEnglish ? 'Monthly Savings' : 'การออมรายเดือน'}</div>
+                    <div class="text-xs text-gray-500">${isEnglish ? 'Regular deposits' : 'ฝากสม่ำเสมอ'}</div>
+                  </button>
+                  <button onclick="switchInterestType('loan')" id="btn-loan" class="p-3 text-sm border rounded-lg hover:bg-blue-50 transition-colors">
+                    <div class="font-medium">${isEnglish ? 'Loan Payment' : 'การผ่อนชำระ'}</div>
+                    <div class="text-xs text-gray-500">${isEnglish ? 'Monthly payments' : 'ผ่อนรายเดือน'}</div>
+                  </button>
+                </div>
+              </div>
+              
+              <!-- Input Forms -->
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-gray-50 p-4 rounded-lg">
+                  <div id="interestInputs">
+                    <!-- Dynamic content will be loaded here -->
+                  </div>
+                </div>
+                
+                <div class="bg-gray-50 p-4 rounded-lg">
+                  <h3 class="font-semibold mb-4">${isEnglish ? 'Calculation Results' : 'ผลการคำนวณ'}</h3>
+                  <div id="interestResults" class="text-center py-8 text-gray-500">
+                    ${isEnglish ? 'Select calculation type and enter values' : 'เลือกประเภทการคำนวณและใส่ข้อมูล'}
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        let currentInterestType = 'simple';
+
+        function switchInterestType(type) {
+          currentInterestType = type;
+          
+          // Update button styles
+          document.querySelectorAll('[id^="btn-"]').forEach(btn => {
+            btn.className = 'p-3 text-sm border rounded-lg hover:bg-blue-50 transition-colors';
+          });
+          document.getElementById('btn-' + type).className = 'p-3 text-sm border-2 border-blue-500 bg-blue-50 rounded-lg';
+          
+          loadInterestInputs(type);
+          clearInterestResults();
+        }
+
+        function loadInterestInputs(type) {
+          const isEnglish = currentLanguage === 'en';
+          const inputsDiv = document.getElementById('interestInputs');
+          
+          if (type === 'simple') {
+            inputsDiv.innerHTML = `
+              <h3 class="font-semibold mb-4">${isEnglish ? 'Simple Interest' : 'ดอกเบี้ยธรรมดา'}</h3>
+              <div class="space-y-3">
+                <div>
+                  <label class="block text-sm font-medium mb-1">${isEnglish ? 'Principal Amount (฿)' : 'เงินต้น (บาท)'}</label>
+                  <input type="number" id="simplePrincipal" placeholder="${isEnglish ? 'Enter amount' : 'ใส่จำนวนเงิน'}" class="w-full px-3 py-2 border rounded-lg" min="1" step="1">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium mb-1">${isEnglish ? 'Interest Rate (% per year)' : 'อัตราดอกเบี้ย (% ต่อปี)'}</label>
+                  <input type="number" id="simpleRate" placeholder="${isEnglish ? 'e.g., 5.5' : 'เช่น 5.5'}" class="w-full px-3 py-2 border rounded-lg" min="0" step="0.1">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium mb-1">${isEnglish ? 'Time Period (years)' : 'ระยะเวลา (ปี)'}</label>
+                  <input type="number" id="simpleTime" placeholder="${isEnglish ? 'e.g., 2.5' : 'เช่น 2.5'}" class="w-full px-3 py-2 border rounded-lg" min="0.1" step="0.1">
+                </div>
+                <button onclick="calculateInterest()" class="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                  ${isEnglish ? 'Calculate' : 'คำนวณ'}
+                </button>
+              </div>
+            `;
+          } else if (type === 'compound') {
+            inputsDiv.innerHTML = `
+              <h3 class="font-semibold mb-4">${isEnglish ? 'Compound Interest' : 'ดอกเบี้ยทบต้น'}</h3>
+              <div class="space-y-3">
+                <div>
+                  <label class="block text-sm font-medium mb-1">${isEnglish ? 'Principal Amount (฿)' : 'เงินต้น (บาท)'}</label>
+                  <input type="number" id="compoundPrincipal" placeholder="${isEnglish ? 'Enter amount' : 'ใส่จำนวนเงิน'}" class="w-full px-3 py-2 border rounded-lg" min="1" step="1">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium mb-1">${isEnglish ? 'Interest Rate (% per year)' : 'อัตราดอกเบี้ย (% ต่อปี)'}</label>
+                  <input type="number" id="compoundRate" placeholder="${isEnglish ? 'e.g., 5.5' : 'เช่น 5.5'}" class="w-full px-3 py-2 border rounded-lg" min="0" step="0.1">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium mb-1">${isEnglish ? 'Time Period (years)' : 'ระยะเวลา (ปี)'}</label>
+                  <input type="number" id="compoundTime" placeholder="${isEnglish ? 'e.g., 2.5' : 'เช่น 2.5'}" class="w-full px-3 py-2 border rounded-lg" min="0.1" step="0.1">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium mb-1">${isEnglish ? 'Compounding Frequency' : 'ความถี่ในการคิดดอกเบี้ย'}</label>
+                  <select id="compoundFreq" class="w-full px-3 py-2 border rounded-lg">
+                    <option value="12">${isEnglish ? 'Monthly' : 'รายเดือน'}</option>
+                    <option value="4">${isEnglish ? 'Quarterly' : 'รายไตรมาส'}</option>
+                    <option value="2">${isEnglish ? 'Semi-annually' : 'ราย 6 เดือน'}</option>
+                    <option value="1">${isEnglish ? 'Annually' : 'รายปี'}</option>
+                    <option value="365">${isEnglish ? 'Daily' : 'รายวัน'}</option>
+                  </select>
+                </div>
+                <button onclick="calculateInterest()" class="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                  ${isEnglish ? 'Calculate' : 'คำนวณ'}
+                </button>
+              </div>
+            `;
+          } else if (type === 'savings') {
+            inputsDiv.innerHTML = `
+              <h3 class="font-semibold mb-4">${isEnglish ? 'Monthly Savings' : 'การออมรายเดือน'}</h3>
+              <div class="space-y-3">
+                <div>
+                  <label class="block text-sm font-medium mb-1">${isEnglish ? 'Initial Amount (฿)' : 'เงินเริ่มต้น (บาท)'}</label>
+                  <input type="number" id="savingsInitial" placeholder="${isEnglish ? 'Starting amount' : 'จำนวนเงินเริ่มต้น'}" class="w-full px-3 py-2 border rounded-lg" min="0" step="1" value="0">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium mb-1">${isEnglish ? 'Monthly Deposit (฿)' : 'ฝากรายเดือน (บาท)'}</label>
+                  <input type="number" id="savingsMonthly" placeholder="${isEnglish ? 'Monthly amount' : 'จำนวนเงินต่อเดือน'}" class="w-full px-3 py-2 border rounded-lg" min="0" step="1">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium mb-1">${isEnglish ? 'Interest Rate (% per year)' : 'อัตราดอกเบี้ย (% ต่อปี)'}</label>
+                  <input type="number" id="savingsRate" placeholder="${isEnglish ? 'e.g., 2.5' : 'เช่น 2.5'}" class="w-full px-3 py-2 border rounded-lg" min="0" step="0.1">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium mb-1">${isEnglish ? 'Time Period (years)' : 'ระยะเวลา (ปี)'}</label>
+                  <input type="number" id="savingsTime" placeholder="${isEnglish ? 'e.g., 5' : 'เช่น 5'}" class="w-full px-3 py-2 border rounded-lg" min="0.1" step="0.1">
+                </div>
+                <button onclick="calculateInterest()" class="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                  ${isEnglish ? 'Calculate' : 'คำนวณ'}
+                </button>
+              </div>
+            `;
+          } else if (type === 'loan') {
+            inputsDiv.innerHTML = `
+              <h3 class="font-semibold mb-4">${isEnglish ? 'Loan Payment' : 'การผ่อนชำระ'}</h3>
+              <div class="space-y-3">
+                <div>
+                  <label class="block text-sm font-medium mb-1">${isEnglish ? 'Loan Amount (฿)' : 'จำนวนเงินกู้ (บาท)'}</label>
+                  <input type="number" id="loanAmount" placeholder="${isEnglish ? 'Total loan amount' : 'จำนวนเงินกู้ทั้งหมด'}" class="w-full px-3 py-2 border rounded-lg" min="1" step="1">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium mb-1">${isEnglish ? 'Interest Rate (% per year)' : 'อัตราดอกเบี้ย (% ต่อปี)'}</label>
+                  <input type="number" id="loanRate" placeholder="${isEnglish ? 'e.g., 7.5' : 'เช่น 7.5'}" class="w-full px-3 py-2 border rounded-lg" min="0" step="0.1">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium mb-1">${isEnglish ? 'Loan Term (years)' : 'ระยะเวลาผ่อน (ปี)'}</label>
+                  <input type="number" id="loanTime" placeholder="${isEnglish ? 'e.g., 3' : 'เช่น 3'}" class="w-full px-3 py-2 border rounded-lg" min="0.1" step="0.1">
+                </div>
+                <button onclick="calculateInterest()" class="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                  ${isEnglish ? 'Calculate' : 'คำนวณ'}
+                </button>
+              </div>
+            `;
+          }
+        }
+
+        function calculateInterest() {
+          const results = document.getElementById('interestResults');
+          const isEnglish = currentLanguage === 'en';
+          
+          let result;
+          
+          if (currentInterestType === 'simple') {
+            const principal = parseFloat(document.getElementById('simplePrincipal').value);
+            const rate = parseFloat(document.getElementById('simpleRate').value);
+            const time = parseFloat(document.getElementById('simpleTime').value);
+            
+            if (!principal || !rate || !time) {
+              results.innerHTML = `<p class="text-red-500">${isEnglish ? 'Please fill in all fields' : 'กรุณากรอกข้อมูลให้ครบ'}</p>`;
+              return;
+            }
+            
+            result = calculateSimpleInterestInline(principal, rate, time);
+          } else if (currentInterestType === 'compound') {
+            const principal = parseFloat(document.getElementById('compoundPrincipal').value);
+            const rate = parseFloat(document.getElementById('compoundRate').value);
+            const time = parseFloat(document.getElementById('compoundTime').value);
+            const freq = parseInt(document.getElementById('compoundFreq').value);
+            
+            if (!principal || !rate || !time) {
+              results.innerHTML = `<p class="text-red-500">${isEnglish ? 'Please fill in all fields' : 'กรุณากรอกข้อมูลให้ครบ'}</p>`;
+              return;
+            }
+            
+            result = calculateCompoundInterestInline(principal, rate, time, freq);
+          } else if (currentInterestType === 'savings') {
+            const initial = parseFloat(document.getElementById('savingsInitial').value) || 0;
+            const monthly = parseFloat(document.getElementById('savingsMonthly').value);
+            const rate = parseFloat(document.getElementById('savingsRate').value);
+            const time = parseFloat(document.getElementById('savingsTime').value);
+            
+            if (!monthly || !rate || !time) {
+              results.innerHTML = `<p class="text-red-500">${isEnglish ? 'Please fill in required fields' : 'กรุณากรอกข้อมูลที่จำเป็น'}</p>`;
+              return;
+            }
+            
+            result = calculateMonthlySavingsInline(monthly, rate, time, initial);
+          } else if (currentInterestType === 'loan') {
+            const amount = parseFloat(document.getElementById('loanAmount').value);
+            const rate = parseFloat(document.getElementById('loanRate').value);
+            const time = parseFloat(document.getElementById('loanTime').value);
+            
+            if (!amount || !rate || !time) {
+              results.innerHTML = `<p class="text-red-500">${isEnglish ? 'Please fill in all fields' : 'กรุณากรอกข้อมูลให้ครบ'}</p>`;
+              return;
+            }
+            
+            result = calculateLoanPaymentInline(amount, rate, time);
+          }
+          
+          if (result.error) {
+            results.innerHTML = `<p class="text-red-500">${isEnglish ? result.errorEN : result.error}</p>`;
+            return;
+          }
+          
+          displayInterestResults(result);
+        }
+
+        function displayInterestResults(result) {
+          const results = document.getElementById('interestResults');
+          const isEnglish = currentLanguage === 'en';
+          const calc = result.calculation;
+          
+          if (result.type === 'simple') {
+            results.innerHTML = `
+              <div class="space-y-4 text-left">
+                <div class="p-4 bg-green-50 rounded-lg">
+                  <h4 class="font-semibold text-lg mb-2">${isEnglish ? 'Simple Interest Results' : 'ผลลัพธ์ดอกเบี้ยธรรมดา'}</h4>
+                  <div class="space-y-2">
+                    <div class="flex justify-between">
+                      <span>${isEnglish ? 'Principal:' : 'เงินต้น:'}</span>
+                      <span class="font-medium">฿${calc.principal.toLocaleString()}</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span>${isEnglish ? 'Interest:' : 'ดอกเบี้ย:'}</span>
+                      <span class="font-medium text-green-600">฿${calc.interest.toLocaleString()}</span>
+                    </div>
+                    <hr>
+                    <div class="flex justify-between text-lg font-bold">
+                      <span>${isEnglish ? 'Total Amount:' : 'จำนวนเงินรวม:'}</span>
+                      <span class="text-green-600">฿${calc.totalAmount.toLocaleString()}</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="p-3 bg-blue-50 rounded text-sm">
+                  <strong>${isEnglish ? 'Formula:' : 'สูตร:'}</strong><br>
+                  ${isEnglish ? 'Interest' : 'ดอกเบี้ย'} = ${calc.principal.toLocaleString()} × ${calc.rate}% × ${calc.time} ${isEnglish ? 'years' : 'ปี'}
+                </div>
+              </div>
+            `;
+          } else if (result.type === 'compound') {
+            results.innerHTML = `
+              <div class="space-y-4 text-left">
+                <div class="p-4 bg-purple-50 rounded-lg">
+                  <h4 class="font-semibold text-lg mb-2">${isEnglish ? 'Compound Interest Results' : 'ผลลัพธ์ดอกเบี้ยทบต้น'}</h4>
+                  <div class="space-y-2">
+                    <div class="flex justify-between">
+                      <span>${isEnglish ? 'Principal:' : 'เงินต้น:'}</span>
+                      <span class="font-medium">฿${calc.principal.toLocaleString()}</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span>${isEnglish ? 'Compound Interest:' : 'ดอกเบี้ยทบต้น:'}</span>
+                      <span class="font-medium text-purple-600">฿${calc.compoundInterest.toLocaleString()}</span>
+                    </div>
+                    <div class="flex justify-between text-sm text-gray-600">
+                      <span>${isEnglish ? 'vs Simple Interest:' : 'เทียบกับดอกเบี้ยธรรมดา:'}</span>
+                      <span>฿${calc.simpleInterest.toLocaleString()}</span>
+                    </div>
+                    <div class="flex justify-between text-sm text-green-600">
+                      <span>${isEnglish ? 'Extra from Compounding:' : 'ได้เพิ่มจากการทบต้น:'}</span>
+                      <span>+฿${calc.extraInterest.toLocaleString()}</span>
+                    </div>
+                    <hr>
+                    <div class="flex justify-between text-lg font-bold">
+                      <span>${isEnglish ? 'Total Amount:' : 'จำนวนเงินรวม:'}</span>
+                      <span class="text-purple-600">฿${calc.totalAmount.toLocaleString()}</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="p-3 bg-blue-50 rounded text-sm">
+                  <strong>${isEnglish ? 'Compounding:' : 'การทบต้น:'}</strong>
+                  ${calc.compoundFrequency} ${isEnglish ? 'times per year' : 'ครั้งต่อปี'}
+                </div>
+              </div>
+            `;
+          } else if (result.type === 'savings') {
+            results.innerHTML = `
+              <div class="space-y-4 text-left">
+                <div class="p-4 bg-blue-50 rounded-lg">
+                  <h4 class="font-semibold text-lg mb-2">${isEnglish ? 'Savings Results' : 'ผลลัพธ์การออมเงิน'}</h4>
+                  <div class="space-y-2">
+                    <div class="flex justify-between">
+                      <span>${isEnglish ? 'Total Contributions:' : 'เงินที่ฝากรวม:'}</span>
+                      <span class="font-medium">฿${calc.totalContributions.toLocaleString()}</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span>${isEnglish ? 'Interest Earned:' : 'ดอกเบี้ยที่ได้:'}</span>
+                      <span class="font-medium text-blue-600">฿${calc.totalInterest.toLocaleString()}</span>
+                    </div>
+                    <hr>
+                    <div class="flex justify-between text-lg font-bold">
+                      <span>${isEnglish ? 'Final Amount:' : 'จำนวนเงินสุดท้าย:'}</span>
+                      <span class="text-blue-600">฿${calc.totalAmount.toLocaleString()}</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="p-3 bg-green-50 rounded text-sm">
+                  <div><strong>${isEnglish ? 'Monthly deposit:' : 'ฝากต่อเดือน:'}</strong> ฿${calc.monthlyAmount.toLocaleString()}</div>
+                  <div><strong>${isEnglish ? 'For:' : 'เป็นเวลา:'}</strong> ${calc.years} ${isEnglish ? 'years' : 'ปี'} (${calc.years * 12} ${isEnglish ? 'months' : 'เดือน'})</div>
+                </div>
+              </div>
+            `;
+          } else if (result.type === 'loan') {
+            results.innerHTML = `
+              <div class="space-y-4 text-left">
+                <div class="p-4 bg-orange-50 rounded-lg">
+                  <h4 class="font-semibold text-lg mb-2">${isEnglish ? 'Loan Payment Results' : 'ผลลัพธ์การผ่อนชำระ'}</h4>
+                  <div class="space-y-2">
+                    <div class="flex justify-between">
+                      <span>${isEnglish ? 'Loan Amount:' : 'จำนวนเงินกู้:'}</span>
+                      <span class="font-medium">฿${calc.loanAmount.toLocaleString()}</span>
+                    </div>
+                    <div class="flex justify-between text-lg font-bold text-orange-600">
+                      <span>${isEnglish ? 'Monthly Payment:' : 'ชำระต่อเดือน:'}</span>
+                      <span>฿${calc.monthlyPayment.toLocaleString()}</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span>${isEnglish ? 'Total Interest:' : 'ดอกเบี้ยรวม:'}</span>
+                      <span class="font-medium text-red-600">฿${calc.totalInterest.toLocaleString()}</span>
+                    </div>
+                    <hr>
+                    <div class="flex justify-between text-lg font-bold">
+                      <span>${isEnglish ? 'Total Payment:' : 'ชำระรวมทั้งหมด:'}</span>
+                      <span class="text-orange-600">฿${calc.totalPayment.toLocaleString()}</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="p-3 bg-yellow-50 rounded text-sm">
+                  <div><strong>${isEnglish ? 'Loan term:' : 'ระยะเวลาผ่อน:'}</strong> ${calc.years} ${isEnglish ? 'years' : 'ปี'} (${calc.years * 12} ${isEnglish ? 'months' : 'เดือน'})</div>
+                  <div><strong>${isEnglish ? 'Suggested income:' : 'รายได้ที่แนะนำ:'}</strong> ฿${Math.round(calc.monthlyPayment / 0.3).toLocaleString()}/เดือน (30% rule)</div>
+                </div>
+              </div>
+            `;
+          }
+        }
+
+        function clearInterestResults() {
+          const isEnglish = currentLanguage === 'en';
+          document.getElementById('interestResults').innerHTML = `
+            <div class="text-center py-8 text-gray-500">
+              ${isEnglish ? 'Enter values and calculate to see results' : 'ใส่ข้อมูลและกดคำนวณเพื่อดูผลลัพธ์'}
+            </div>
+          `;
+        }
+
+        // Initialize with simple interest when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+          setTimeout(() => {
+            if (currentInterestType === 'simple' && document.getElementById('interestInputs')) {
+              switchInterestType('simple');
+            }
+          }, 100);
+        });
 
         </script>
 

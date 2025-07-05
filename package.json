@@ -27,7 +27,9 @@
     "finance",
     "utilities",
     "responsive",
-    "web-app"
+    "web-app",
+    "static-site",
+    "html5"
   ],
   "author": "Your Name",
   "license": "MIT",

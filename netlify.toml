@@ -56,7 +56,8 @@
 [build.processing.html]
   pretty_urls = true
 
-# Plugin configuration
+# Plugin configuration (optional - remove Next.js plugin)
+# Note: Next.js plugin is automatically added by Netlify but not needed for static sites
 [[plugins]]
   package = "@netlify/plugin-lighthouse"
   
@@ -66,15 +67,15 @@
     best-practices = 0.9
     seo = 0.9
 
-# Branch-specific settings
+# Branch-specific settings  
 [context.production]
-  command = "NODE_ENV=production node build.js && cp dist/* ."
+  command = "node build-netlify.js"
   
 [context.deploy-preview]
-  command = "NODE_ENV=staging node build.js && cp dist/* ."
+  command = "node build-netlify.js"
   
-[context.branch-deploy]
-  command = "NODE_ENV=development node build.js && cp dist/* ."
+[context.branch-deploy]  
+  command = "node build-netlify.js"
 
 # Dev server settings (for local development)
 [dev]

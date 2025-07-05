@@ -724,7 +724,296 @@
               </div>
             </div>
           `;
-        }</script>
+        }
+
+        // ======================
+        // TAXI FARE CALCULATOR
+        // ======================
+
+        // Import taxi calculator functions (inline version)
+        const TAXI_RATES = {
+          regular: {
+            name: 'รถแท็กซี่ขนาดปกติ',
+            nameEN: 'Regular Size Taxi',
+            baseFare: 35.00,
+            rates: [
+              { min: 1.01, max: 10, rate: 6.50 },
+              { min: 10.01, max: 20, rate: 7.00 },
+              { min: 20.01, max: 40, rate: 8.00 },
+              { min: 40.01, max: 60, rate: 8.50 },
+              { min: 60.01, max: 80, rate: 9.00 },
+              { min: 80.01, max: Infinity, rate: 10.50 }
+            ]
+          },
+          large: {
+            name: 'รถแท็กซี่ขนาดใหญ่',
+            nameEN: 'Large Size Taxi',
+            baseFare: 40.00,
+            rates: [
+              { min: 1.01, max: 10, rate: 6.50 },
+              { min: 10.01, max: 20, rate: 7.00 },
+              { min: 20.01, max: 40, rate: 8.00 },
+              { min: 40.01, max: 60, rate: 8.50 },
+              { min: 60.01, max: 80, rate: 9.00 },
+              { min: 80.01, max: Infinity, rate: 10.50 }
+            ]
+          }
+        };
+
+        const WAITING_RATE = {
+          ratePerMinute: 3.00,
+          speedThreshold: 6
+        };
+
+        const ADDITIONAL_CHARGES = {
+          appBooking: 20,
+          airportSurcharge: 50
+        };
+
+        function calculateDistanceFare(distance, taxiType = 'regular') {
+          if (distance <= 0) return 0;
+          
+          const rateConfig = TAXI_RATES[taxiType];
+          if (!rateConfig) return 0;
+          
+          let totalFare = rateConfig.baseFare;
+          
+          if (distance <= 1) {
+            return totalFare;
+          }
+          
+          let remainingDistance = distance - 1;
+          
+          for (const rateRange of rateConfig.rates) {
+            if (remainingDistance <= 0) break;
+            
+            const distanceInRange = Math.min(
+              remainingDistance,
+              rateRange.max - Math.max(rateRange.min - 1, 0)
+            );
+            
+            totalFare += distanceInRange * rateRange.rate;
+            remainingDistance -= distanceInRange;
+          }
+          
+          return Math.round(totalFare * 100) / 100;
+        }
+
+        function calculateWaitingFare(waitingTimeMinutes) {
+          if (waitingTimeMinutes <= 0) return 0;
+          return Math.round(waitingTimeMinutes * WAITING_RATE.ratePerMinute * 100) / 100;
+        }
+
+        function calculateTaxiFare({
+          distance,
+          waitingTime = 0,
+          taxiType = 'regular',
+          isAppBooking = false,
+          isAirportPickup = false
+        }) {
+          if (distance <= 0) {
+            return {
+              error: 'ระยะทางต้องมากกว่า 0 กิโลเมตร',
+              errorEN: 'Distance must be greater than 0 kilometers'
+            };
+          }
+          
+          const distanceFare = calculateDistanceFare(distance, taxiType);
+          const waitingFare = calculateWaitingFare(waitingTime);
+          
+          let additionalFee = 0;
+          const additionalCharges = [];
+          
+          if (isAppBooking) {
+            additionalFee += ADDITIONAL_CHARGES.appBooking;
+            additionalCharges.push({
+              name: 'ค่าบริการแอป',
+              nameEN: 'App Booking Fee',
+              amount: ADDITIONAL_CHARGES.appBooking
+            });
+          }
+          
+          if (isAirportPickup) {
+            additionalFee += ADDITIONAL_CHARGES.airportSurcharge;
+            additionalCharges.push({
+              name: 'ค่าบริการสนามบิน',
+              nameEN: 'Airport Surcharge',
+              amount: ADDITIONAL_CHARGES.airportSurcharge
+            });
+          }
+          
+          const totalFare = distanceFare + waitingFare + additionalFee;
+          
+          return {
+            success: true,
+            breakdown: {
+              distanceFare,
+              waitingFare,
+              additionalFee,
+              additionalCharges
+            },
+            total: Math.round(totalFare * 100) / 100,
+            taxiInfo: TAXI_RATES[taxiType],
+            distance,
+            waitingTime
+          };
+        }
+
+        // Update showCalculator function to handle taxi-fare
+        const originalShowCalculator = showCalculator;
+        showCalculator = function(type) {
+          const modal = document.getElementById('calculatorModal');
+          const title = document.getElementById('modalTitle');
+          const content = document.getElementById('modalContent');
+          
+          modal.classList.remove('hidden');
+          modal.classList.add('flex');
+          
+          if (type === 'mrt-time') {
+            title.textContent = currentLanguage === 'th' ? '🚇 คำนวณเวลาเดินทาง MRT' : '🚇 MRT Time Calculator';
+            content.innerHTML = getMRTCalculatorHTML();
+          } else if (type === 'taxi-fare') {
+            title.textContent = currentLanguage === 'th' ? '🚕 คำนวณค่าแท็กซี่' : '🚕 Taxi Fare Calculator';
+            content.innerHTML = getTaxiCalculatorHTML();
+          } else {
+            title.textContent = currentLanguage === 'th' ? 'เครื่องคิดเลขกำลังพัฒนา!' : 'Calculator Coming Soon!';
+            content.innerHTML = `<p class="text-center py-8 text-gray-500">${currentLanguage === 'th' ? 'เครื่องคิดเลขนี้อยู่ระหว่างการพัฒนา กรุณากลับมาใหม่ภายหลัง!' : 'This calculator is under development. Please check back later!'}</p>`;
+          }
+        };
+
+        function getTaxiCalculatorHTML() {
+          const isEnglish = currentLanguage === 'en';
+          
+          return `
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div class="bg-gray-50 p-4 rounded-lg">
+                <h3 class="font-semibold mb-4">${isEnglish ? 'Trip Details' : 'รายละเอียดการเดินทาง'}</h3>
+                <div class="space-y-4">
+                  <div>
+                    <label class="block text-sm font-medium mb-2">${isEnglish ? 'Distance (km)' : 'ระยะทาง (กิโลเมตร)'}</label>
+                    <input type="number" id="taxiDistance" placeholder="${isEnglish ? 'Enter distance in kilometers' : 'ใส่ระยะทางเป็นกิโลเมตร'}" 
+                           class="w-full px-3 py-2 border rounded-lg" min="0.1" step="0.1">
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium mb-2">${isEnglish ? 'Traffic Time (minutes)' : 'เวลาติด/รอ (นาที)'}</label>
+                    <input type="number" id="taxiWaitTime" placeholder="${isEnglish ? 'Enter waiting time in minutes' : 'ใส่เวลารอเป็นนาที'}" 
+                           class="w-full px-3 py-2 border rounded-lg" min="0" step="1" value="0">
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium mb-2">${isEnglish ? 'Taxi Type' : 'ประเภทรถแท็กซี่'}</label>
+                    <select id="taxiType" class="w-full px-3 py-2 border rounded-lg">
+                      <option value="regular">${isEnglish ? 'Regular Size (฿35 base)' : 'ขนาดปกติ (฿35 เริ่มต้น)'}</option>
+                      <option value="large">${isEnglish ? 'Large Size (฿40 base)' : 'ขนาดใหญ่ (฿40 เริ่มต้น)'}</option>
+                    </select>
+                  </div>
+                  <div class="space-y-2">
+                    <label class="flex items-center">
+                      <input type="checkbox" id="isAppBooking" class="mr-2">
+                      <span class="text-sm">${isEnglish ? 'App booking (+฿20)' : 'จองผ่านแอป (+฿20)'}</span>
+                    </label>
+                    <label class="flex items-center">
+                      <input type="checkbox" id="isAirportPickup" class="mr-2">
+                      <span class="text-sm">${isEnglish ? 'Airport pickup (+฿50)' : 'รับจากสนามบิน (+฿50)'}</span>
+                    </label>
+                  </div>
+                  <button onclick="calculateTaxi()" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                    ${isEnglish ? 'Calculate Fare' : 'คำนวณค่าโดยสาร'}
+                  </button>
+                </div>
+              </div>
+              <div class="bg-gray-50 p-4 rounded-lg">
+                <h3 class="font-semibold mb-4">${isEnglish ? 'Fare Breakdown' : 'รายละเอียดค่าโดยสาร'}</h3>
+                <div id="taxiResults" class="text-center py-8 text-gray-500">
+                  ${isEnglish ? 'Enter distance and click calculate' : 'ใส่ระยะทางและกดคำนวณ'}
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        function calculateTaxi() {
+          const distance = parseFloat(document.getElementById('taxiDistance').value);
+          const waitingTime = parseInt(document.getElementById('taxiWaitTime').value) || 0;
+          const taxiType = document.getElementById('taxiType').value;
+          const isAppBooking = document.getElementById('isAppBooking').checked;
+          const isAirportPickup = document.getElementById('isAirportPickup').checked;
+          const results = document.getElementById('taxiResults');
+          const isEnglish = currentLanguage === 'en';
+          
+          if (!distance || distance <= 0) {
+            results.innerHTML = `<p class="text-red-500">${isEnglish ? 'Please enter a valid distance' : 'กรุณาใส่ระยะทางที่ถูกต้อง'}</p>`;
+            return;
+          }
+          
+          const result = calculateTaxiFare({
+            distance,
+            waitingTime,
+            taxiType,
+            isAppBooking,
+            isAirportPickup
+          });
+          
+          if (result.error) {
+            results.innerHTML = `<p class="text-red-500">${isEnglish ? result.errorEN : result.error}</p>`;
+            return;
+          }
+          
+          const taxiInfo = result.taxiInfo;
+          const breakdown = result.breakdown;
+          
+          let additionalChargesHTML = '';
+          if (breakdown.additionalCharges.length > 0) {
+            additionalChargesHTML = breakdown.additionalCharges.map(charge => 
+              `<div class="flex justify-between">
+                <span>${isEnglish ? charge.nameEN : charge.name}:</span>
+                <span>฿${charge.amount}</span>
+              </div>`
+            ).join('');
+          }
+          
+          results.innerHTML = `
+            <div class="space-y-3 text-left">
+              <div class="p-3 bg-blue-50 rounded">
+                <strong>${isEnglish ? 'Taxi Type:' : 'ประเภทรถ:'}</strong> ${isEnglish ? taxiInfo.nameEN : taxiInfo.name}<br>
+                <strong>${isEnglish ? 'Distance:' : 'ระยะทาง:'}</strong> ${distance} ${isEnglish ? 'km' : 'กม.'}<br>
+                ${waitingTime > 0 ? `<strong>${isEnglish ? 'Waiting Time:' : 'เวลารอ:'}</strong> ${waitingTime} ${isEnglish ? 'minutes' : 'นาที'}<br>` : ''}
+              </div>
+              
+              <div class="p-3 bg-green-50 rounded">
+                <h4 class="font-semibold mb-2">${isEnglish ? 'Fare Breakdown' : 'รายละเอียดค่าโดยสาร'}</h4>
+                <div class="space-y-1 text-sm">
+                  <div class="flex justify-between">
+                    <span>${isEnglish ? 'Base fare (1st km):' : 'ค่าโดยสารพื้นฐาน (1 กม.แรก):'}</span>
+                    <span>฿${taxiInfo.baseFare}</span>
+                  </div>
+                  ${distance > 1 ? `
+                  <div class="flex justify-between">
+                    <span>${isEnglish ? 'Distance fare:' : 'ค่าโดยสารระยะทาง:'}</span>
+                    <span>฿${(breakdown.distanceFare - taxiInfo.baseFare).toFixed(2)}</span>
+                  </div>` : ''}
+                  ${breakdown.waitingFare > 0 ? `
+                  <div class="flex justify-between">
+                    <span>${isEnglish ? 'Waiting fare:' : 'ค่าเวลารอ:'}</span>
+                    <span>฿${breakdown.waitingFare}</span>
+                  </div>` : ''}
+                  ${additionalChargesHTML}
+                  <hr class="my-2">
+                  <div class="flex justify-between font-semibold text-lg">
+                    <span>${isEnglish ? 'Total Fare:' : 'ค่าโดยสารรวม:'}</span>
+                    <span class="text-green-600">฿${result.total}</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="p-3 bg-yellow-50 rounded text-sm">
+                <strong>${isEnglish ? 'Note:' : 'หมายเหตุ:'}</strong>
+                ${isEnglish ? 'Rates according to Ministry of Transport announcement (effective Jan 13, 2023)' : 'อัตราตามประกาศกระทรวงคมนาคม (มีผลบังคับใช้ 13 มกราคม 2566)'}
+              </div>
+            </div>
+          `;
+        }
+
+        </script>
 
   <!-- Netlify Analytics -->
   <script defer src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>

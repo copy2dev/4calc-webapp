@@ -5,11 +5,9 @@
   
   # Publish directory (root because we copy files)
   publish = "."
-  
-  # Build environment
-  environment = { NODE_ENV = "production" }
 
 [build.environment]
+  NODE_ENV = "production"
   NODE_VERSION = "18"
 
 # Headers for security and performance

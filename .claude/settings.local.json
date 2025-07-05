@@ -22,7 +22,8 @@
       "Bash(git push:*)",
       "WebFetch(domain:www.mrta.co.th)",
       "Bash(python3:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(mv:*)"
     ],
     "deny": []
   }

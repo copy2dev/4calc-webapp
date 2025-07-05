@@ -1,5 +1,52 @@
 # 4Calc Version History
 
+## v1.3.0 - Taxi Fare Calculator (2025-07-05)
+
+### 🚕 Major New Calculator
+- **Taxi Fare Calculator**: Complete Bangkok taxi fare calculation system
+- **Official Rates**: Based on Ministry of Transport announcement (B.E. 2565/2023)
+- **Dual Input System**: Distance (km) + Traffic waiting time (minutes)
+- **Multiple Vehicle Types**: Regular (฿35 base) and Large (฿40 base) taxi support
+
+### 📊 Advanced Calculation Algorithm
+- **Tiered Distance Rates**: 6 different rate brackets (1km, 1-10km, 10-20km, 20-40km, 40-60km, 60-80km, 80km+)
+- **Waiting Time Charges**: ฿3 per minute when speed < 6 km/hr
+- **Additional Services**: App booking (+฿20) and Airport surcharge (+฿50)
+- **Accurate Rate Structure**: Matches official government taxi meter rates
+
+### 🎨 User Interface Features
+- **Simple 2-Input Design**: Main focus on distance and traffic time
+- **Service Options**: Checkboxes for additional services
+- **Detailed Breakdown**: Shows base fare, distance fare, waiting fare, and extras separately
+- **Legal Reference**: Notes official rate announcement date and authority
+- **Responsive Layout**: Works seamlessly on all devices
+
+### 🔧 Technical Architecture
+- **Modular Design**: Created separate `taxi-calculator.js` file for reusability
+- **Independent Functions**: Each calculation aspect separated for easy maintenance
+- **Input Validation**: Comprehensive error checking and user feedback
+- **Bilingual Support**: Full Thai/English interface and results
+
+### 📋 Available Calculators (2 Working)
+1. **MRT Time Calculator** 🚇
+   - Complete 4-line Bangkok MRT system (109 stations)
+   - Expandable route details with station-by-station breakdown
+   - Travel time and fare calculations
+   
+2. **Taxi Fare Calculator** 🚕 *(New)*
+   - Official Bangkok taxi rates
+   - Distance + traffic time inputs
+   - Detailed fare breakdown
+   - Additional service charges
+
+### 🧪 Testing Verified
+- **Sample Calculation**: 5km + 10min wait + app booking = ฿111
+- **Rate Accuracy**: All 6 distance brackets tested
+- **UI/UX Flow**: Complete user journey validation
+- **Multi-language**: Thai/English switching functionality
+
+---
+
 ## v1.2.0 - Expandable Route Details (2025-07-05)
 
 ### ✨ Major New Features

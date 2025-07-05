@@ -875,6 +875,9 @@
           } else if (type === 'taxi-fare') {
             title.textContent = currentLanguage === 'th' ? '🚕 คำนวณค่าแท็กซี่' : '🚕 Taxi Fare Calculator';
             content.innerHTML = getTaxiCalculatorHTML();
+          } else if (type === 'btu') {
+            title.textContent = currentLanguage === 'th' ? '❄️ คำนวณ BTU เครื่องปรับอากาศ' : '❄️ BTU Air Conditioner Calculator';
+            content.innerHTML = getBTUCalculatorHTML();
           } else {
             title.textContent = currentLanguage === 'th' ? 'เครื่องคิดเลขกำลังพัฒนา!' : 'Calculator Coming Soon!';
             content.innerHTML = `<p class="text-center py-8 text-gray-500">${currentLanguage === 'th' ? 'เครื่องคิดเลขนี้อยู่ระหว่างการพัฒนา กรุณากลับมาใหม่ภายหลัง!' : 'This calculator is under development. Please check back later!'}</p>`;
@@ -1008,6 +1011,379 @@
               <div class="p-3 bg-yellow-50 rounded text-sm">
                 <strong>${isEnglish ? 'Note:' : 'หมายเหตุ:'}</strong>
                 ${isEnglish ? 'Rates according to Ministry of Transport announcement (effective Jan 13, 2023)' : 'อัตราตามประกาศกระทรวงคมนาคม (มีผลบังคับใช้ 13 มกราคม 2566)'}
+              </div>
+            </div>
+          `;
+        }
+
+        // ======================
+        // BTU CALCULATOR
+        // ======================
+
+        // BTU Constants (inline version)
+        const BTU_CONSTANTS = {
+          BASE_BTU_PER_SQM: 600,
+          BASE_BTU_PER_SQFT: 25,
+          
+          DIRECTION_FACTORS: {
+            north: 0.9,
+            northeast: 0.95,
+            east: 1.0,
+            southeast: 1.1,
+            south: 1.15,
+            southwest: 1.1,
+            west: 1.05,
+            northwest: 0.95
+          },
+          
+          FLOOR_FACTORS: {
+            ground: 0.95,
+            middle: 1.0,
+            top: 1.15
+          },
+          
+          PEOPLE_BTU: 600,
+          
+          APPLIANCE_BTU: {
+            computer: 300,
+            tv: 200,
+            refrigerator: 1000,
+            lighting: 100,
+            oven: 2000
+          },
+          
+          CEILING_HEIGHT_FACTORS: {
+            low: 0.9,
+            normal: 1.0,
+            high: 1.1
+          },
+          
+          ROOM_TYPE_FACTORS: {
+            bedroom: 0.9,
+            living: 1.0,
+            kitchen: 1.2,
+            office: 1.1,
+            server: 1.5
+          }
+        };
+
+        const STANDARD_BTU_SIZES = [
+          { btu: 9000, ton: 0.75, type: '9,000 BTU (3/4 ตัน)' },
+          { btu: 12000, ton: 1.0, type: '12,000 BTU (1 ตัน)' },
+          { btu: 18000, ton: 1.5, type: '18,000 BTU (1.5 ตัน)' },
+          { btu: 24000, ton: 2.0, type: '24,000 BTU (2 ตัน)' },
+          { btu: 30000, ton: 2.5, type: '30,000 BTU (2.5 ตัน)' },
+          { btu: 36000, ton: 3.0, type: '36,000 BTU (3 ตัน)' },
+          { btu: 42000, ton: 3.5, type: '42,000 BTU (3.5 ตัน)' },
+          { btu: 48000, ton: 4.0, type: '48,000 BTU (4 ตัน)' }
+        ];
+
+        function calculateBaseBTU(area, unit = 'sqm') {
+          if (area <= 0) return 0;
+          
+          if (unit === 'sqft') {
+            return area * BTU_CONSTANTS.BASE_BTU_PER_SQFT;
+          } else {
+            return area * BTU_CONSTANTS.BASE_BTU_PER_SQM;
+          }
+        }
+
+        function findRecommendedACSize(requiredBTU) {
+          const suitable = STANDARD_BTU_SIZES.find(size => size.btu >= requiredBTU);
+          
+          if (!suitable) {
+            const largestSize = STANDARD_BTU_SIZES[STANDARD_BTU_SIZES.length - 1];
+            const machineCount = Math.ceil(requiredBTU / largestSize.btu);
+            
+            return {
+              single: false,
+              machineCount,
+              eachMachine: largestSize,
+              totalBTU: machineCount * largestSize.btu,
+              message: `แนะนำใช้ ${machineCount} เครื่อง ขนาด ${largestSize.type} แต่ละเครื่อง`
+            };
+          }
+          
+          return {
+            single: true,
+            recommended: suitable,
+            efficiency: Math.round((requiredBTU / suitable.btu) * 100),
+            message: `แนะนำขนาด ${suitable.type}`
+          };
+        }
+
+        function calculateBTUTotal({
+          area,
+          unit = 'sqm',
+          direction = 'east',
+          floor = 'middle',
+          peopleCount = 2,
+          roomType = 'living',
+          ceilingHeight = 'normal',
+          appliances = {
+            computer: 0,
+            tv: 0,
+            refrigerator: 0,
+            lighting: 0,
+            oven: 0
+          }
+        }) {
+          if (area <= 0) {
+            return {
+              error: 'พื้นที่ห้องต้องมากกว่า 0',
+              errorEN: 'Room area must be greater than 0'
+            };
+          }
+          
+          const baseBTU = calculateBaseBTU(area, unit);
+          
+          const directionFactor = BTU_CONSTANTS.DIRECTION_FACTORS[direction] || 1.0;
+          const floorFactor = BTU_CONSTANTS.FLOOR_FACTORS[floor] || 1.0;
+          const roomTypeFactor = BTU_CONSTANTS.ROOM_TYPE_FACTORS[roomType] || 1.0;
+          const ceilingFactor = BTU_CONSTANTS.CEILING_HEIGHT_FACTORS[ceilingHeight] || 1.0;
+          
+          const peopleBTU = peopleCount * BTU_CONSTANTS.PEOPLE_BTU;
+          
+          let applianceBTU = 0;
+          Object.keys(appliances).forEach(appliance => {
+            const count = appliances[appliance] || 0;
+            const btuPerUnit = BTU_CONSTANTS.APPLIANCE_BTU[appliance] || 0;
+            applianceBTU += count * btuPerUnit;
+          });
+          
+          const adjustedBaseBTU = baseBTU * directionFactor * floorFactor * roomTypeFactor * ceilingFactor;
+          const totalBTU = adjustedBaseBTU + peopleBTU + applianceBTU;
+          
+          const recommendedSize = findRecommendedACSize(totalBTU);
+          
+          return {
+            success: true,
+            calculation: {
+              baseBTU: Math.round(baseBTU),
+              adjustedBaseBTU: Math.round(adjustedBaseBTU),
+              peopleBTU,
+              applianceBTU,
+              totalBTU: Math.round(totalBTU)
+            },
+            factors: {
+              direction: directionFactor,
+              floor: floorFactor,
+              roomType: roomTypeFactor,
+              ceiling: ceilingFactor
+            },
+            recommendation: recommendedSize,
+            area,
+            unit
+          };
+        }
+
+        function getBTUCalculatorHTML() {
+          const isEnglish = currentLanguage === 'en';
+          
+          return `
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div class="bg-gray-50 p-4 rounded-lg">
+                <h3 class="font-semibold mb-4">${isEnglish ? 'Room Details' : 'รายละเอียดห้อง'}</h3>
+                <div class="space-y-4">
+                  <div class="grid grid-cols-2 gap-2">
+                    <div>
+                      <label class="block text-sm font-medium mb-2">${isEnglish ? 'Area' : 'พื้นที่'}</label>
+                      <input type="number" id="btuArea" placeholder="${isEnglish ? 'Enter area' : 'ใส่พื้นที่'}" 
+                             class="w-full px-3 py-2 border rounded-lg" min="1" step="0.1">
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium mb-2">${isEnglish ? 'Unit' : 'หน่วย'}</label>
+                      <select id="btuUnit" class="w-full px-3 py-2 border rounded-lg">
+                        <option value="sqm">${isEnglish ? 'Square meters (m²)' : 'ตารางเมตร (ตร.ม.)'}</option>
+                        <option value="sqft">${isEnglish ? 'Square feet (ft²)' : 'ตารางฟุต (ตร.ฟต.)'}</option>
+                      </select>
+                    </div>
+                  </div>
+                  
+                  <div class="grid grid-cols-2 gap-2">
+                    <div>
+                      <label class="block text-sm font-medium mb-2">${isEnglish ? 'Direction' : 'ทิศทาง'}</label>
+                      <select id="btuDirection" class="w-full px-3 py-2 border rounded-lg">
+                        <option value="north">${isEnglish ? 'North' : 'เหนือ'}</option>
+                        <option value="northeast">${isEnglish ? 'Northeast' : 'ตะวันออกเฉียงเหนือ'}</option>
+                        <option value="east" selected>${isEnglish ? 'East' : 'ตะวันออก'}</option>
+                        <option value="southeast">${isEnglish ? 'Southeast' : 'ตะวันออกเฉียงใต้'}</option>
+                        <option value="south">${isEnglish ? 'South' : 'ใต้'}</option>
+                        <option value="southwest">${isEnglish ? 'Southwest' : 'ตะวันตกเฉียงใต้'}</option>
+                        <option value="west">${isEnglish ? 'West' : 'ตะวันตก'}</option>
+                        <option value="northwest">${isEnglish ? 'Northwest' : 'ตะวันตกเฉียงเหนือ'}</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium mb-2">${isEnglish ? 'Floor' : 'ชั้น'}</label>
+                      <select id="btuFloor" class="w-full px-3 py-2 border rounded-lg">
+                        <option value="ground">${isEnglish ? 'Ground floor' : 'ชั้นล่าง'}</option>
+                        <option value="middle" selected>${isEnglish ? 'Middle floor' : 'ชั้นกลาง'}</option>
+                        <option value="top">${isEnglish ? 'Top floor' : 'ชั้นบนสุด'}</option>
+                      </select>
+                    </div>
+                  </div>
+                  
+                  <div class="grid grid-cols-2 gap-2">
+                    <div>
+                      <label class="block text-sm font-medium mb-2">${isEnglish ? 'Room Type' : 'ประเภทห้อง'}</label>
+                      <select id="btuRoomType" class="w-full px-3 py-2 border rounded-lg">
+                        <option value="bedroom">${isEnglish ? 'Bedroom' : 'ห้องนอน'}</option>
+                        <option value="living" selected>${isEnglish ? 'Living room' : 'ห้องนั่งเล่น'}</option>
+                        <option value="kitchen">${isEnglish ? 'Kitchen' : 'ห้องครัว'}</option>
+                        <option value="office">${isEnglish ? 'Office' : 'ห้องทำงาน'}</option>
+                        <option value="server">${isEnglish ? 'Server room' : 'ห้องเซิร์ฟเวอร์'}</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium mb-2">${isEnglish ? 'Ceiling Height' : 'ความสูงเพดาน'}</label>
+                      <select id="btuCeiling" class="w-full px-3 py-2 border rounded-lg">
+                        <option value="low">${isEnglish ? 'Low (< 2.5m)' : 'ต่ำ (< 2.5 ม.)'}</option>
+                        <option value="normal" selected>${isEnglish ? 'Normal (2.5-3m)' : 'ปกติ (2.5-3 ม.)'}</option>
+                        <option value="high">${isEnglish ? 'High (> 3m)' : 'สูง (> 3 ม.)'}</option>
+                      </select>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label class="block text-sm font-medium mb-2">${isEnglish ? 'Number of People' : 'จำนวนคน'}</label>
+                    <input type="number" id="btuPeople" value="2" min="0" max="50"
+                           class="w-full px-3 py-2 border rounded-lg">
+                  </div>
+                  
+                  <div>
+                    <label class="block text-sm font-medium mb-2">${isEnglish ? 'Electrical Appliances' : 'อุปกรณ์ไฟฟ้า'}</label>
+                    <div class="grid grid-cols-2 gap-2 text-sm">
+                      <div class="flex justify-between items-center">
+                        <span>${isEnglish ? 'Computer' : 'คอมพิวเตอร์'}</span>
+                        <input type="number" id="btuComputer" value="0" min="0" max="10" class="w-16 px-2 py-1 border rounded text-center">
+                      </div>
+                      <div class="flex justify-between items-center">
+                        <span>${isEnglish ? 'TV' : 'ทีวี'}</span>
+                        <input type="number" id="btuTv" value="0" min="0" max="5" class="w-16 px-2 py-1 border rounded text-center">
+                      </div>
+                      <div class="flex justify-between items-center">
+                        <span>${isEnglish ? 'Refrigerator' : 'ตู้เย็น'}</span>
+                        <input type="number" id="btuRefrigerator" value="0" min="0" max="3" class="w-16 px-2 py-1 border rounded text-center">
+                      </div>
+                      <div class="flex justify-between items-center">
+                        <span>${isEnglish ? 'Lighting' : 'หลอดไฟ'}</span>
+                        <input type="number" id="btuLighting" value="0" min="0" max="20" class="w-16 px-2 py-1 border rounded text-center">
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <button onclick="calculateBTU()" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                    ${isEnglish ? 'Calculate BTU' : 'คำนวณ BTU'}
+                  </button>
+                </div>
+              </div>
+              
+              <div class="bg-gray-50 p-4 rounded-lg">
+                <h3 class="font-semibold mb-4">${isEnglish ? 'Calculation Results' : 'ผลการคำนวณ'}</h3>
+                <div id="btuResults" class="text-center py-8 text-gray-500">
+                  ${isEnglish ? 'Enter room details and click calculate' : 'ใส่รายละเอียดห้องและกดคำนวณ'}
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        function calculateBTU() {
+          const area = parseFloat(document.getElementById('btuArea').value);
+          const unit = document.getElementById('btuUnit').value;
+          const direction = document.getElementById('btuDirection').value;
+          const floor = document.getElementById('btuFloor').value;
+          const roomType = document.getElementById('btuRoomType').value;
+          const ceilingHeight = document.getElementById('btuCeiling').value;
+          const peopleCount = parseInt(document.getElementById('btuPeople').value) || 0;
+          
+          const appliances = {
+            computer: parseInt(document.getElementById('btuComputer').value) || 0,
+            tv: parseInt(document.getElementById('btuTv').value) || 0,
+            refrigerator: parseInt(document.getElementById('btuRefrigerator').value) || 0,
+            lighting: parseInt(document.getElementById('btuLighting').value) || 0,
+            oven: 0
+          };
+          
+          const results = document.getElementById('btuResults');
+          const isEnglish = currentLanguage === 'en';
+          
+          if (!area || area <= 0) {
+            results.innerHTML = `<p class="text-red-500">${isEnglish ? 'Please enter a valid area' : 'กรุณาใส่พื้นที่ที่ถูกต้อง'}</p>`;
+            return;
+          }
+          
+          const result = calculateBTUTotal({
+            area,
+            unit,
+            direction,
+            floor,
+            peopleCount,
+            roomType,
+            ceilingHeight,
+            appliances
+          });
+          
+          if (result.error) {
+            results.innerHTML = `<p class="text-red-500">${isEnglish ? result.errorEN : result.error}</p>`;
+            return;
+          }
+          
+          const calculation = result.calculation;
+          const recommendation = result.recommendation;
+          
+          results.innerHTML = `
+            <div class="space-y-3 text-left">
+              <div class="p-3 bg-blue-50 rounded">
+                <strong>${isEnglish ? 'Room:' : 'ห้อง:'}</strong> ${area} ${unit === 'sqm' ? (isEnglish ? 'm²' : 'ตร.ม.') : (isEnglish ? 'ft²' : 'ตร.ฟต.')}<br>
+                <strong>${isEnglish ? 'People:' : 'จำนวนคน:'}</strong> ${peopleCount} ${isEnglish ? 'people' : 'คน'}
+              </div>
+              
+              <div class="p-3 bg-green-50 rounded">
+                <h4 class="font-semibold mb-2">${isEnglish ? 'BTU Breakdown' : 'รายละเอียด BTU'}</h4>
+                <div class="space-y-1 text-sm">
+                  <div class="flex justify-between">
+                    <span>${isEnglish ? 'Base BTU:' : 'BTU พื้นฐาน:'}</span>
+                    <span>${calculation.baseBTU.toLocaleString()}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span>${isEnglish ? 'Room adjustments:' : 'ปรับตามห้อง:'}</span>
+                    <span>${(calculation.adjustedBaseBTU - calculation.baseBTU).toLocaleString()}</span>
+                  </div>
+                  ${calculation.peopleBTU > 0 ? `
+                  <div class="flex justify-between">
+                    <span>${isEnglish ? 'People BTU:' : 'BTU จากคน:'}</span>
+                    <span>+${calculation.peopleBTU.toLocaleString()}</span>
+                  </div>` : ''}
+                  ${calculation.applianceBTU > 0 ? `
+                  <div class="flex justify-between">
+                    <span>${isEnglish ? 'Appliances BTU:' : 'BTU จากอุปกรณ์:'}</span>
+                    <span>+${calculation.applianceBTU.toLocaleString()}</span>
+                  </div>` : ''}
+                  <hr class="my-2">
+                  <div class="flex justify-between font-semibold text-lg">
+                    <span>${isEnglish ? 'Total BTU Required:' : 'BTU ที่ต้องการรวม:'}</span>
+                    <span class="text-green-600">${calculation.totalBTU.toLocaleString()}</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="p-3 bg-purple-50 rounded">
+                <h4 class="font-semibold mb-2">${isEnglish ? 'Recommendation' : 'คำแนะนำ'}</h4>
+                ${recommendation.single ? `
+                  <p class="text-sm"><strong>${isEnglish ? 'Recommended Size:' : 'ขนาดที่แนะนำ:'}</strong></p>
+                  <p class="text-lg font-semibold text-purple-600">${recommendation.recommended.type}</p>
+                  <p class="text-sm text-gray-600">${isEnglish ? 'Efficiency:' : 'ประสิทธิภาพ:'} ${recommendation.efficiency}%</p>
+                ` : `
+                  <p class="text-sm text-orange-600"><strong>${isEnglish ? 'Large Area Alert:' : 'ห้องใหญ่:'}</strong></p>
+                  <p class="text-sm">${recommendation.message}</p>
+                `}
+              </div>
+              
+              <div class="p-3 bg-yellow-50 rounded text-sm">
+                <strong>${isEnglish ? 'Tips:' : 'คำแนะนำ:'}</strong>
+                ${isEnglish ? 'Choose Inverter AC for energy saving. Consider room insulation for better efficiency.' : 'เลือกแอร์ Inverter ประหยัดไฟ พิจารณาฉนวนกันความร้อนเพื่อประสิทธิภาพดีขึ้น'}
               </div>
             </div>
           `;

@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm init:*)",
+      "Bash(npm install:*)",
+      "Bash(mkdir:*)",
+      "Bash(npx tailwindcss:*)",
+      "Bash(npm run dev:*)",
+      "Bash(npm run build:*)",
+      "Bash(npx tsc:*)",
+      "Bash(pkill:*)",
+      "Bash(curl:*)",
+      "mcp__ide__getDiagnostics",
+      "Bash(ss:*)",
+      "Bash(PORT=3001 npm run dev)",
+      "Bash(node:*)",
+      "Bash(explorer.exe test-preview.html)",
+      "Bash(chmod:*)"
+    ],
+    "deny": []
+  }
+}

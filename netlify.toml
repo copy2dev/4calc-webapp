@@ -1,0 +1,85 @@
+# Netlify Configuration for 4Calc
+[build]
+  # Build command
+  command = "node build-netlify.js"
+  
+  # Publish directory (root because we copy files)
+  publish = "."
+  
+  # Build environment
+  environment = { NODE_ENV = "production" }
+
+[build.environment]
+  NODE_VERSION = "18"
+
+# Headers for security and performance
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+[[headers]]
+  for = "*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# Redirects and rewrites
+[[redirects]]
+  from = "/health"
+  to = "/.netlify/functions/health"
+  status = 200
+
+# Form handling (if needed in the future)
+[build.processing]
+  skip_processing = false
+
+[build.processing.css]
+  bundle = true
+  minify = true
+
+[build.processing.js]
+  bundle = true
+  minify = true
+
+[build.processing.html]
+  pretty_urls = true
+
+# Plugin configuration
+[[plugins]]
+  package = "@netlify/plugin-lighthouse"
+  
+  [plugins.inputs.thresholds]
+    performance = 0.9
+    accessibility = 0.9
+    best-practices = 0.9
+    seo = 0.9
+
+# Branch-specific settings
+[context.production]
+  command = "NODE_ENV=production node build.js && cp dist/* ."
+  
+[context.deploy-preview]
+  command = "NODE_ENV=staging node build.js && cp dist/* ."
+  
+[context.branch-deploy]
+  command = "NODE_ENV=development node build.js && cp dist/* ."
+
+# Dev server settings (for local development)
+[dev]
+  command = "node server.js"
+  port = 3000
+  publish = "."

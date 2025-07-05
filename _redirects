@@ -1,0 +1,10 @@
+# Netlify redirects for 4Calc
+
+# Health check endpoint
+/health    /.netlify/functions/health    200
+
+# API endpoints (for future use)
+/api/*     /.netlify/functions/:splat    200
+
+# SPA fallback
+/*         /index.html                   200

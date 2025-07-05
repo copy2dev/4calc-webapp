@@ -1,0 +1,51 @@
+{
+  "name": "4calc-webapp",
+  "version": "1.0.0",
+  "description": "4Calc - ศูนย์รวมเครื่องคิดเลขครบครัน | All-in-One Calculator Hub",
+  "main": "server.js",
+  "private": true,
+  "scripts": {
+    "dev": "node server.js",
+    "build": "node build.js",
+    "start": "node server.js",
+    "release:patch": "node release.js patch",
+    "release:minor": "node release.js minor", 
+    "release:major": "node release.js major",
+    "deploy": "npm run build && cd dist && ./deploy.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/copy2dev/4calc-webapp.git"
+  },
+  "keywords": [
+    "calculator",
+    "thai",
+    "english",
+    "mrt",
+    "taxi",
+    "pregnancy",
+    "finance",
+    "utilities",
+    "responsive",
+    "web-app"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/copy2dev/4calc-webapp/issues"
+  },
+  "homepage": "https://github.com/copy2dev/4calc-webapp#readme",
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {},
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}

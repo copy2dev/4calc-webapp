@@ -12,6 +12,11 @@
         .lang-btn { position: relative; }
         .lang-dropdown { display: none; position: absolute; top: 100%; right: 0; background: white; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 50; min-width: 120px; }
         .lang-dropdown.show { display: block; }
+        .expandable-section { transition: all 0.3s ease-out; overflow: hidden; }
+        .expandable-content { max-height: 0; transition: max-height 0.3s ease-out; overflow: hidden; }
+        .expandable-content.expanded { max-height: 1000px; }
+        .expand-icon { transition: transform 0.3s ease; }
+        .expand-icon.rotated { transform: rotate(180deg); }
     </style>
 
 <!-- 4Calc v1.1.0 -->
@@ -434,7 +439,7 @@
             noResultsTitle: 'No calculators found', 
             noResultsDesc: 'Try adjusting your search or selecting a different category' 
           } 
-        }; const calculators = { th: [ { id: 'mrt-time', name: 'คำนวณเวลาเดินทาง MRT', description: 'คำนวณเวลาเดินทางระหว่างสถานี MRT', emoji: '🚇', category: 'transportation' }, { id: 'taxi-fare', name: 'คำนวณค่าแท็กซี่', description: 'คำนวณค่าแท็กซี่ตามระยะทางและเวลา', emoji: '🚕', category: 'transportation' }, { id: 'pregnancy', name: 'คำนวณอายุครรภ์', description: 'คำนวณกำหนดคลอดและ milestone สำคัญ', emoji: '🤱', category: 'health' }, { id: 'interest', name: 'คำนวณดอกเบี้ย', description: 'คำนวณดอกเบี้ยแบบง่ายและทบต้น', emoji: '💰', category: 'finance' }, { id: 'btu', name: 'คำนวณ BTU', description: 'คำนวณความต้องการ BTU สำหรับเครื่องปรับอากาศ', emoji: '❄️', category: 'utilities' }, { id: 'distance', name: 'คำนวณระยะทาง', description: 'คำนวณระยะทางระหว่างสองจุด', emoji: '📍', category: 'geography' } ], en: [ { id: 'mrt-time', name: 'MRT Time Calculator', description: 'Calculate travel time between MRT stations', emoji: '🚇', category: 'transportation' }, { id: 'taxi-fare', name: 'Taxi Fare Calculator', description: 'Calculate taxi fare based on distance and time', emoji: '🚕', category: 'transportation' }, { id: 'pregnancy', name: 'Pregnancy Calculator', description: 'Calculate due date and pregnancy milestones', emoji: '🤱', category: 'health' }, { id: 'interest', name: 'Interest Calculator', description: 'Calculate simple and compound interest', emoji: '💰', category: 'finance' }, { id: 'btu', name: 'BTU Calculator', description: 'Calculate BTU requirements for air conditioning', emoji: '❄️', category: 'utilities' }, { id: 'distance', name: 'Distance Calculator', description: 'Calculate distance between two points', emoji: '📍', category: 'geography' } ] }; document.addEventListener('DOMContentLoaded', function() { updateLanguage(); renderCalculators(); setupEventListeners(); }); function setupEventListeners() { document.getElementById('langButton').addEventListener('click', function() { const dropdown = document.getElementById('langDropdown'); dropdown.classList.toggle('show'); }); document.addEventListener('click', function(event) { if (!event.target.closest('.lang-btn')) { document.getElementById('langDropdown').classList.remove('show'); } }); document.getElementById('searchInput').addEventListener('input', function(e) { renderCalculators(e.target.value); }); document.querySelectorAll('.category-btn').forEach(btn => { btn.addEventListener('click', function() { const category = this.dataset.category; document.querySelectorAll('.category-btn').forEach(b => { b.className = 'category-btn px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors'; }); this.className = 'category-btn px-4 py-2 bg-blue-600 text-white border border-blue-600 rounded-lg hover:bg-blue-700 transition-colors'; selectedCategory = category === 'all' ? null : category; renderCalculators(); }); }); } function switchLanguage(lang) { currentLanguage = lang; localStorage.setItem('language', lang); const flagMap = { th: '🇹🇭', en: '🇺🇸' }; const nameMap = { th: 'ไทย', en: 'English' }; document.getElementById('currentFlag').textContent = flagMap[lang]; document.getElementById('currentLang').textContent = nameMap[lang]; document.getElementById('langDropdown').classList.remove('show'); updateLanguage(); renderCalculators(); } function updateLanguage() { const t = translations[currentLanguage]; document.getElementById('siteSubtitle').textContent = t.siteSubtitle; document.getElementById('welcomeText').textContent = t.welcomeText; document.getElementById('welcomeDescription').textContent = t.welcomeDescription; document.getElementById('searchInput').placeholder = t.searchPlaceholder; document.getElementById('nav-home').textContent = t.navHome; document.getElementById('nav-categories').textContent = t.navCategories; document.getElementById('nav-about').textContent = t.navAbout; document.getElementById('needNewCalc').textContent = t.needNewCalc; document.getElementById('newCalcDesc').textContent = t.newCalcDesc; document.getElementById('requestCalcBtn').textContent = t.requestCalcBtn; document.getElementById('footerText').textContent = t.footerText; const categoryTexts = [t.allCategories, t.transportation, t.health, t.finance, t.utilities, t.geography]; document.querySelectorAll('.category-btn span:last-child').forEach((span, index) => { span.textContent = categoryTexts[index]; }); } function renderCalculators(searchTerm = '') { const grid = document.getElementById('calculatorGrid'); const noResults = document.getElementById('noResults'); const currentCalculators = calculators[currentLanguage]; let filtered = currentCalculators.filter(calc => { const matchesSearch = calc.name.toLowerCase().includes(searchTerm.toLowerCase()) || calc.description.toLowerCase().includes(searchTerm.toLowerCase()); const matchesCategory = !selectedCategory || calc.category === selectedCategory; return matchesSearch && matchesCategory; }); if (filtered.length === 0) { grid.classList.add('hidden'); noResults.classList.remove('hidden'); return; } grid.classList.remove('hidden'); noResults.classList.add('hidden'); grid.innerHTML = filtered.map(calc => ` <div class="calculator-card bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer" onclick="showCalculator('${calc.id}')"> <div class="text-3xl mb-4">${calc.emoji}</div> <h3 class="text-lg font-semibold mb-2">${calc.name}</h3> <p class="text-gray-600 mb-3">${calc.description}</p> <span class="text-sm text-blue-600 font-medium"> ${translations[currentLanguage][calc.category]} </span> </div> `).join(''); } function showCalculator(type) { const modal = document.getElementById('calculatorModal'); const title = document.getElementById('modalTitle'); const content = document.getElementById('modalContent'); modal.classList.remove('hidden'); modal.classList.add('flex'); if (type === 'mrt-time') { title.textContent = currentLanguage === 'th' ? '🚇 คำนวณเวลาเดินทาง MRT' : '🚇 MRT Time Calculator'; content.innerHTML = getMRTCalculatorHTML(); } else { title.textContent = currentLanguage === 'th' ? 'เครื่องคิดเลขกำลังพัฒนา!' : 'Calculator Coming Soon!'; content.innerHTML = `<p class="text-center py-8 text-gray-500">${currentLanguage === 'th' ? 'เครื่องคิดเลขนี้อยู่ระหว่างการพัฒนา กรุณากลับมาใหม่ภายหลัง!' : 'This calculator is under development. Please check back later!'}</p>`; } } function closeCalculator() { const modal = document.getElementById('calculatorModal'); modal.classList.add('hidden'); modal.classList.remove('flex'); } function getMRTCalculatorHTML() {
+        }; const calculators = { th: [ { id: 'mrt-time', name: 'คำนวณเวลาเดินทาง MRT', description: 'คำนวณเวลาเดินทางระหว่างสถานี MRT', emoji: '🚇', category: 'transportation' }, { id: 'taxi-fare', name: 'คำนวณค่าแท็กซี่', description: 'คำนวณค่าแท็กซี่ตามระยะทางและเวลา', emoji: '🚕', category: 'transportation' }, { id: 'pregnancy', name: 'คำนวณอายุครรภ์', description: 'คำนวณกำหนดคลอดและ milestone สำคัญ', emoji: '🤱', category: 'health' }, { id: 'interest', name: 'คำนวณดอกเบี้ย', description: 'คำนวณดอกเบี้ยแบบง่ายและทบต้น', emoji: '💰', category: 'finance' }, { id: 'solar', name: 'คำนวณโซลาร์เซลล์', description: 'คำนวณผลตอบแทนและความคุ้มค่าของระบบโซลาร์', emoji: '☀️', category: 'utilities' }, { id: 'btu', name: 'คำนวณ BTU', description: 'คำนวณความต้องการ BTU สำหรับเครื่องปรับอากาศ', emoji: '❄️', category: 'utilities' }, { id: 'distance', name: 'คำนวณระยะทาง', description: 'คำนวณระยะทางระหว่างสองจุด', emoji: '📍', category: 'geography' } ], en: [ { id: 'mrt-time', name: 'MRT Time Calculator', description: 'Calculate travel time between MRT stations', emoji: '🚇', category: 'transportation' }, { id: 'taxi-fare', name: 'Taxi Fare Calculator', description: 'Calculate taxi fare based on distance and time', emoji: '🚕', category: 'transportation' }, { id: 'pregnancy', name: 'Pregnancy Calculator', description: 'Calculate due date and pregnancy milestones', emoji: '🤱', category: 'health' }, { id: 'interest', name: 'Interest Calculator', description: 'Calculate simple and compound interest', emoji: '💰', category: 'finance' }, { id: 'solar', name: 'Solar Rooftop Calculator', description: 'Calculate ROI and savings for solar panel systems', emoji: '☀️', category: 'utilities' }, { id: 'btu', name: 'BTU Calculator', description: 'Calculate BTU requirements for air conditioning', emoji: '❄️', category: 'utilities' }, { id: 'distance', name: 'Distance Calculator', description: 'Calculate distance between two points', emoji: '📍', category: 'geography' } ] }; document.addEventListener('DOMContentLoaded', function() { updateLanguage(); renderCalculators(); setupEventListeners(); }); function setupEventListeners() { document.getElementById('langButton').addEventListener('click', function() { const dropdown = document.getElementById('langDropdown'); dropdown.classList.toggle('show'); }); document.addEventListener('click', function(event) { if (!event.target.closest('.lang-btn')) { document.getElementById('langDropdown').classList.remove('show'); } }); document.getElementById('searchInput').addEventListener('input', function(e) { renderCalculators(e.target.value); }); document.querySelectorAll('.category-btn').forEach(btn => { btn.addEventListener('click', function() { const category = this.dataset.category; document.querySelectorAll('.category-btn').forEach(b => { b.className = 'category-btn px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors'; }); this.className = 'category-btn px-4 py-2 bg-blue-600 text-white border border-blue-600 rounded-lg hover:bg-blue-700 transition-colors'; selectedCategory = category === 'all' ? null : category; renderCalculators(); }); }); } function switchLanguage(lang) { currentLanguage = lang; localStorage.setItem('language', lang); const flagMap = { th: '🇹🇭', en: '🇺🇸' }; const nameMap = { th: 'ไทย', en: 'English' }; document.getElementById('currentFlag').textContent = flagMap[lang]; document.getElementById('currentLang').textContent = nameMap[lang]; document.getElementById('langDropdown').classList.remove('show'); updateLanguage(); renderCalculators(); } function updateLanguage() { const t = translations[currentLanguage]; document.getElementById('siteSubtitle').textContent = t.siteSubtitle; document.getElementById('welcomeText').textContent = t.welcomeText; document.getElementById('welcomeDescription').textContent = t.welcomeDescription; document.getElementById('searchInput').placeholder = t.searchPlaceholder; document.getElementById('nav-home').textContent = t.navHome; document.getElementById('nav-categories').textContent = t.navCategories; document.getElementById('nav-about').textContent = t.navAbout; document.getElementById('needNewCalc').textContent = t.needNewCalc; document.getElementById('newCalcDesc').textContent = t.newCalcDesc; document.getElementById('requestCalcBtn').textContent = t.requestCalcBtn; document.getElementById('footerText').textContent = t.footerText; const categoryTexts = [t.allCategories, t.transportation, t.health, t.finance, t.utilities, t.geography]; document.querySelectorAll('.category-btn span:last-child').forEach((span, index) => { span.textContent = categoryTexts[index]; }); } function renderCalculators(searchTerm = '') { const grid = document.getElementById('calculatorGrid'); const noResults = document.getElementById('noResults'); const currentCalculators = calculators[currentLanguage]; let filtered = currentCalculators.filter(calc => { const matchesSearch = calc.name.toLowerCase().includes(searchTerm.toLowerCase()) || calc.description.toLowerCase().includes(searchTerm.toLowerCase()); const matchesCategory = !selectedCategory || calc.category === selectedCategory; return matchesSearch && matchesCategory; }); if (filtered.length === 0) { grid.classList.add('hidden'); noResults.classList.remove('hidden'); return; } grid.classList.remove('hidden'); noResults.classList.add('hidden'); grid.innerHTML = filtered.map(calc => ` <div class="calculator-card bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer" onclick="showCalculator('${calc.id}')"> <div class="text-3xl mb-4">${calc.emoji}</div> <h3 class="text-lg font-semibold mb-2">${calc.name}</h3> <p class="text-gray-600 mb-3">${calc.description}</p> <span class="text-sm text-blue-600 font-medium"> ${translations[currentLanguage][calc.category]} </span> </div> `).join(''); } function showCalculator(type) { const modal = document.getElementById('calculatorModal'); const title = document.getElementById('modalTitle'); const content = document.getElementById('modalContent'); modal.classList.remove('hidden'); modal.classList.add('flex'); if (type === 'mrt-time') { title.textContent = currentLanguage === 'th' ? '🚇 คำนวณเวลาเดินทาง MRT' : '🚇 MRT Time Calculator'; content.innerHTML = getMRTCalculatorHTML(); } else { title.textContent = currentLanguage === 'th' ? 'เครื่องคิดเลขกำลังพัฒนา!' : 'Calculator Coming Soon!'; content.innerHTML = `<p class="text-center py-8 text-gray-500">${currentLanguage === 'th' ? 'เครื่องคิดเลขนี้อยู่ระหว่างการพัฒนา กรุณากลับมาใหม่ภายหลัง!' : 'This calculator is under development. Please check back later!'}</p>`; } } function closeCalculator() { const modal = document.getElementById('calculatorModal'); modal.classList.add('hidden'); modal.classList.remove('flex'); } function getMRTCalculatorHTML() {
           const isEnglish = currentLanguage === 'en';
           
           // Generate station options from comprehensive data
@@ -884,6 +889,12 @@
           } else if (type === 'interest') {
             title.textContent = currentLanguage === 'th' ? '💰 คำนวณดอกเบี้ย' : '💰 Interest Calculator';
             content.innerHTML = getInterestCalculatorHTML();
+          } else if (type === 'distance') {
+            title.textContent = currentLanguage === 'th' ? '📏 คำนวณระยะทาง' : '📏 Distance Calculator';
+            content.innerHTML = getDistanceCalculatorHTML();
+          } else if (type === 'solar') {
+            title.textContent = currentLanguage === 'th' ? '☀️ คำนวณโซลาร์เซลล์บนหลังคา' : '☀️ Solar Rooftop Calculator';
+            content.innerHTML = getSolarCalculatorHTML();
           } else {
             title.textContent = currentLanguage === 'th' ? 'เครื่องคิดเลขกำลังพัฒนา!' : 'Calculator Coming Soon!';
             content.innerHTML = `<p class="text-center py-8 text-gray-500">${currentLanguage === 'th' ? 'เครื่องคิดเลขนี้อยู่ระหว่างการพัฒนา กรุณากลับมาใหม่ภายหลัง!' : 'This calculator is under development. Please check back later!'}</p>`;
@@ -2330,6 +2341,1251 @@
             }
           }, 100);
         });
+
+        // ======================
+        // DISTANCE CALCULATOR
+        // ======================
+
+        // Distance constants (inline version)
+        const DISTANCE_CONSTANTS_INLINE = {
+          EARTH_RADIUS_KM: 6371,
+          TRAVEL_SPEEDS: {
+            walking: 5,
+            cycling: 15,
+            driving: 60,
+            flight: 800
+          },
+          DIRECTIONS: {
+            th: ['เหนือ', 'ตะวันออกเฉียงเหนือ', 'ตะวันออก', 'ตะวันออกเฉียงใต้', 
+                 'ใต้', 'ตะวันตกเฉียงใต้', 'ตะวันตก', 'ตะวันตกเฉียงเหนือ'],
+            en: ['North', 'Northeast', 'East', 'Southeast', 
+                 'South', 'Southwest', 'West', 'Northwest']
+          },
+          POPULAR_PLACES: {
+            'สยาม': { lat: 13.7463, lng: 100.5352, name: 'Siam', province: 'กรุงเทพฯ' },
+            'จตุจักร': { lat: 13.7997, lng: 100.5497, name: 'Chatuchak', province: 'กรุงเทพฯ' },
+            'สุวรรณภูมิ': { lat: 13.6900, lng: 100.7501, name: 'Suvarnabhumi Airport', province: 'กรุงเทพฯ' },
+            'ดอนเมือง': { lat: 13.9126, lng: 100.6070, name: 'Don Mueang Airport', province: 'กรุงเทพฯ' },
+            'เชียงใหม่': { lat: 18.7883, lng: 98.9853, name: 'Chiang Mai', province: 'เชียงใหม่' },
+            'ภูเก็ต': { lat: 7.8804, lng: 98.3923, name: 'Phuket', province: 'ภูเก็ต' },
+            'พัทยา': { lat: 12.9236, lng: 100.8825, name: 'Pattaya', province: 'ชลบุรี' },
+            'หัวหิน': { lat: 12.5564, lng: 99.9587, name: 'Hua Hin', province: 'ประจวบคีรีขันธ์' }
+          }
+        };
+
+        function calculateHaversineDistanceInline(lat1, lng1, lat2, lng2, unit = 'km') {
+          const toRad = (deg) => deg * (Math.PI / 180);
+          
+          const dLat = toRad(lat2 - lat1);
+          const dLng = toRad(lng2 - lng1);
+          
+          const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+                    Math.sin(dLng / 2) * Math.sin(dLng / 2);
+          
+          const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+          
+          return DISTANCE_CONSTANTS_INLINE.EARTH_RADIUS_KM * c;
+        }
+
+        function calculateBearingInline(lat1, lng1, lat2, lng2) {
+          const toRad = (deg) => deg * (Math.PI / 180);
+          const toDeg = (rad) => rad * (180 / Math.PI);
+          
+          const dLng = toRad(lng2 - lng1);
+          const lat1Rad = toRad(lat1);
+          const lat2Rad = toRad(lat2);
+          
+          const y = Math.sin(dLng) * Math.cos(lat2Rad);
+          const x = Math.cos(lat1Rad) * Math.sin(lat2Rad) - 
+                    Math.sin(lat1Rad) * Math.cos(lat2Rad) * Math.cos(dLng);
+          
+          let bearing = toDeg(Math.atan2(y, x));
+          bearing = (bearing + 360) % 360;
+          
+          const directionIndex = Math.round(bearing / 45) % 8;
+          
+          return {
+            degrees: Math.round(bearing * 10) / 10,
+            direction: {
+              th: DISTANCE_CONSTANTS_INLINE.DIRECTIONS.th[directionIndex],
+              en: DISTANCE_CONSTANTS_INLINE.DIRECTIONS.en[directionIndex]
+            }
+          };
+        }
+
+        function calculateTravelTimeInline(distance) {
+          const speeds = DISTANCE_CONSTANTS_INLINE.TRAVEL_SPEEDS;
+          
+          const formatTime = (hours, isEnglish = false) => {
+            if (hours < 1) {
+              return isEnglish ? `${Math.round(hours * 60)} min` : `${Math.round(hours * 60)} นาที`;
+            } else if (hours < 24) {
+              const h = Math.floor(hours);
+              const m = Math.round((hours - h) * 60);
+              if (isEnglish) {
+                return m > 0 ? `${h}h ${m}min` : `${h}h`;
+              } else {
+                return m > 0 ? `${h} ชม. ${m} นาที` : `${h} ชม.`;
+              }
+            } else {
+              const days = Math.floor(hours / 24);
+              const remainingHours = Math.round(hours % 24);
+              if (isEnglish) {
+                return `${days}d ${remainingHours}h`;
+              } else {
+                return `${days} วัน ${remainingHours} ชม.`;
+              }
+            }
+          };
+          
+          return {
+            walking: {
+              hours: distance / speeds.walking,
+              display: formatTime(distance / speeds.walking),
+              displayEN: formatTime(distance / speeds.walking, true)
+            },
+            cycling: {
+              hours: distance / speeds.cycling,
+              display: formatTime(distance / speeds.cycling),
+              displayEN: formatTime(distance / speeds.cycling, true)
+            },
+            driving: {
+              hours: distance / speeds.driving,
+              display: formatTime(distance / speeds.driving),
+              displayEN: formatTime(distance / speeds.driving, true)
+            },
+            flight: {
+              hours: distance / speeds.flight,
+              display: formatTime(distance / speeds.flight),
+              displayEN: formatTime(distance / speeds.flight, true)
+            }
+          };
+        }
+
+        async function searchPlaceInline(query) {
+          if (!query || query.trim().length < 2) return [];
+          
+          // Search in popular places first
+          const popularResults = searchInPopularPlacesInline(query);
+          
+          try {
+            const url = `https://nominatim.openstreetmap.org/search?` +
+              `q=${encodeURIComponent(query.trim())}&` +
+              `format=json&limit=3&countrycodes=th&addressdetails=1`;
+            
+            const response = await fetch(url);
+            const data = await response.json();
+            
+            const nominatimResults = data.map(place => ({
+              name: place.display_name,
+              lat: parseFloat(place.lat),
+              lng: parseFloat(place.lon),
+              source: 'nominatim'
+            }));
+            
+            return [...popularResults, ...nominatimResults].slice(0, 5);
+          } catch (error) {
+            console.warn('Nominatim API error:', error);
+            return popularResults;
+          }
+        }
+
+        function searchInPopularPlacesInline(query) {
+          const queryLower = query.toLowerCase().trim();
+          const results = [];
+          
+          for (const [key, place] of Object.entries(DISTANCE_CONSTANTS_INLINE.POPULAR_PLACES)) {
+            const keyLower = key.toLowerCase();
+            const nameLower = place.name.toLowerCase();
+            
+            if (keyLower.includes(queryLower) || nameLower.includes(queryLower)) {
+              results.push({
+                name: `${key} (${place.province})`,
+                lat: place.lat,
+                lng: place.lng,
+                source: 'popular'
+              });
+            }
+          }
+          
+          return results;
+        }
+
+        function getCurrentLocationInline() {
+          return new Promise((resolve, reject) => {
+            if (!navigator.geolocation) {
+              reject(new Error('Browser ไม่รองรับ GPS'));
+              return;
+            }
+            
+            const options = {
+              enableHighAccuracy: true,
+              timeout: 10000,
+              maximumAge: 300000
+            };
+            
+            navigator.geolocation.getCurrentPosition(
+              (position) => {
+                resolve({
+                  lat: position.coords.latitude,
+                  lng: position.coords.longitude,
+                  name: 'ตำแหน่งปัจจุบัน',
+                  nameEN: 'Current Location',
+                  source: 'gps'
+                });
+              },
+              (error) => {
+                let message;
+                switch (error.code) {
+                  case error.PERMISSION_DENIED:
+                    message = 'ผู้ใช้ปฏิเสธการเข้าถึงตำแหน่ง';
+                    break;
+                  case error.POSITION_UNAVAILABLE:
+                    message = 'ไม่สามารถหาตำแหน่งได้';
+                    break;
+                  case error.TIMEOUT:
+                    message = 'หมดเวลาในการหาตำแหน่ง';
+                    break;
+                  default:
+                    message = 'เกิดข้อผิดพลาดในการหาตำแหน่ง';
+                    break;
+                }
+                reject(new Error(message));
+              },
+              options
+            );
+          });
+        }
+
+        function parseCoordinatesInline(coordText) {
+          if (!coordText || typeof coordText !== 'string') return null;
+          
+          const parts = coordText.trim().split(',');
+          if (parts.length !== 2) return null;
+          
+          const lat = parseFloat(parts[0].trim());
+          const lng = parseFloat(parts[1].trim());
+          
+          if (lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180) {
+            return { lat, lng };
+          }
+          
+          return null;
+        }
+
+        function getDistanceCalculatorHTML() {
+          const isEnglish = currentLanguage === 'en';
+          
+          return `
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div class="bg-gray-50 p-4 rounded-lg">
+                <h3 class="font-semibold mb-4">${isEnglish ? 'Location Input' : 'กรอกตำแหน่ง'}</h3>
+                <div class="space-y-4">
+                  
+                  <!-- From Location -->
+                  <div>
+                    <label class="block text-sm font-medium mb-2">
+                      📍 ${isEnglish ? 'From (Starting Point)' : 'จาก (จุดเริ่มต้น)'}
+                    </label>
+                    <div class="space-y-2">
+                      <input type="text" id="fromInput" placeholder="${isEnglish ? 'Search place, use GPS, or enter coordinates' : 'ค้นหาสถานที่, ใช้ GPS, หรือใส่พิกัด'}" 
+                             class="w-full px-3 py-2 border rounded-lg" onkeyup="handleLocationSearch('from')">
+                      <div class="flex gap-2">
+                        <button onclick="useCurrentLocation('from')" class="px-3 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200">
+                          📍 ${isEnglish ? 'Use GPS' : 'ใช้ GPS'}
+                        </button>
+                        <button onclick="clearLocation('from')" class="px-3 py-1 text-xs bg-gray-100 text-gray-700 rounded hover:bg-gray-200">
+                          🗑️ ${isEnglish ? 'Clear' : 'ล้าง'}
+                        </button>
+                      </div>
+                      <div id="fromSuggestions" class="hidden space-y-1"></div>
+                    </div>
+                  </div>
+                  
+                  <!-- To Location -->
+                  <div>
+                    <label class="block text-sm font-medium mb-2">
+                      🎯 ${isEnglish ? 'To (Destination)' : 'ไป (จุดปลายทาง)'}
+                    </label>
+                    <div class="space-y-2">
+                      <input type="text" id="toInput" placeholder="${isEnglish ? 'Search place, use GPS, or enter coordinates' : 'ค้นหาสถานที่, ใช้ GPS, หรือใส่พิกัด'}" 
+                             class="w-full px-3 py-2 border rounded-lg" onkeyup="handleLocationSearch('to')">
+                      <div class="flex gap-2">
+                        <button onclick="useCurrentLocation('to')" class="px-3 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200">
+                          📍 ${isEnglish ? 'Use GPS' : 'ใช้ GPS'}
+                        </button>
+                        <button onclick="clearLocation('to')" class="px-3 py-1 text-xs bg-gray-100 text-gray-700 rounded hover:bg-gray-200">
+                          🗑️ ${isEnglish ? 'Clear' : 'ล้าง'}
+                        </button>
+                      </div>
+                      <div id="toSuggestions" class="hidden space-y-1"></div>
+                    </div>
+                  </div>
+                  
+                  <!-- Options -->
+                  <div class="border-t pt-4">
+                    <h4 class="font-medium mb-3">${isEnglish ? 'Options' : 'ตัวเลือก'}</h4>
+                    <div class="space-y-2">
+                      <label class="flex items-center">
+                        <input type="checkbox" id="showDirection" checked class="mr-2">
+                        <span class="text-sm">${isEnglish ? 'Show direction' : 'แสดงทิศทาง'}</span>
+                      </label>
+                      <label class="flex items-center">
+                        <input type="checkbox" id="showTravelTime" checked class="mr-2">
+                        <span class="text-sm">${isEnglish ? 'Calculate travel time' : 'คำนวณเวลาเดินทาง'}</span>
+                      </label>
+                      <label class="flex items-center">
+                        <input type="checkbox" id="showMidpoint" class="mr-2">
+                        <span class="text-sm">${isEnglish ? 'Find midpoint' : 'หาจุดกึ่งกลาง'}</span>
+                      </label>
+                    </div>
+                  </div>
+                  
+                  <button onclick="calculateDistance()" class="w-full px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700">
+                    📏 ${isEnglish ? 'Calculate Distance' : 'คำนวณระยะทาง'}
+                  </button>
+                  
+                  <div class="text-xs text-gray-500 space-y-1">
+                    <p>${isEnglish ? '• Coordinates format: latitude, longitude (e.g., 13.7463, 100.5352)' : '• รูปแบบพิกัด: ละติจูด, ลองจิจูด (เช่น 13.7463, 100.5352)'}</p>
+                    <p>${isEnglish ? '• Distance calculated using Haversine formula' : '• ระยะทางคำนวณด้วยสูตร Haversine'}</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="bg-gray-50 p-4 rounded-lg">
+                <h3 class="font-semibold mb-4">${isEnglish ? 'Distance Results' : 'ผลการคำนวณระยะทาง'}</h3>
+                <div id="distanceResults" class="text-center py-8 text-gray-500">
+                  ${isEnglish ? 'Enter starting point and destination, then calculate' : 'ใส่จุดเริ่มต้นและปลายทาง แล้วกดคำนวณ'}
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        // Global variables for distance calculator
+        let fromLocation = null;
+        let toLocation = null;
+        let searchTimeouts = {};
+
+        function handleLocationSearch(type) {
+          const input = document.getElementById(type + 'Input');
+          const suggestions = document.getElementById(type + 'Suggestions');
+          const query = input.value.trim();
+          
+          // Clear previous timeout
+          if (searchTimeouts[type]) {
+            clearTimeout(searchTimeouts[type]);
+          }
+          
+          if (query.length < 2) {
+            suggestions.innerHTML = '';
+            suggestions.classList.add('hidden');
+            return;
+          }
+          
+          // Check if it's coordinates
+          const coords = parseCoordinatesInline(query);
+          if (coords) {
+            showCoordinateSuggestion(type, coords, query);
+            return;
+          }
+          
+          // Debounce search
+          searchTimeouts[type] = setTimeout(async () => {
+            try {
+              const results = await searchPlaceInline(query);
+              showSearchSuggestions(type, results);
+            } catch (error) {
+              console.error('Search error:', error);
+            }
+          }, 500);
+        }
+
+        function showCoordinateSuggestion(type, coords, query) {
+          const suggestions = document.getElementById(type + 'Suggestions');
+          const isEnglish = currentLanguage === 'en';
+          
+          suggestions.innerHTML = `
+            <div class="p-2 border rounded bg-yellow-50 cursor-pointer hover:bg-yellow-100" 
+                 onclick="selectLocation('${type}', ${coords.lat}, ${coords.lng}, '${query}')">
+              📍 ${isEnglish ? 'Coordinates:' : 'พิกัด:'} ${coords.lat.toFixed(4)}, ${coords.lng.toFixed(4)}
+            </div>
+          `;
+          suggestions.classList.remove('hidden');
+        }
+
+        function showSearchSuggestions(type, results) {
+          const suggestions = document.getElementById(type + 'Suggestions');
+          
+          if (results.length === 0) {
+            suggestions.innerHTML = '<div class="p-2 text-gray-500 text-sm">ไม่พบสถานที่</div>';
+            suggestions.classList.remove('hidden');
+            return;
+          }
+          
+          suggestions.innerHTML = results.map(place => `
+            <div class="p-2 border rounded bg-white cursor-pointer hover:bg-gray-50" 
+                 onclick="selectLocation('${type}', ${place.lat}, ${place.lng}, '${place.name}')">
+              📍 ${place.name}
+              ${place.source === 'popular' ? '<span class="text-xs text-blue-600">(ยอดนิยม)</span>' : ''}
+            </div>
+          `).join('');
+          
+          suggestions.classList.remove('hidden');
+        }
+
+        function selectLocation(type, lat, lng, name) {
+          const input = document.getElementById(type + 'Input');
+          const suggestions = document.getElementById(type + 'Suggestions');
+          
+          input.value = name;
+          suggestions.innerHTML = '';
+          suggestions.classList.add('hidden');
+          
+          if (type === 'from') {
+            fromLocation = { lat, lng, name };
+          } else {
+            toLocation = { lat, lng, name };
+          }
+        }
+
+        async function useCurrentLocation(type) {
+          const input = document.getElementById(type + 'Input');
+          const isEnglish = currentLanguage === 'en';
+          
+          input.value = isEnglish ? 'Getting location...' : 'กำลังหาตำแหน่ง...';
+          
+          try {
+            const location = await getCurrentLocationInline();
+            input.value = isEnglish ? location.nameEN : location.name;
+            
+            if (type === 'from') {
+              fromLocation = location;
+            } else {
+              toLocation = location;
+            }
+          } catch (error) {
+            input.value = '';
+            alert(error.message);
+          }
+        }
+
+        function clearLocation(type) {
+          const input = document.getElementById(type + 'Input');
+          const suggestions = document.getElementById(type + 'Suggestions');
+          
+          input.value = '';
+          suggestions.innerHTML = '';
+          suggestions.classList.add('hidden');
+          
+          if (type === 'from') {
+            fromLocation = null;
+          } else {
+            toLocation = null;
+          }
+        }
+
+        function calculateDistance() {
+          const results = document.getElementById('distanceResults');
+          const isEnglish = currentLanguage === 'en';
+          
+          if (!fromLocation || !toLocation) {
+            results.innerHTML = `<p class="text-red-500">${isEnglish ? 'Please select both starting point and destination' : 'กรุณาเลือกจุดเริ่มต้นและปลายทางทั้งคู่'}</p>`;
+            return;
+          }
+          
+          // Calculate distance
+          const distance = calculateHaversineDistanceInline(
+            fromLocation.lat, fromLocation.lng,
+            toLocation.lat, toLocation.lng
+          );
+          
+          const showDirection = document.getElementById('showDirection').checked;
+          const showTravelTime = document.getElementById('showTravelTime').checked;
+          const showMidpoint = document.getElementById('showMidpoint').checked;
+          
+          let bearing = null;
+          let travelTime = null;
+          let midpoint = null;
+          
+          if (showDirection) {
+            bearing = calculateBearingInline(
+              fromLocation.lat, fromLocation.lng,
+              toLocation.lat, toLocation.lng
+            );
+          }
+          
+          if (showTravelTime) {
+            travelTime = calculateTravelTimeInline(distance);
+          }
+          
+          if (showMidpoint) {
+            const midLat = (fromLocation.lat + toLocation.lat) / 2;
+            const midLng = (fromLocation.lng + toLocation.lng) / 2;
+            midpoint = { lat: midLat, lng: midLng };
+          }
+          
+          displayDistanceResults({
+            distance,
+            fromLocation,
+            toLocation,
+            bearing,
+            travelTime,
+            midpoint
+          });
+        }
+
+        function displayDistanceResults(result) {
+          const results = document.getElementById('distanceResults');
+          const isEnglish = currentLanguage === 'en';
+          const { distance, fromLocation, toLocation, bearing, travelTime, midpoint } = result;
+          
+          let html = `
+            <div class="space-y-4 text-left">
+              <!-- Route -->
+              <div class="p-4 bg-orange-50 rounded-lg border-l-4 border-orange-400">
+                <h4 class="font-semibold text-lg mb-2">${isEnglish ? 'Route Information' : 'ข้อมูลเส้นทาง'}</h4>
+                <div class="space-y-1 text-sm">
+                  <div><strong>${isEnglish ? 'From:' : 'จาก:'}</strong> ${fromLocation.name}</div>
+                  <div><strong>${isEnglish ? 'To:' : 'ไป:'}</strong> ${toLocation.name}</div>
+                </div>
+              </div>
+              
+              <!-- Distance -->
+              <div class="p-4 bg-green-50 rounded-lg">
+                <h4 class="font-semibold text-lg mb-2">${isEnglish ? 'Distance' : 'ระยะทาง'}</h4>
+                <div class="text-2xl font-bold text-green-600 mb-2">
+                  ${distance.toFixed(2)} ${isEnglish ? 'km' : 'กม.'}
+                </div>
+                <div class="text-sm text-gray-600">
+                  ${(distance * 0.621371).toFixed(2)} ${isEnglish ? 'miles' : 'ไมล์'}
+                </div>
+              </div>
+          `;
+          
+          // Direction
+          if (bearing) {
+            html += `
+              <div class="p-4 bg-blue-50 rounded-lg">
+                <h4 class="font-semibold mb-2">${isEnglish ? 'Direction' : 'ทิศทาง'}</h4>
+                <div class="text-lg font-semibold text-blue-600">
+                  ${isEnglish ? bearing.direction.en : bearing.direction.th}
+                </div>
+                <div class="text-sm text-gray-600">
+                  ${bearing.degrees}° ${isEnglish ? 'from North' : 'จากทิศเหนือ'}
+                </div>
+              </div>
+            `;
+          }
+          
+          // Travel Time
+          if (travelTime) {
+            html += `
+              <div class="p-4 bg-purple-50 rounded-lg">
+                <h4 class="font-semibold mb-2">${isEnglish ? 'Estimated Travel Time' : 'เวลาเดินทางโดยประมาณ'}</h4>
+                <div class="grid grid-cols-2 gap-2 text-sm">
+                  <div class="flex justify-between">
+                    <span>🚶 ${isEnglish ? 'Walking:' : 'เดิน:'}</span>
+                    <span class="font-medium">${isEnglish ? travelTime.walking.displayEN : travelTime.walking.display}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span>🚗 ${isEnglish ? 'Driving:' : 'ขับรถ:'}</span>
+                    <span class="font-medium">${isEnglish ? travelTime.driving.displayEN : travelTime.driving.display}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span>🚴 ${isEnglish ? 'Cycling:' : 'จักรยาน:'}</span>
+                    <span class="font-medium">${isEnglish ? travelTime.cycling.displayEN : travelTime.cycling.display}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span>✈️ ${isEnglish ? 'Flight:' : 'เครื่องบิน:'}</span>
+                    <span class="font-medium">${isEnglish ? travelTime.flight.displayEN : travelTime.flight.display}</span>
+                  </div>
+                </div>
+              </div>
+            `;
+          }
+          
+          // Midpoint
+          if (midpoint) {
+            html += `
+              <div class="p-4 bg-yellow-50 rounded-lg">
+                <h4 class="font-semibold mb-2">${isEnglish ? 'Midpoint' : 'จุดกึ่งกลาง'}</h4>
+                <div class="text-sm">
+                  <strong>${isEnglish ? 'Coordinates:' : 'พิกัด:'}</strong><br>
+                  ${midpoint.lat.toFixed(6)}, ${midpoint.lng.toFixed(6)}
+                </div>
+              </div>
+            `;
+          }
+          
+          // Coordinates
+          html += `
+            <div class="p-3 bg-gray-100 rounded text-sm">
+              <div class="grid grid-cols-1 gap-1">
+                <div><strong>${isEnglish ? 'From coordinates:' : 'พิกัดจุดเริ่มต้น:'}</strong> ${fromLocation.lat.toFixed(6)}, ${fromLocation.lng.toFixed(6)}</div>
+                <div><strong>${isEnglish ? 'To coordinates:' : 'พิกัดจุดปลายทาง:'}</strong> ${toLocation.lat.toFixed(6)}, ${toLocation.lng.toFixed(6)}</div>
+              </div>
+            </div>
+          `;
+          
+          // Note
+          html += `
+            <div class="p-3 bg-blue-50 rounded text-sm border-l-4 border-blue-400">
+              <strong>${isEnglish ? 'Note:' : 'หมายเหตุ:'}</strong>
+              ${isEnglish ? 'Straight-line distance calculated using Haversine formula. Actual travel distance may vary.' : 'ระยะทางเส้นตรงคำนวณด้วยสูตร Haversine ระยะทางเดินทางจริงอาจแตกต่าง'}
+            </div>
+          `;
+          
+          html += '</div>';
+          results.innerHTML = html;
+        }
+
+        // Hide suggestions when clicking outside
+        document.addEventListener('click', function(event) {
+          const fromSuggestions = document.getElementById('fromSuggestions');
+          const toSuggestions = document.getElementById('toSuggestions');
+          const fromInput = document.getElementById('fromInput');
+          const toInput = document.getElementById('toInput');
+          
+          if (fromSuggestions && !fromInput?.contains(event.target) && !fromSuggestions.contains(event.target)) {
+            fromSuggestions.classList.add('hidden');
+          }
+          
+          if (toSuggestions && !toInput?.contains(event.target) && !toSuggestions.contains(event.target)) {
+            toSuggestions.classList.add('hidden');
+          }
+        });
+
+        // Solar Calculator Functions
+        function getSolarCalculatorHTML() {
+          const isEnglish = currentLanguage === 'en';
+          
+          return `
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <!-- Input Section -->
+              <div class="bg-gray-50 p-4 rounded-lg">
+                <h3 class="font-semibold mb-4">${isEnglish ? 'Basic Information' : 'ข้อมูลพื้นฐาน'}</h3>
+                <div class="space-y-4">
+                  <!-- Core Inputs -->
+                  <div>
+                    <label class="block text-sm font-medium mb-2">${isEnglish ? 'Roof Area (sqm)' : 'พื้นที่หลังคา (ตร.ม.)'}</label>
+                    <input type="number" id="solarRoofArea" placeholder="${isEnglish ? 'Enter roof area in square meters' : 'ใส่พื้นที่หลังคาเป็นตารางเมตร'}" 
+                           class="w-full px-3 py-2 border rounded-lg" min="1" step="0.1">
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium mb-2">${isEnglish ? 'Monthly Electricity Usage (kWh)' : 'การใช้ไฟรายเดือน (หน่วย)'}</label>
+                    <input type="number" id="solarMonthlyUsage" placeholder="${isEnglish ? 'Enter monthly electricity usage' : 'ใส่การใช้ไฟรายเดือน'}" 
+                           class="w-full px-3 py-2 border rounded-lg" min="0" step="1">
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium mb-2">${isEnglish ? 'Region' : 'ภูมิภาค'}</label>
+                    <select id="solarRegion" class="w-full px-3 py-2 border rounded-lg">
+                      <option value="central">${isEnglish ? 'Central (Bangkok)' : 'ภาคกลาง (กรุงเทพฯ)'}</option>
+                      <option value="north">${isEnglish ? 'Northern (Chiang Mai)' : 'ภาคเหนือ (เชียงใหม่)'}</option>
+                      <option value="northeast">${isEnglish ? 'Northeastern (Isaan)' : 'ภาคตะวันออกเฉียงเหนือ (อีสาน)'}</option>
+                      <option value="south">${isEnglish ? 'Southern (Phuket)' : 'ภาคใต้ (ภูเก็ต)'}</option>
+                      <option value="east">${isEnglish ? 'Eastern (Pattaya)' : 'ภาคตะวันออก (พัทยา)'}</option>
+                    </select>
+                  </div>
+
+                  <!-- Expandable Advanced Options -->
+                  <div class="expandable-section">
+                    <button type="button" onclick="toggleSolarAdvanced()" class="w-full flex items-center justify-between p-3 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors">
+                      <span class="font-medium text-blue-700">${isEnglish ? '⚙️ Advanced Options' : '⚙️ ตัวเลือกขั้นสูง'}</span>
+                      <svg id="solarAdvancedIcon" class="w-5 h-5 text-blue-600 expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                      </svg>
+                    </button>
+                    <div id="solarAdvancedContent" class="expandable-content mt-3">
+                      <div class="space-y-3 p-3 bg-white rounded border">
+                        <div>
+                          <label class="block text-sm font-medium mb-1">${isEnglish ? 'Panel Type' : 'ประเภทแผงโซลาร์'}</label>
+                          <select id="solarPanelType" class="w-full px-3 py-2 border rounded-lg text-sm">
+                            <option value="monocrystalline">${isEnglish ? 'Monocrystalline (20% eff.)' : 'โมโนคริสตัลไลน์ (ประสิทธิภาพ 20%)'}</option>
+                            <option value="polycrystalline">${isEnglish ? 'Polycrystalline (17% eff.)' : 'โพลีคริสตัลไลน์ (ประสิทธิภาพ 17%)'}</option>
+                            <option value="thinfilm">${isEnglish ? 'Thin Film (13% eff.)' : 'ฟิล์มบาง (ประสิทธิภาพ 13%)'}</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label class="block text-sm font-medium mb-1">${isEnglish ? 'Electricity Provider' : 'ผู้ให้บริการไฟฟ้า'}</label>
+                          <select id="solarProvider" class="w-full px-3 py-2 border rounded-lg text-sm">
+                            <option value="mea">${isEnglish ? 'MEA (Bangkok Metro)' : 'MEA (การไฟฟ้านครหลวง)'}</option>
+                            <option value="pea">${isEnglish ? 'PEA (Provincial)' : 'PEA (การไฟฟ้าส่วนภูมิภาค)'}</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label class="block text-sm font-medium mb-1">${isEnglish ? 'Usable Roof Area (%)' : 'สัดส่วนพื้นที่ใช้งานได้ (%)'}</label>
+                          <input type="number" id="solarUsableRatio" value="80" class="w-full px-3 py-2 border rounded-lg text-sm" min="10" max="100" step="5">
+                        </div>
+                        <div>
+                          <label class="block text-sm font-medium mb-1">${isEnglish ? 'Performance Ratio (%)' : 'ประสิทธิภาพการทำงานจริง (%)'}</label>
+                          <input type="number" id="solarPerformance" value="85" class="w-full px-3 py-2 border rounded-lg text-sm" min="60" max="95" step="1">
+                        </div>
+                        <div>
+                          <label class="block text-sm font-medium mb-1">${isEnglish ? 'Shading Loss (%)' : 'การสูญเสียจากเงา (%)'}</label>
+                          <input type="number" id="solarShading" value="5" class="w-full px-3 py-2 border rounded-lg text-sm" min="0" max="30" step="1">
+                        </div>
+                        
+                        <!-- Manual Override Section -->
+                        <div class="border-t pt-3 mt-3">
+                          <div class="text-sm font-medium text-gray-700 mb-2">${isEnglish ? '🔧 Manual Override (Optional)' : '🔧 กำหนดค่าเอง (ไม่บังคับ)'}</div>
+                          <div class="grid grid-cols-2 gap-2">
+                            <div>
+                              <label class="block text-xs font-medium mb-1">${isEnglish ? 'System Capacity (kWp)' : 'กำลังผลิต (kWp)'}</label>
+                              <input type="number" id="solarManualCapacity" placeholder="${isEnglish ? 'Auto calculate' : 'คำนวณอัตโนมัติ'}" 
+                                     class="w-full px-2 py-1 border rounded text-xs" min="0.1" max="1000" step="0.1">
+                              <div class="text-xs text-gray-500 mt-1">${isEnglish ? 'Leave empty for auto' : 'เว้นว่างเพื่อคำนวณอัตโนมัติ'}</div>
+                            </div>
+                            <div>
+                              <label class="block text-xs font-medium mb-1">${isEnglish ? 'System Cost (฿)' : 'ต้นทุนระบบ (บาท)'}</label>
+                              <input type="number" id="solarManualCost" placeholder="${isEnglish ? 'Auto calculate' : 'คำนวณอัตโนมัติ'}" 
+                                     class="w-full px-2 py-1 border rounded text-xs" min="1000" max="10000000" step="1000">
+                              <div class="text-xs text-gray-500 mt-1">${isEnglish ? 'Leave empty for auto' : 'เว้นว่างเพื่อคำนวณอัตโนมัติ'}</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button onclick="calculateSolar()" class="w-full px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 font-medium">
+                    ${isEnglish ? '☀️ Calculate Solar ROI' : '☀️ คำนวณผลตอบแทนโซลาร์'}
+                  </button>
+                </div>
+              </div>
+
+              <!-- Results Section -->
+              <div class="bg-gray-50 p-4 rounded-lg">
+                <h3 class="font-semibold mb-4">${isEnglish ? 'Solar Analysis Results' : 'ผลการวิเคราะห์ระบบโซลาร์'}</h3>
+                <div id="solarResults" class="text-center py-8 text-gray-500">
+                  ${isEnglish ? 'Enter your roof area and electricity usage to see results' : 'ใส่พื้นที่หลังคาและการใช้ไฟเพื่อดูผลลัพธ์'}
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        function toggleSolarAdvanced() {
+          const content = document.getElementById('solarAdvancedContent');
+          const icon = document.getElementById('solarAdvancedIcon');
+          
+          if (content.classList.contains('expanded')) {
+            content.classList.remove('expanded');
+            icon.classList.remove('rotated');
+          } else {
+            content.classList.add('expanded');
+            icon.classList.add('rotated');
+          }
+        }
+
+        function calculateSolar() {
+          const roofArea = parseFloat(document.getElementById('solarRoofArea').value);
+          const monthlyUsage = parseFloat(document.getElementById('solarMonthlyUsage').value);
+          const region = document.getElementById('solarRegion').value;
+          const panelType = document.getElementById('solarPanelType').value;
+          const provider = document.getElementById('solarProvider').value;
+          const usableRatio = parseFloat(document.getElementById('solarUsableRatio').value) / 100;
+          const performance = parseFloat(document.getElementById('solarPerformance').value) / 100;
+          const shading = parseFloat(document.getElementById('solarShading').value) / 100;
+          
+          // Manual override inputs
+          const manualCapacity = parseFloat(document.getElementById('solarManualCapacity').value);
+          const manualCost = parseFloat(document.getElementById('solarManualCost').value);
+          
+          const results = document.getElementById('solarResults');
+          const isEnglish = currentLanguage === 'en';
+          
+          if (!monthlyUsage || monthlyUsage <= 0) {
+            results.innerHTML = `<p class="text-red-500">${isEnglish ? 'Please enter valid monthly electricity usage' : 'กรุณาใส่การใช้ไฟรายเดือนที่ถูกต้อง'}</p>`;
+            return;
+          }
+          
+          // Determine capacity: manual input or auto-calculate from roof area
+          let capacity, isManualCapacity = false;
+          if (manualCapacity && manualCapacity > 0) {
+            // Use manual capacity
+            isManualCapacity = true;
+            capacity = {
+              success: true,
+              roofArea: roofArea || 0,
+              usableArea: roofArea ? Math.round(roofArea * usableRatio * 100) / 100 : 0,
+              panelType,
+              capacity: {
+                wp: Math.round(manualCapacity * 1000),
+                kWp: Math.round(manualCapacity * 100) / 100
+              },
+              panelInfo: { efficiency: 0.20, name: 'Manual Input' }
+            };
+          } else {
+            // Auto-calculate from roof area
+            if (!roofArea || roofArea <= 0) {
+              results.innerHTML = `<p class="text-red-500">${isEnglish ? 'Please enter valid roof area or specify manual capacity in Advanced Options' : 'กรุณาใส่พื้นที่หลังคาหรือระบุกำลังผลิตในตัวเลือกขั้นสูง'}</p>`;
+              return;
+            }
+            capacity = calculateSolarCapacityInline(roofArea, panelType, usableRatio);
+            if (capacity.error) {
+              results.innerHTML = `<p class="text-red-500">${isEnglish ? capacity.errorEN : capacity.error}</p>`;
+              return;
+            }
+          }
+          
+          const production = calculateEnergyProductionInline(capacity.capacity.kWp, region, { performanceRatio: performance, shadingLoss: shading });
+          if (production.error) {
+            results.innerHTML = `<p class="text-red-500">${isEnglish ? production.errorEN : production.error}</p>`;
+            return;
+          }
+          
+          const electricityBill = calculateElectricityBillInline(monthlyUsage, provider);
+          if (electricityBill.error) {
+            results.innerHTML = `<p class="text-red-500">${isEnglish ? electricityBill.errorEN : electricityBill.error}</p>`;
+            return;
+          }
+          
+          // Determine system cost: manual input or auto-calculate
+          let systemCost, isManualCost = false;
+          if (manualCost && manualCost > 0) {
+            // Use manual cost
+            isManualCost = true;
+            systemCost = {
+              success: true,
+              capacity: capacity.capacity.kWp,
+              costPerKwp: Math.round(manualCost / capacity.capacity.kWp),
+              totalCost: Math.round(manualCost),
+              category: { name: 'Manual Input' },
+              breakdown: {
+                equipment: Math.round(manualCost * 0.7),
+                installation: Math.round(manualCost * 0.2),
+                permits: Math.round(manualCost * 0.1)
+              }
+            };
+          } else {
+            // Auto-calculate cost
+            systemCost = estimateSystemCostInline(capacity.capacity.kWp);
+          }
+          const savings = calculateSavingsAndROIInline(production, electricityBill, systemCost.totalCost);
+          
+          displaySolarResults({
+            capacity,
+            production,
+            electricityBill,
+            systemCost,
+            savings,
+            roofArea,
+            monthlyUsage,
+            region,
+            isManualCapacity,
+            isManualCost
+          });
+        }
+
+        function displaySolarResults(data) {
+          const results = document.getElementById('solarResults');
+          const isEnglish = currentLanguage === 'en';
+          const { capacity, production, electricityBill, systemCost, savings, isManualCapacity, isManualCost } = data;
+          
+          results.innerHTML = `
+            <div class="space-y-4 text-left">
+              <!-- System Summary -->
+              <div class="p-4 bg-orange-50 rounded-lg border-l-4 border-orange-400">
+                <h4 class="font-semibold text-lg mb-2">${isEnglish ? 'System Configuration' : 'การกำหนดค่าระบบ'}</h4>
+                <div class="grid grid-cols-2 gap-2 text-sm">
+                  <div>
+                    <strong>${isEnglish ? 'Capacity:' : 'กำลังผลิต:'}</strong> ${capacity.capacity.kWp} kWp
+                    ${isManualCapacity ? `<span class="ml-1 px-1 bg-blue-100 text-blue-600 text-xs rounded">${isEnglish ? 'Manual' : 'กำหนดเอง'}</span>` : `<span class="ml-1 px-1 bg-green-100 text-green-600 text-xs rounded">${isEnglish ? 'Auto' : 'อัตโนมัติ'}</span>`}
+                  </div>
+                  <div><strong>${isEnglish ? 'Usable Area:' : 'พื้นที่ใช้งาน:'}</strong> ${capacity.usableArea} ${isEnglish ? 'sqm' : 'ตร.ม.'}</div>
+                  <div><strong>${isEnglish ? 'Panel Type:' : 'ประเภทแผง:'}</strong> ${capacity.panelInfo.name}</div>
+                  <div><strong>${isEnglish ? 'Efficiency:' : 'ประสิทธิภาพ:'}</strong> ${(capacity.panelInfo.efficiency * 100)}%</div>
+                </div>
+              </div>
+
+              <!-- Energy Production -->
+              <div class="p-4 bg-green-50 rounded-lg">
+                <h4 class="font-semibold text-lg mb-2">${isEnglish ? 'Energy Production' : 'การผลิตพลังงาน'}</h4>
+                <div class="grid grid-cols-3 gap-2 text-sm">
+                  <div class="text-center">
+                    <div class="font-semibold text-green-600">${production.production.daily} kWh</div>
+                    <div class="text-gray-600">${isEnglish ? 'Daily' : 'รายวัน'}</div>
+                  </div>
+                  <div class="text-center">
+                    <div class="font-semibold text-green-600">${production.production.monthly} kWh</div>
+                    <div class="text-gray-600">${isEnglish ? 'Monthly' : 'รายเดือน'}</div>
+                  </div>
+                  <div class="text-center">
+                    <div class="font-semibold text-green-600">${production.production.yearly} kWh</div>
+                    <div class="text-gray-600">${isEnglish ? 'Yearly' : 'รายปี'}</div>
+                  </div>
+                </div>
+                <div class="mt-2 text-xs text-gray-500">
+                  ${isEnglish ? 'Solar Irradiance:' : 'ค่าการฉายแสง:'} ${production.region.irradiance} kWh/m²/day (${isEnglish ? production.region.nameEN : production.region.name})
+                </div>
+              </div>
+
+              <!-- Financial Analysis -->
+              <div class="p-4 bg-blue-50 rounded-lg">
+                <h4 class="font-semibold text-lg mb-2">${isEnglish ? 'Financial Analysis' : 'การวิเคราะห์ทางการเงิน'}</h4>
+                <div class="space-y-2 text-sm">
+                  <div class="flex justify-between">
+                    <span>
+                      ${isEnglish ? 'System Cost:' : 'ต้นทุนระบบ:'}
+                      ${isManualCost ? `<span class="ml-1 px-1 bg-blue-100 text-blue-600 text-xs rounded">${isEnglish ? 'Manual' : 'กำหนดเอง'}</span>` : `<span class="ml-1 px-1 bg-green-100 text-green-600 text-xs rounded">${isEnglish ? 'Auto' : 'อัตโนมัติ'}</span>`}
+                    </span>
+                    <span class="font-medium">฿${systemCost.totalCost.toLocaleString()}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span>${isEnglish ? 'Monthly Savings:' : 'การประหยัดต่อเดือน:'}</span>
+                    <span class="font-medium text-green-600">฿${savings.savings.monthly.toLocaleString()}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span>${isEnglish ? 'Yearly Savings:' : 'การประหยัดต่อปี:'}</span>
+                    <span class="font-medium text-green-600">฿${savings.savings.yearly.toLocaleString()}</span>
+                  </div>
+                  <div class="flex justify-between border-t pt-2">
+                    <span class="font-semibold">${isEnglish ? 'Payback Period:' : 'ระยะเวลาคืนทุน:'}</span>
+                    <span class="font-semibold text-blue-600">${savings.investment.paybackYears} ${isEnglish ? 'years' : 'ปี'}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="font-semibold">${isEnglish ? '25-Year ROI:' : 'ROI 25 ปี:'}</span>
+                    <span class="font-semibold text-blue-600">${savings.investment.roi}%</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Energy Independence -->
+              <div class="p-4 bg-purple-50 rounded-lg">
+                <h4 class="font-semibold text-lg mb-2">${isEnglish ? 'Energy Independence' : 'ความเป็นอิสระทางพลังงาน'}</h4>
+                <div class="space-y-2 text-sm">
+                  <div class="flex justify-between">
+                    <span>${isEnglish ? 'Monthly Usage:' : 'การใช้ไฟรายเดือน:'}</span>
+                    <span>${savings.energyFlow.monthlyUsage} kWh</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span>${isEnglish ? 'Solar Production:' : 'การผลิตโซลาร์:'}</span>
+                    <span>${savings.energyFlow.monthlyProduction} kWh</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span>${isEnglish ? 'Self Sufficiency:' : 'การพึ่งพาตนเอง:'}</span>
+                    <span class="font-medium text-purple-600">${savings.energyFlow.selfSufficiency}%</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span>${isEnglish ? 'Remaining Bill:' : 'ค่าไฟคงเหลือ:'}</span>
+                    <span class="font-medium">฿${savings.savings.remainingBill.toLocaleString()}/month</span>
+                  </div>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-3 mt-3">
+                  <div class="bg-purple-600 h-3 rounded-full" style="width: ${Math.min(savings.energyFlow.selfSufficiency, 100)}%"></div>
+                </div>
+              </div>
+
+              <!-- Environmental Impact -->
+              <div class="p-4 bg-teal-50 rounded-lg">
+                <h4 class="font-semibold text-lg mb-2">${isEnglish ? 'Environmental Impact' : 'ผลกระทบต่อสิ่งแวดล้อม'}</h4>
+                <div class="grid grid-cols-2 gap-2 text-sm">
+                  <div class="text-center">
+                    <div class="font-semibold text-teal-600">${Math.round(production.production.yearly * 0.5)} kg</div>
+                    <div class="text-gray-600">${isEnglish ? 'CO₂ Reduction/Year' : 'ลด CO₂/ปี'}</div>
+                  </div>
+                  <div class="text-center">
+                    <div class="font-semibold text-teal-600">${Math.round(production.production.yearly * 0.5 / 22)}</div>
+                    <div class="text-gray-600">${isEnglish ? 'Trees Equivalent/Year' : 'เทียบเท่าต้นไม้/ปี'}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        // Inline Solar Calculation Functions (for browser compatibility)
+        function calculateSolarCapacityInline(roofArea, panelType = 'monocrystalline', usableRatio = 0.8) {
+          if (roofArea <= 0 || roofArea > 10000) {
+            return {
+              error: 'พื้นที่หลังคาต้องอยู่ระหว่าง 1-10,000 ตร.ม.',
+              errorEN: 'Roof area must be between 1-10,000 sqm'
+            };
+          }
+
+          const powerPerSqm = {
+            monocrystalline: 200,
+            polycrystalline: 170,
+            thinfilm: 130
+          };
+
+          const panelEfficiency = {
+            monocrystalline: { efficiency: 0.20, name: 'Monocrystalline' },
+            polycrystalline: { efficiency: 0.17, name: 'Polycrystalline' },
+            thinfilm: { efficiency: 0.13, name: 'Thin Film' }
+          };
+
+          const power = powerPerSqm[panelType];
+          if (!power) {
+            return {
+              error: 'ประเภทแผงโซลาร์ไม่ถูกต้อง',
+              errorEN: 'Invalid panel type'
+            };
+          }
+
+          const usableArea = roofArea * usableRatio;
+          const capacityWp = usableArea * power;
+          const capacityKwp = capacityWp / 1000;
+
+          return {
+            success: true,
+            roofArea,
+            usableArea: Math.round(usableArea * 100) / 100,
+            panelType,
+            capacity: {
+              wp: Math.round(capacityWp),
+              kWp: Math.round(capacityKwp * 100) / 100
+            },
+            panelInfo: panelEfficiency[panelType]
+          };
+        }
+
+        function calculateEnergyProductionInline(capacityKwp, region = 'central', options = {}) {
+          const { performanceRatio = 0.85, shadingLoss = 0.05, dustLoss = 0.03 } = options;
+
+          if (capacityKwp <= 0 || capacityKwp > 1000) {
+            return {
+              error: 'กำลังการผลิตต้องอยู่ระหว่าง 0.1-1,000 kWp',
+              errorEN: 'Capacity must be between 0.1-1,000 kWp'
+            };
+          }
+
+          const solarData = {
+            central: { irradiance: 4.8, name: 'ภาคกลาง', nameEN: 'Central' },
+            north: { irradiance: 4.6, name: 'ภาคเหนือ', nameEN: 'Northern' },
+            northeast: { irradiance: 5.1, name: 'ภาคตะวันออกเฉียงเหนือ', nameEN: 'Northeastern' },
+            south: { irradiance: 4.4, name: 'ภาคใต้', nameEN: 'Southern' },
+            east: { irradiance: 4.9, name: 'ภาคตะวันออก', nameEN: 'Eastern' }
+          };
+
+          const regionData = solarData[region];
+          if (!regionData) {
+            return {
+              error: 'ภูมิภาคไม่ถูกต้อง',
+              errorEN: 'Invalid region'
+            };
+          }
+
+          const dailyProduction = capacityKwp * regionData.irradiance * performanceRatio;
+          const lossMultiplier = 1 - shadingLoss - dustLoss;
+          const adjustedDailyProduction = dailyProduction * lossMultiplier;
+          const monthlyProduction = adjustedDailyProduction * 30;
+          const yearlyProduction = adjustedDailyProduction * 365;
+
+          return {
+            success: true,
+            capacity: capacityKwp,
+            region: regionData,
+            production: {
+              daily: Math.round(adjustedDailyProduction * 100) / 100,
+              monthly: Math.round(monthlyProduction * 100) / 100,
+              yearly: Math.round(yearlyProduction * 100) / 100
+            },
+            factors: {
+              performanceRatio,
+              shadingLoss,
+              dustLoss,
+              totalLoss: Math.round((shadingLoss + dustLoss) * 100 * 100) / 100
+            }
+          };
+        }
+
+        function calculateElectricityBillInline(monthlyUnits, provider = 'mea') {
+          if (monthlyUnits < 0 || monthlyUnits > 10000) {
+            return {
+              error: 'การใช้ไฟต้องอยู่ระหว่าง 0-10,000 หน่วย',
+              errorEN: 'Electricity usage must be between 0-10,000 units'
+            };
+          }
+
+          const rates = {
+            mea: {
+              tiers: [
+                { max: 15, rate: 2.3488 },
+                { max: 25, rate: 2.9882 },
+                { max: 35, rate: 3.2405 },
+                { max: 100, rate: 3.6237 },
+                { max: 150, rate: 3.7171 },
+                { max: 400, rate: 4.2218 },
+                { max: Infinity, rate: 4.4217 }
+              ],
+              baseFee: 38.22,
+              name: 'MEA (การไฟฟ้านครหลวง)'
+            },
+            pea: {
+              tiers: [
+                { max: 15, rate: 2.3488 },
+                { max: 25, rate: 2.9882 },
+                { max: 35, rate: 3.2405 },
+                { max: 100, rate: 3.6237 },
+                { max: 150, rate: 3.7171 },
+                { max: 400, rate: 4.2218 },
+                { max: Infinity, rate: 4.4217 }
+              ],
+              baseFee: 24.62,
+              name: 'PEA (การไฟฟ้าส่วนภูมิภาค)'
+            }
+          };
+
+          const rateData = rates[provider];
+          if (!rateData) {
+            return {
+              error: 'ผู้ให้บริการไฟฟ้าไม่ถูกต้อง',
+              errorEN: 'Invalid electricity provider'
+            };
+          }
+
+          let totalCost = rateData.baseFee;
+          let remainingUnits = monthlyUnits;
+          const breakdown = [];
+
+          for (const tier of rateData.tiers) {
+            if (remainingUnits <= 0) break;
+            
+            const prevMax = breakdown.length > 0 ? rateData.tiers[breakdown.length - 1].max : 0;
+            const unitsInTier = Math.min(remainingUnits, tier.max - prevMax);
+            const costInTier = unitsInTier * tier.rate;
+            
+            breakdown.push({
+              units: Math.round(unitsInTier * 100) / 100,
+              rate: tier.rate,
+              cost: Math.round(costInTier * 100) / 100
+            });
+            
+            totalCost += costInTier;
+            remainingUnits -= unitsInTier;
+          }
+
+          const averageRate = monthlyUnits > 0 ? (totalCost - rateData.baseFee) / monthlyUnits : 0;
+
+          return {
+            success: true,
+            monthlyUnits,
+            provider: rateData,
+            costs: {
+              baseFee: rateData.baseFee,
+              energyCost: Math.round((totalCost - rateData.baseFee) * 100) / 100,
+              totalCost: Math.round(totalCost * 100) / 100,
+              averageRate: Math.round(averageRate * 100) / 100
+            },
+            breakdown
+          };
+        }
+
+        function estimateSystemCostInline(capacityKwp) {
+          if (capacityKwp <= 0 || capacityKwp > 1000) {
+            return {
+              error: 'กำลังการผลิตต้องอยู่ระหว่าง 0.1-1,000 kWp',
+              errorEN: 'Capacity must be between 0.1-1,000 kWp'
+            };
+          }
+
+          let costPerKwp;
+          let category;
+
+          if (capacityKwp <= 3) {
+            costPerKwp = 45000;
+            category = { name: 'ระบบเล็ก (1-3 kWp)' };
+          } else if (capacityKwp <= 5) {
+            costPerKwp = 42000;
+            category = { name: 'ระบบกลาง (3-5 kWp)' };
+          } else if (capacityKwp <= 10) {
+            costPerKwp = 38000;
+            category = { name: 'ระบบใหญ่ (5-10 kWp)' };
+          } else {
+            costPerKwp = 35000;
+            category = { name: 'ระบบขนาดใหญ่มาก (10+ kWp)' };
+          }
+
+          const totalCost = capacityKwp * costPerKwp;
+
+          return {
+            success: true,
+            capacity: capacityKwp,
+            costPerKwp,
+            totalCost: Math.round(totalCost),
+            category,
+            breakdown: {
+              equipment: Math.round(totalCost * 0.7),
+              installation: Math.round(totalCost * 0.2),
+              permits: Math.round(totalCost * 0.1)
+            }
+          };
+        }
+
+        function calculateSavingsAndROIInline(productionData, electricityData, systemCost, options = {}) {
+          const {
+            netMeteringRate = 2.20,
+            electricityPriceInflation = 0.03,
+            analysisYears = 25
+          } = options;
+
+          if (!productionData.success || !electricityData.success) {
+            return {
+              error: 'ข้อมูลการผลิตหรือค่าไฟฟ้าไม่ถูกต้อง',
+              errorEN: 'Invalid production or electricity data'
+            };
+          }
+
+          const monthlyProduction = productionData.production.monthly;
+          const monthlyUsage = electricityData.monthlyUnits;
+          const averageElectricityRate = electricityData.costs.averageRate;
+
+          const selfConsumption = Math.min(monthlyProduction, monthlyUsage);
+          const gridExport = Math.max(0, monthlyProduction - monthlyUsage);
+          const gridImport = Math.max(0, monthlyUsage - monthlyProduction);
+
+          const selfConsumptionSavings = selfConsumption * averageElectricityRate;
+          const exportIncome = gridExport * netMeteringRate;
+          const remainingElectricityBill = gridImport * averageElectricityRate + electricityData.costs.baseFee;
+          
+          const monthlySavings = selfConsumptionSavings + exportIncome;
+          const yearlySavings = monthlySavings * 12;
+
+          // Calculate lifetime savings with inflation and degradation
+          let lifetimeSavings = 0;
+          const degradationRate = 0.008; // 0.8% per year
+          
+          for (let year = 1; year <= analysisYears; year++) {
+            const electricityInflation = Math.pow(1 + electricityPriceInflation, year - 1);
+            const solarDegradation = Math.pow(1 - degradationRate, year - 1);
+            const yearSavings = yearlySavings * electricityInflation * solarDegradation;
+            lifetimeSavings += yearSavings;
+          }
+
+          const simplePaybackYears = systemCost / yearlySavings;
+          const roi = ((lifetimeSavings - systemCost) / systemCost) * 100;
+
+          return {
+            success: true,
+            energyFlow: {
+              monthlyProduction: Math.round(monthlyProduction * 100) / 100,
+              monthlyUsage,
+              selfConsumption: Math.round(selfConsumption * 100) / 100,
+              gridExport: Math.round(gridExport * 100) / 100,
+              gridImport: Math.round(gridImport * 100) / 100,
+              selfSufficiency: Math.round((selfConsumption / monthlyUsage) * 100 * 100) / 100
+            },
+            savings: {
+              monthly: Math.round(monthlySavings * 100) / 100,
+              yearly: Math.round(yearlySavings * 100) / 100,
+              lifetime: Math.round(lifetimeSavings * 100) / 100,
+              remainingBill: Math.round(remainingElectricityBill * 100) / 100
+            },
+            investment: {
+              systemCost,
+              paybackYears: Math.round(simplePaybackYears * 100) / 100,
+              roi: Math.round(roi * 100) / 100,
+              netProfit: Math.round((lifetimeSavings - systemCost) * 100) / 100
+            },
+            rates: {
+              electricity: averageElectricityRate,
+              netMetering: netMeteringRate
+            }
+          };
+        }
 
         </script>
 

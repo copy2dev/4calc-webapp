@@ -1,5 +1,64 @@
 # 4Calc Version History
 
+## v1.4.1 - Solar Calculator Manual Input Enhancement (2025-07-06)
+
+### 🔧 Manual Override Features *(New)*
+- **Manual kWp Input**: Users can specify exact system capacity instead of auto-calculation from roof area
+- **Manual Cost Input**: Users can enter actual installation quotes instead of market estimates
+- **Flexible Calculation Modes**: Auto (roof area), Manual kWp, Manual cost, or Full manual modes
+- **Visual Indicators**: Clear badges showing "Manual" vs "Auto" for capacity and cost calculations
+
+### ☀️ Enhanced Solar Calculator
+- **Smart Input Validation**: Only electricity usage required, roof area OR manual kWp accepted
+- **Dual Mode Operation**: Auto-calculate from roof area OR use manual system specifications
+- **Cost Flexibility**: Market-based estimates OR user-provided actual quotes
+- **Real-world Compatibility**: Perfect for users with existing quotes or specific requirements
+
+---
+
+## v1.4.0 - Solar Rooftop Calculator (2025-07-06)
+
+### ☀️ Major New Calculator
+- **Solar Rooftop Calculator**: Comprehensive solar panel ROI and savings analysis system
+- **Thailand-Specific Data**: Regional solar irradiance data for all 5 regions
+- **MEA/PEA Electricity Rates**: Official 2024 tiered electricity pricing from both providers
+- **Expandable Advanced Options**: Clean UI with collapsible sections for optional parameters
+
+### 🔧 Advanced Solar Calculation Engine
+- **Capacity Calculation**: Automatic kWp sizing based on roof area and panel type
+- **Energy Production**: Daily/monthly/yearly production with performance ratio and loss factors
+- **Financial Analysis**: 25-year ROI, payback period, and lifetime savings calculations
+- **Net Metering Integration**: Grid export income and self-consumption optimization
+- **Electricity Bill Analysis**: Accurate tiered rate calculations for MEA/PEA customers
+
+### 🎨 Expandable UI Design
+- **Core Inputs Only**: Simple roof area + electricity usage for basic calculation
+- **⚙️ Advanced Options**: Expandable section with panel type, provider, performance settings
+- **Smooth Animations**: CSS-based expand/collapse with rotate icons and transitions
+- **No Company Recommendations**: Clean focus on calculations, prepared for future advertising
+
+### 📊 Comprehensive Results Dashboard
+- **System Configuration**: Capacity, usable area, panel type, efficiency display
+- **Energy Production**: Daily/monthly/yearly kWh with solar irradiance data
+- **Financial Analysis**: System cost, monthly/yearly savings, payback period, 25-year ROI
+- **Energy Independence**: Self-sufficiency percentage with visual progress bar
+- **Environmental Impact**: CO₂ reduction and trees equivalent calculations
+
+### 🇹🇭 Thailand Market Data
+- **5 Regional Solar Data**: Central (4.8), North (4.6), Northeast (5.1), South (4.4), East (4.9) kWh/m²/day
+- **MEA Electricity Rates**: 7-tier structure with ฿38.22 base fee for Bangkok metro
+- **PEA Electricity Rates**: 7-tier structure with ฿24.62 base fee for provinces
+- **Solar Panel Types**: Monocrystalline (20%), Polycrystalline (17%), Thin Film (13%)
+- **System Costs**: Tiered pricing ฿45k-35k per kWp based on system size
+
+### 🧪 Testing Verified
+- **Sample Calculation**: 50sqm roof + 300kWh usage = 8kWp system, ฿304k cost, 6.2yr payback
+- **Advanced Options**: All expandable sections function with smooth animations
+- **Multi-language**: Complete Thai/English switching for all solar terminology
+- **Input Validation**: Comprehensive error handling for all edge cases
+
+---
+
 ## v1.3.0 - Taxi Fare Calculator (2025-07-05)
 
 ### 🚕 Major New Calculator
@@ -27,17 +86,42 @@
 - **Input Validation**: Comprehensive error checking and user feedback
 - **Bilingual Support**: Full Thai/English interface and results
 
-### 📋 Available Calculators (2 Working)
+### 📋 Available Calculators (7 Total)
 1. **MRT Time Calculator** 🚇
    - Complete 4-line Bangkok MRT system (109 stations)
    - Expandable route details with station-by-station breakdown
    - Travel time and fare calculations
    
-2. **Taxi Fare Calculator** 🚕 *(New)*
+2. **Taxi Fare Calculator** 🚕
    - Official Bangkok taxi rates
    - Distance + traffic time inputs
    - Detailed fare breakdown
    - Additional service charges
+
+3. **Solar Rooftop Calculator** ☀️ *(New)*
+   - Thailand-specific solar irradiance data (5 regions)
+   - MEA/PEA electricity rate analysis
+   - ROI and payback period calculations
+   - Expandable advanced options
+   
+4. **Pregnancy Calculator** 🤱
+   - LMP and conception date calculations
+   - Trimester tracking and milestones
+   - Due date predictions
+   
+5. **Interest Calculator** 💰
+   - Simple, compound, savings, and loan calculations
+   - Market rate comparisons
+   - Detailed breakdown tables
+
+6. **BTU Calculator** ❄️
+   - Air conditioning sizing calculations
+   - Room area and cooling requirements
+   
+7. **Distance Calculator** 📍
+   - GPS and location search integration
+   - Haversine distance calculations
+   - Travel time estimates
 
 ### 🧪 Testing Verified
 - **Sample Calculation**: 5km + 10min wait + app booking = ฿111

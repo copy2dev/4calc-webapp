@@ -41,9 +41,9 @@
                 </div>
                 <div class="flex items-center space-x-4">
                     <nav class="hidden md:flex space-x-8">
-                        <a href="#" id="nav-home" class="text-gray-700 hover:text-blue-600 transition-colors">หน้าแรก</a>
-                        <a href="#" id="nav-categories" class="text-gray-700 hover:text-blue-600 transition-colors">หมวดหมู่</a>
-                        <a href="#" id="nav-about" class="text-gray-700 hover:text-blue-600 transition-colors">เกี่ยวกับเรา</a>
+                        <a href="index.html" id="nav-home" class="text-gray-700 hover:text-blue-600 transition-colors">หน้าแรก</a>
+                        <a href="#categories" id="nav-categories" class="text-gray-700 hover:text-blue-600 transition-colors">หมวดหมู่</a>
+                        <a href="about.html" id="nav-about" class="text-gray-700 hover:text-blue-600 transition-colors">เกี่ยวกับเรา</a>
                     </nav>
                     
                     <!-- Language Switcher -->
@@ -95,7 +95,7 @@
         </div>
 
         <!-- Categories -->
-        <div class="flex flex-wrap justify-center gap-2 mb-8" id="categoryButtons">
+        <div id="categories" class="flex flex-wrap justify-center gap-2 mb-8">
             <button class="category-btn px-4 py-2 bg-blue-600 text-white border border-blue-600 rounded-lg hover:bg-blue-700 transition-colors" data-category="all">
                 <span class="mr-2">🔍</span>
                 <span>ทุกหมวดหมู่</span>
@@ -142,9 +142,9 @@
                 <p id="newCalcDesc" class="text-gray-600 mb-4">
                     เราเพิ่มเครื่องคิดเลขใหม่อย่างต่อเนื่องตามความต้องการของผู้ใช้
                 </p>
-                <button id="requestCalcBtn" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                <a href="about.html" id="requestCalcBtn" class="inline-block px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
                     ขอเครื่องคิดเลข
-                </button>
+                </a>
             </div>
         </div>
     </div>
@@ -439,7 +439,7 @@
             noResultsTitle: 'No calculators found', 
             noResultsDesc: 'Try adjusting your search or selecting a different category' 
           } 
-        }; const calculators = { th: [ { id: 'mrt-time', name: 'คำนวณเวลาเดินทาง MRT', description: 'คำนวณเวลาเดินทางระหว่างสถานี MRT', emoji: '🚇', category: 'transportation' }, { id: 'taxi-fare', name: 'คำนวณค่าแท็กซี่', description: 'คำนวณค่าแท็กซี่ตามระยะทางและเวลา', emoji: '🚕', category: 'transportation' }, { id: 'pregnancy', name: 'คำนวณอายุครรภ์', description: 'คำนวณกำหนดคลอดและ milestone สำคัญ', emoji: '🤱', category: 'health' }, { id: 'interest', name: 'คำนวณดอกเบี้ย', description: 'คำนวณดอกเบี้ยแบบง่ายและทบต้น', emoji: '💰', category: 'finance' }, { id: 'solar', name: 'คำนวณโซลาร์เซลล์', description: 'คำนวณผลตอบแทนและความคุ้มค่าของระบบโซลาร์', emoji: '☀️', category: 'utilities' }, { id: 'btu', name: 'คำนวณ BTU', description: 'คำนวณความต้องการ BTU สำหรับเครื่องปรับอากาศ', emoji: '❄️', category: 'utilities' }, { id: 'distance', name: 'คำนวณระยะทาง', description: 'คำนวณระยะทางระหว่างสองจุด', emoji: '📍', category: 'geography' } ], en: [ { id: 'mrt-time', name: 'MRT Time Calculator', description: 'Calculate travel time between MRT stations', emoji: '🚇', category: 'transportation' }, { id: 'taxi-fare', name: 'Taxi Fare Calculator', description: 'Calculate taxi fare based on distance and time', emoji: '🚕', category: 'transportation' }, { id: 'pregnancy', name: 'Pregnancy Calculator', description: 'Calculate due date and pregnancy milestones', emoji: '🤱', category: 'health' }, { id: 'interest', name: 'Interest Calculator', description: 'Calculate simple and compound interest', emoji: '💰', category: 'finance' }, { id: 'solar', name: 'Solar Rooftop Calculator', description: 'Calculate ROI and savings for solar panel systems', emoji: '☀️', category: 'utilities' }, { id: 'btu', name: 'BTU Calculator', description: 'Calculate BTU requirements for air conditioning', emoji: '❄️', category: 'utilities' }, { id: 'distance', name: 'Distance Calculator', description: 'Calculate distance between two points', emoji: '📍', category: 'geography' } ] }; document.addEventListener('DOMContentLoaded', function() { updateLanguage(); renderCalculators(); setupEventListeners(); }); function setupEventListeners() { document.getElementById('langButton').addEventListener('click', function() { const dropdown = document.getElementById('langDropdown'); dropdown.classList.toggle('show'); }); document.addEventListener('click', function(event) { if (!event.target.closest('.lang-btn')) { document.getElementById('langDropdown').classList.remove('show'); } }); document.getElementById('searchInput').addEventListener('input', function(e) { renderCalculators(e.target.value); }); document.querySelectorAll('.category-btn').forEach(btn => { btn.addEventListener('click', function() { const category = this.dataset.category; document.querySelectorAll('.category-btn').forEach(b => { b.className = 'category-btn px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors'; }); this.className = 'category-btn px-4 py-2 bg-blue-600 text-white border border-blue-600 rounded-lg hover:bg-blue-700 transition-colors'; selectedCategory = category === 'all' ? null : category; renderCalculators(); }); }); } function switchLanguage(lang) { currentLanguage = lang; localStorage.setItem('language', lang); const flagMap = { th: '🇹🇭', en: '🇺🇸' }; const nameMap = { th: 'ไทย', en: 'English' }; document.getElementById('currentFlag').textContent = flagMap[lang]; document.getElementById('currentLang').textContent = nameMap[lang]; document.getElementById('langDropdown').classList.remove('show'); updateLanguage(); renderCalculators(); } function updateLanguage() { const t = translations[currentLanguage]; document.getElementById('siteSubtitle').textContent = t.siteSubtitle; document.getElementById('welcomeText').textContent = t.welcomeText; document.getElementById('welcomeDescription').textContent = t.welcomeDescription; document.getElementById('searchInput').placeholder = t.searchPlaceholder; document.getElementById('nav-home').textContent = t.navHome; document.getElementById('nav-categories').textContent = t.navCategories; document.getElementById('nav-about').textContent = t.navAbout; document.getElementById('needNewCalc').textContent = t.needNewCalc; document.getElementById('newCalcDesc').textContent = t.newCalcDesc; document.getElementById('requestCalcBtn').textContent = t.requestCalcBtn; document.getElementById('footerText').textContent = t.footerText; const categoryTexts = [t.allCategories, t.transportation, t.health, t.finance, t.utilities, t.geography]; document.querySelectorAll('.category-btn span:last-child').forEach((span, index) => { span.textContent = categoryTexts[index]; }); } function renderCalculators(searchTerm = '') { const grid = document.getElementById('calculatorGrid'); const noResults = document.getElementById('noResults'); const currentCalculators = calculators[currentLanguage]; let filtered = currentCalculators.filter(calc => { const matchesSearch = calc.name.toLowerCase().includes(searchTerm.toLowerCase()) || calc.description.toLowerCase().includes(searchTerm.toLowerCase()); const matchesCategory = !selectedCategory || calc.category === selectedCategory; return matchesSearch && matchesCategory; }); if (filtered.length === 0) { grid.classList.add('hidden'); noResults.classList.remove('hidden'); return; } grid.classList.remove('hidden'); noResults.classList.add('hidden'); grid.innerHTML = filtered.map(calc => ` <div class="calculator-card bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer" onclick="showCalculator('${calc.id}')"> <div class="text-3xl mb-4">${calc.emoji}</div> <h3 class="text-lg font-semibold mb-2">${calc.name}</h3> <p class="text-gray-600 mb-3">${calc.description}</p> <span class="text-sm text-blue-600 font-medium"> ${translations[currentLanguage][calc.category]} </span> </div> `).join(''); } function showCalculator(type) { const modal = document.getElementById('calculatorModal'); const title = document.getElementById('modalTitle'); const content = document.getElementById('modalContent'); modal.classList.remove('hidden'); modal.classList.add('flex'); if (type === 'mrt-time') { title.textContent = currentLanguage === 'th' ? '🚇 คำนวณเวลาเดินทาง MRT' : '🚇 MRT Time Calculator'; content.innerHTML = getMRTCalculatorHTML(); } else { title.textContent = currentLanguage === 'th' ? 'เครื่องคิดเลขกำลังพัฒนา!' : 'Calculator Coming Soon!'; content.innerHTML = `<p class="text-center py-8 text-gray-500">${currentLanguage === 'th' ? 'เครื่องคิดเลขนี้อยู่ระหว่างการพัฒนา กรุณากลับมาใหม่ภายหลัง!' : 'This calculator is under development. Please check back later!'}</p>`; } } function closeCalculator() { const modal = document.getElementById('calculatorModal'); modal.classList.add('hidden'); modal.classList.remove('flex'); } function getMRTCalculatorHTML() {
+        }; const calculators = { th: [ { id: 'mrt-time', name: 'คำนวณเวลาเดินทาง MRT', description: 'คำนวณเวลาเดินทางระหว่างสถานี MRT', emoji: '🚇', category: 'transportation' }, { id: 'taxi-fare', name: 'คำนวณค่าแท็กซี่', description: 'คำนวณค่าแท็กซี่ตามระยะทางและเวลา', emoji: '🚕', category: 'transportation' }, { id: 'pregnancy', name: 'คำนวณอายุครรภ์', description: 'คำนวณกำหนดคลอดและ milestone สำคัญ', emoji: '🤱', category: 'health' }, { id: 'interest', name: 'คำนวณดอกเบี้ย', description: 'คำนวณดอกเบี้ยแบบง่ายและทบต้น', emoji: '💰', category: 'finance' }, { id: 'solar', name: 'คำนวณโซลาร์เซลล์', description: 'คำนวณผลตอบแทนและความคุ้มค่าของระบบโซลาร์', emoji: '☀️', category: 'utilities' }, { id: 'electrical', name: 'คำนวณทางไฟฟ้า', description: 'คำนวณขนาดสายไฟ ระยะทาง และแรงดันตก', emoji: '⚡', category: 'utilities' }, { id: 'btu', name: 'คำนวณ BTU', description: 'คำนวณความต้องการ BTU สำหรับเครื่องปรับอากาศ', emoji: '❄️', category: 'utilities' }, { id: 'distance', name: 'คำนวณระยะทาง', description: 'คำนวณระยะทางระหว่างสองจุด', emoji: '📍', category: 'geography' } ], en: [ { id: 'mrt-time', name: 'MRT Time Calculator', description: 'Calculate travel time between MRT stations', emoji: '🚇', category: 'transportation' }, { id: 'taxi-fare', name: 'Taxi Fare Calculator', description: 'Calculate taxi fare based on distance and time', emoji: '🚕', category: 'transportation' }, { id: 'pregnancy', name: 'Pregnancy Calculator', description: 'Calculate due date and pregnancy milestones', emoji: '🤱', category: 'health' }, { id: 'interest', name: 'Interest Calculator', description: 'Calculate simple and compound interest', emoji: '💰', category: 'finance' }, { id: 'solar', name: 'Solar Rooftop Calculator', description: 'Calculate ROI and savings for solar panel systems', emoji: '☀️', category: 'utilities' }, { id: 'electrical', name: 'Electrical Calculator', description: 'Calculate wire size, distance, and voltage drop', emoji: '⚡', category: 'utilities' }, { id: 'btu', name: 'BTU Calculator', description: 'Calculate BTU requirements for air conditioning', emoji: '❄️', category: 'utilities' }, { id: 'distance', name: 'Distance Calculator', description: 'Calculate distance between two points', emoji: '📍', category: 'geography' } ] }; document.addEventListener('DOMContentLoaded', function() { updateLanguage(); renderCalculators(); setupEventListeners(); }); function setupEventListeners() { document.getElementById('langButton').addEventListener('click', function() { const dropdown = document.getElementById('langDropdown'); dropdown.classList.toggle('show'); }); document.addEventListener('click', function(event) { if (!event.target.closest('.lang-btn')) { document.getElementById('langDropdown').classList.remove('show'); } }); document.getElementById('searchInput').addEventListener('input', function(e) { renderCalculators(e.target.value); }); document.querySelectorAll('.category-btn').forEach(btn => { btn.addEventListener('click', function() { const category = this.dataset.category; document.querySelectorAll('.category-btn').forEach(b => { b.className = 'category-btn px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors'; }); this.className = 'category-btn px-4 py-2 bg-blue-600 text-white border border-blue-600 rounded-lg hover:bg-blue-700 transition-colors'; selectedCategory = category === 'all' ? null : category; renderCalculators(); }); }); } function switchLanguage(lang) { currentLanguage = lang; localStorage.setItem('language', lang); const flagMap = { th: '🇹🇭', en: '🇺🇸' }; const nameMap = { th: 'ไทย', en: 'English' }; document.getElementById('currentFlag').textContent = flagMap[lang]; document.getElementById('currentLang').textContent = nameMap[lang]; document.getElementById('langDropdown').classList.remove('show'); updateLanguage(); renderCalculators(); } function updateLanguage() { const t = translations[currentLanguage]; document.getElementById('siteSubtitle').textContent = t.siteSubtitle; document.getElementById('welcomeText').textContent = t.welcomeText; document.getElementById('welcomeDescription').textContent = t.welcomeDescription; document.getElementById('searchInput').placeholder = t.searchPlaceholder; document.getElementById('nav-home').textContent = t.navHome; document.getElementById('nav-categories').textContent = t.navCategories; document.getElementById('nav-about').textContent = t.navAbout; document.getElementById('needNewCalc').textContent = t.needNewCalc; document.getElementById('newCalcDesc').textContent = t.newCalcDesc; document.getElementById('requestCalcBtn').textContent = t.requestCalcBtn; document.getElementById('footerText').textContent = t.footerText; const categoryTexts = [t.allCategories, t.transportation, t.health, t.finance, t.utilities, t.geography]; document.querySelectorAll('.category-btn span:last-child').forEach((span, index) => { span.textContent = categoryTexts[index]; }); } function renderCalculators(searchTerm = '') { const grid = document.getElementById('calculatorGrid'); const noResults = document.getElementById('noResults'); const currentCalculators = calculators[currentLanguage]; let filtered = currentCalculators.filter(calc => { const matchesSearch = calc.name.toLowerCase().includes(searchTerm.toLowerCase()) || calc.description.toLowerCase().includes(searchTerm.toLowerCase()); const matchesCategory = !selectedCategory || calc.category === selectedCategory; return matchesSearch && matchesCategory; }); if (filtered.length === 0) { grid.classList.add('hidden'); noResults.classList.remove('hidden'); return; } grid.classList.remove('hidden'); noResults.classList.add('hidden'); grid.innerHTML = filtered.map(calc => ` <div class="calculator-card bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer" onclick="showCalculator('${calc.id}')"> <div class="text-3xl mb-4">${calc.emoji}</div> <h3 class="text-lg font-semibold mb-2">${calc.name}</h3> <p class="text-gray-600 mb-3">${calc.description}</p> <span class="text-sm text-blue-600 font-medium"> ${translations[currentLanguage][calc.category]} </span> </div> `).join(''); } function showCalculator(type) { const modal = document.getElementById('calculatorModal'); const title = document.getElementById('modalTitle'); const content = document.getElementById('modalContent'); modal.classList.remove('hidden'); modal.classList.add('flex'); if (type === 'mrt-time') { title.textContent = currentLanguage === 'th' ? '🚇 คำนวณเวลาเดินทาง MRT' : '🚇 MRT Time Calculator'; content.innerHTML = getMRTCalculatorHTML(); } else { title.textContent = currentLanguage === 'th' ? 'เครื่องคิดเลขกำลังพัฒนา!' : 'Calculator Coming Soon!'; content.innerHTML = `<p class="text-center py-8 text-gray-500">${currentLanguage === 'th' ? 'เครื่องคิดเลขนี้อยู่ระหว่างการพัฒนา กรุณากลับมาใหม่ภายหลัง!' : 'This calculator is under development. Please check back later!'}</p>`; } } function closeCalculator() { const modal = document.getElementById('calculatorModal'); modal.classList.add('hidden'); modal.classList.remove('flex'); } function getMRTCalculatorHTML() {
           const isEnglish = currentLanguage === 'en';
           
           // Generate station options from comprehensive data
@@ -895,6 +895,9 @@
           } else if (type === 'solar') {
             title.textContent = currentLanguage === 'th' ? '☀️ คำนวณโซลาร์เซลล์บนหลังคา' : '☀️ Solar Rooftop Calculator';
             content.innerHTML = getSolarCalculatorHTML();
+          } else if (type === 'electrical') {
+            title.textContent = currentLanguage === 'th' ? '⚡ เครื่องคำนวณทางไฟฟ้า' : '⚡ Electrical Calculator';
+            content.innerHTML = getElectricalCalculatorHTML();
           } else {
             title.textContent = currentLanguage === 'th' ? 'เครื่องคิดเลขกำลังพัฒนา!' : 'Calculator Coming Soon!';
             content.innerHTML = `<p class="text-center py-8 text-gray-500">${currentLanguage === 'th' ? 'เครื่องคิดเลขนี้อยู่ระหว่างการพัฒนา กรุณากลับมาใหม่ภายหลัง!' : 'This calculator is under development. Please check back later!'}</p>`;
@@ -3584,6 +3587,933 @@
               electricity: averageElectricityRate,
               netMetering: netMeteringRate
             }
+          };
+        }
+
+        // Electrical Calculator Functions
+        let currentElectricalType = 'conductor';
+
+        function getElectricalCalculatorHTML() {
+          const isEnglish = currentLanguage === 'en';
+          
+          return `
+            <div class="space-y-6">
+              <!-- Tab Navigation -->
+              <div class="flex flex-wrap gap-2 bg-gray-100 p-1 rounded-lg">
+                <button onclick="switchElectricalTab('conductor')" 
+                        class="electrical-tab flex-1 px-4 py-2 text-sm font-medium rounded-lg transition-colors bg-blue-600 text-white" 
+                        data-tab="conductor">
+                  ${isEnglish ? '📏 Wire Size' : '📏 ขนาดสายไฟ'}
+                </button>
+                <button onclick="switchElectricalTab('distance')" 
+                        class="electrical-tab flex-1 px-4 py-2 text-sm font-medium rounded-lg transition-colors bg-white text-gray-700 hover:bg-gray-50" 
+                        data-tab="distance">
+                  ${isEnglish ? '📐 Max Distance' : '📐 ระยะทางสูงสุด'}
+                </button>
+                <button onclick="switchElectricalTab('voltage')" 
+                        class="electrical-tab flex-1 px-4 py-2 text-sm font-medium rounded-lg transition-colors bg-white text-gray-700 hover:bg-gray-50" 
+                        data-tab="voltage">
+                  ${isEnglish ? '⚡ Voltage Drop' : '⚡ แรงดันตก'}
+                </button>
+              </div>
+
+              <!-- Calculator Content -->
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Input Section -->
+                <div class="bg-gray-50 p-4 rounded-lg">
+                  <h3 class="font-semibold mb-4" id="electricalInputTitle">
+                    ${isEnglish ? '📏 Minimum Conductor Size' : '📏 ขนาดสายไฟขั้นต่ำ'}
+                  </h3>
+                  <div id="electricalInputs">
+                    <!-- Dynamic inputs will be inserted here -->
+                  </div>
+                </div>
+
+                <!-- Results Section -->
+                <div class="bg-gray-50 p-4 rounded-lg">
+                  <h3 class="font-semibold mb-4">${isEnglish ? 'Calculation Results' : 'ผลการคำนวณ'}</h3>
+                  <div id="electricalResults" class="text-center py-8 text-gray-500">
+                    ${isEnglish ? 'Enter values and click calculate' : 'ใส่ค่าต่างๆ และกดคำนวณ'}
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        function switchElectricalTab(type) {
+          currentElectricalType = type;
+          const isEnglish = currentLanguage === 'en';
+          
+          // Update tab buttons
+          document.querySelectorAll('.electrical-tab').forEach(tab => {
+            tab.className = 'electrical-tab flex-1 px-4 py-2 text-sm font-medium rounded-lg transition-colors bg-white text-gray-700 hover:bg-gray-50';
+          });
+          document.querySelector(`[data-tab="${type}"]`).className = 'electrical-tab flex-1 px-4 py-2 text-sm font-medium rounded-lg transition-colors bg-blue-600 text-white';
+          
+          // Update input section
+          const inputTitle = document.getElementById('electricalInputTitle');
+          const inputsDiv = document.getElementById('electricalInputs');
+          const results = document.getElementById('electricalResults');
+          
+          // Clear results
+          results.innerHTML = `<div class="text-center py-8 text-gray-500">${isEnglish ? 'Enter values and click calculate' : 'ใส่ค่าต่างๆ และกดคำนวณ'}</div>`;
+          
+          if (type === 'conductor') {
+            inputTitle.textContent = isEnglish ? '📏 Minimum Conductor Size' : '📏 ขนาดสายไฟขั้นต่ำ';
+            inputsDiv.innerHTML = `
+              <div class="space-y-3">
+                <div>
+                  <label class="block text-sm font-medium mb-1">${isEnglish ? 'Current (A)' : 'กระแส (แอมป์)'}</label>
+                  <input type="number" id="elecCurrent" placeholder="${isEnglish ? 'Enter current in amperes' : 'ใส่กระแสเป็นแอมป์'}" 
+                         class="w-full px-3 py-2 border rounded-lg" min="0.1" step="0.1">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium mb-1">${isEnglish ? 'Distance (m)' : 'ระยะทาง (เมตร)'}</label>
+                  <input type="number" id="elecDistance" placeholder="${isEnglish ? 'Enter distance in meters' : 'ใส่ระยะทางเป็นเมตร'}" 
+                         class="w-full px-3 py-2 border rounded-lg" min="0.1" step="0.1">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium mb-1">${isEnglish ? 'Voltage (V)' : 'แรงดัน (โวลต์)'}</label>
+                  <select id="elecVoltage" class="w-full px-3 py-2 border rounded-lg">
+                    <option value="220">${isEnglish ? '220V (1-phase)' : '220V (1 เฟส)'}</option>
+                    <option value="380">${isEnglish ? '380V (3-phase)' : '380V (3 เฟส)'}</option>
+                    <option value="400">${isEnglish ? '400V (3-phase)' : '400V (3 เฟส)'}</option>
+                    <option value="480">${isEnglish ? '480V (3-phase)' : '480V (3 เฟส)'}</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium mb-1">${isEnglish ? 'Voltage Drop (%)' : 'แรงดันตก (%)'}</label>
+                  <input type="number" id="elecVoltageDrop" value="3" 
+                         class="w-full px-3 py-2 border rounded-lg" min="0.1" max="20" step="0.1">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium mb-1">${isEnglish ? 'Conductor Material' : 'วัสดุสายไฟ'}</label>
+                  <select id="elecMaterial" class="w-full px-3 py-2 border rounded-lg">
+                    <option value="copper">${isEnglish ? 'Copper (Cu)' : 'ทองแดง (Cu)'}</option>
+                    <option value="aluminum">${isEnglish ? 'Aluminum (Al)' : 'อลูมิเนียม (Al)'}</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium mb-1">${isEnglish ? 'Number of Phases' : 'จำนวนเฟส'}</label>
+                  <select id="elecPhases" class="w-full px-3 py-2 border rounded-lg">
+                    <option value="1">${isEnglish ? '1 Phase' : '1 เฟส'}</option>
+                    <option value="3">${isEnglish ? '3 Phase' : '3 เฟส'}</option>
+                  </select>
+                </div>
+                <button onclick="calculateElectrical()" class="w-full px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700">
+                  ${isEnglish ? '⚡ Calculate Wire Size' : '⚡ คำนวณขนาดสาย'}
+                </button>
+              </div>
+            `;
+          } else if (type === 'distance') {
+            inputTitle.textContent = isEnglish ? '📐 Maximum Circuit Distance' : '📐 ระยะทางวงจรสูงสุด';
+            inputsDiv.innerHTML = `
+              <div class="space-y-3">
+                <div>
+                  <label class="block text-sm font-medium mb-1">${isEnglish ? 'Wire Size (mm²)' : 'ขนาดสาย (ตร.มม.)'}</label>
+                  <select id="elecWireSize" class="w-full px-3 py-2 border rounded-lg">
+                    <option value="1.5">1.5 mm²</option>
+                    <option value="2.5">2.5 mm²</option>
+                    <option value="4">4 mm²</option>
+                    <option value="6">6 mm²</option>
+                    <option value="10">10 mm²</option>
+                    <option value="16">16 mm²</option>
+                    <option value="25">25 mm²</option>
+                    <option value="35">35 mm²</option>
+                    <option value="50">50 mm²</option>
+                    <option value="70">70 mm²</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium mb-1">${isEnglish ? 'Current (A)' : 'กระแส (แอมป์)'}</label>
+                  <input type="number" id="elecCurrentDist" placeholder="${isEnglish ? 'Enter current in amperes' : 'ใส่กระแสเป็นแอมป์'}" 
+                         class="w-full px-3 py-2 border rounded-lg" min="0.1" step="0.1">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium mb-1">${isEnglish ? 'Voltage (V)' : 'แรงดัน (โวลต์)'}</label>
+                  <select id="elecVoltageDist" class="w-full px-3 py-2 border rounded-lg">
+                    <option value="220">${isEnglish ? '220V (1-phase)' : '220V (1 เฟส)'}</option>
+                    <option value="380">${isEnglish ? '380V (3-phase)' : '380V (3 เฟส)'}</option>
+                    <option value="400">${isEnglish ? '400V (3-phase)' : '400V (3 เฟส)'}</option>
+                    <option value="480">${isEnglish ? '480V (3-phase)' : '480V (3 เฟส)'}</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium mb-1">${isEnglish ? 'Voltage Drop (%)' : 'แรงดันตก (%)'}</label>
+                  <input type="number" id="elecVoltageDropDist" value="3" 
+                         class="w-full px-3 py-2 border rounded-lg" min="0.1" max="20" step="0.1">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium mb-1">${isEnglish ? 'Conductor Material' : 'วัสดุสายไฟ'}</label>
+                  <select id="elecMaterialDist" class="w-full px-3 py-2 border rounded-lg">
+                    <option value="copper">${isEnglish ? 'Copper (Cu)' : 'ทองแดง (Cu)'}</option>
+                    <option value="aluminum">${isEnglish ? 'Aluminum (Al)' : 'อลูมิเนียม (Al)'}</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium mb-1">${isEnglish ? 'Number of Phases' : 'จำนวนเฟส'}</label>
+                  <select id="elecPhasesDist" class="w-full px-3 py-2 border rounded-lg">
+                    <option value="1">${isEnglish ? '1 Phase' : '1 เฟส'}</option>
+                    <option value="3">${isEnglish ? '3 Phase' : '3 เฟส'}</option>
+                  </select>
+                </div>
+                <button onclick="calculateElectrical()" class="w-full px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700">
+                  ${isEnglish ? '📐 Calculate Max Distance' : '📐 คำนวณระยะทางสูงสุด'}
+                </button>
+              </div>
+            `;
+          } else if (type === 'voltage') {
+            inputTitle.textContent = isEnglish ? '⚡ Voltage Drop Percentage' : '⚡ เปอร์เซ็นต์แรงดันตก';
+            inputsDiv.innerHTML = `
+              <div class="space-y-3">
+                <div>
+                  <label class="block text-sm font-medium mb-1">${isEnglish ? 'Wire Size (mm²)' : 'ขนาดสาย (ตร.มม.)'}</label>
+                  <select id="elecWireSizeVolt" class="w-full px-3 py-2 border rounded-lg">
+                    <option value="1.5">1.5 mm²</option>
+                    <option value="2.5">2.5 mm²</option>
+                    <option value="4">4 mm²</option>
+                    <option value="6">6 mm²</option>
+                    <option value="10">10 mm²</option>
+                    <option value="16">16 mm²</option>
+                    <option value="25">25 mm²</option>
+                    <option value="35">35 mm²</option>
+                    <option value="50">50 mm²</option>
+                    <option value="70">70 mm²</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium mb-1">${isEnglish ? 'Current (A)' : 'กระแส (แอมป์)'}</label>
+                  <input type="number" id="elecCurrentVolt" placeholder="${isEnglish ? 'Enter current in amperes' : 'ใส่กระแสเป็นแอมป์'}" 
+                         class="w-full px-3 py-2 border rounded-lg" min="0.1" step="0.1">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium mb-1">${isEnglish ? 'Distance (m)' : 'ระยะทาง (เมตร)'}</label>
+                  <input type="number" id="elecDistanceVolt" placeholder="${isEnglish ? 'Enter distance in meters' : 'ใส่ระยะทางเป็นเมตร'}" 
+                         class="w-full px-3 py-2 border rounded-lg" min="0.1" step="0.1">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium mb-1">${isEnglish ? 'Voltage (V)' : 'แรงดัน (โวลต์)'}</label>
+                  <select id="elecVoltageVolt" class="w-full px-3 py-2 border rounded-lg">
+                    <option value="220">${isEnglish ? '220V (1-phase)' : '220V (1 เฟส)'}</option>
+                    <option value="380">${isEnglish ? '380V (3-phase)' : '380V (3 เฟส)'}</option>
+                    <option value="400">${isEnglish ? '400V (3-phase)' : '400V (3 เฟส)'}</option>
+                    <option value="480">${isEnglish ? '480V (3-phase)' : '480V (3 เฟส)'}</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium mb-1">${isEnglish ? 'Conductor Material' : 'วัสดุสายไฟ'}</label>
+                  <select id="elecMaterialVolt" class="w-full px-3 py-2 border rounded-lg">
+                    <option value="copper">${isEnglish ? 'Copper (Cu)' : 'ทองแดง (Cu)'}</option>
+                    <option value="aluminum">${isEnglish ? 'Aluminum (Al)' : 'อลูมิเนียม (Al)'}</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium mb-1">${isEnglish ? 'Number of Phases' : 'จำนวนเฟส'}</label>
+                  <select id="elecPhasesVolt" class="w-full px-3 py-2 border rounded-lg">
+                    <option value="1">${isEnglish ? '1 Phase' : '1 เฟส'}</option>
+                    <option value="3">${isEnglish ? '3 Phase' : '3 เฟส'}</option>
+                  </select>
+                </div>
+                <button onclick="calculateElectrical()" class="w-full px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700">
+                  ${isEnglish ? '⚡ Calculate Voltage Drop' : '⚡ คำนวณแรงดันตก'}
+                </button>
+              </div>
+            `;
+          }
+        }
+
+        function calculateElectrical() {
+          const results = document.getElementById('electricalResults');
+          const isEnglish = currentLanguage === 'en';
+          
+          try {
+            let result;
+            
+            if (currentElectricalType === 'conductor') {
+              const current = parseFloat(document.getElementById('elecCurrent').value);
+              const distance = parseFloat(document.getElementById('elecDistance').value);
+              const voltage = parseFloat(document.getElementById('elecVoltage').value);
+              const voltageDropPercent = parseFloat(document.getElementById('elecVoltageDrop').value);
+              const material = document.getElementById('elecMaterial').value;
+              const phases = parseInt(document.getElementById('elecPhases').value);
+              
+              if (!current || !distance || !voltage || !voltageDropPercent) {
+                results.innerHTML = `<p class="text-red-500">${isEnglish ? 'Please fill in all fields' : 'กรุณากรอกข้อมูลให้ครบ'}</p>`;
+                return;
+              }
+              
+              result = calculateMinimumConductorSizeInline(current, distance, voltage, voltageDropPercent, material, phases);
+              displayConductorResults(result);
+              
+            } else if (currentElectricalType === 'distance') {
+              const wireSize = parseFloat(document.getElementById('elecWireSize').value);
+              const current = parseFloat(document.getElementById('elecCurrentDist').value);
+              const voltage = parseFloat(document.getElementById('elecVoltageDist').value);
+              const voltageDropPercent = parseFloat(document.getElementById('elecVoltageDropDist').value);
+              const material = document.getElementById('elecMaterialDist').value;
+              const phases = parseInt(document.getElementById('elecPhasesDist').value);
+              
+              if (!wireSize || !current || !voltage || !voltageDropPercent) {
+                results.innerHTML = `<p class="text-red-500">${isEnglish ? 'Please fill in all fields' : 'กรุณากรอกข้อมูลให้ครบ'}</p>`;
+                return;
+              }
+              
+              result = calculateMaximumCircuitDistanceInline(wireSize, current, voltage, voltageDropPercent, material, phases);
+              displayDistanceResults(result);
+              
+            } else if (currentElectricalType === 'voltage') {
+              const wireSize = parseFloat(document.getElementById('elecWireSizeVolt').value);
+              const current = parseFloat(document.getElementById('elecCurrentVolt').value);
+              const distance = parseFloat(document.getElementById('elecDistanceVolt').value);
+              const voltage = parseFloat(document.getElementById('elecVoltageVolt').value);
+              const material = document.getElementById('elecMaterialVolt').value;
+              const phases = parseInt(document.getElementById('elecPhasesVolt').value);
+              
+              if (!wireSize || !current || !distance || !voltage) {
+                results.innerHTML = `<p class="text-red-500">${isEnglish ? 'Please fill in all fields' : 'กรุณากรอกข้อมูลให้ครบ'}</p>`;
+                return;
+              }
+              
+              result = calculateVoltageDropPercentageInline(wireSize, current, distance, voltage, material, phases);
+              displayVoltageResults(result);
+            }
+            
+          } catch (error) {
+            results.innerHTML = `<p class="text-red-500">${isEnglish ? 'Calculation error. Please check your inputs.' : 'เกิดข้อผิดพลาดในการคำนวณ กรุณาตรวจสอบข้อมูล'}</p>`;
+          }
+        }
+
+        function displayConductorResults(result) {
+          const results = document.getElementById('electricalResults');
+          const isEnglish = currentLanguage === 'en';
+          
+          if (result.error) {
+            results.innerHTML = `<p class="text-red-500">${isEnglish ? result.errorEN : result.error}</p>`;
+            return;
+          }
+          
+          const { calculation, warnings } = result;
+          const wire = calculation.recommendedWire;
+          
+          let warningsHTML = warnings.map(w => `
+            <div class="p-2 rounded text-sm ${w.type === 'error' ? 'bg-red-50 text-red-700' : w.type === 'warning' ? 'bg-yellow-50 text-yellow-700' : w.type === 'success' ? 'bg-green-50 text-green-700' : 'bg-blue-50 text-blue-700'}">
+              ${isEnglish ? w.messageEN : w.message}
+            </div>
+          `).join('');
+          
+          results.innerHTML = `
+            <div class="space-y-4 text-left">
+              <!-- Recommended Wire -->
+              <div class="p-4 bg-yellow-50 rounded-lg border-l-4 border-yellow-400">
+                <h4 class="font-semibold text-lg mb-2">${isEnglish ? 'Recommended Wire Size' : 'ขนาดสายที่แนะนำ'}</h4>
+                <div class="space-y-2">
+                  <div class="text-2xl font-bold text-yellow-600">
+                    ${wire.mm2} mm² ${wire.awg !== '-' ? `(AWG ${wire.awg})` : ''}
+                  </div>
+                  <div class="text-sm">
+                    <strong>${isEnglish ? 'Ampacity:' : 'กำลังขนาด:'}</strong> ${wire.ampacity} A<br>
+                    <strong>${isEnglish ? 'Actual Voltage Drop:' : 'แรงดันตกจริง:'}</strong> ${wire.actualVoltageDropPercent}%<br>
+                    <strong>${isEnglish ? 'Voltage Drop:' : 'แรงดันตก:'}</strong> ${wire.actualVoltageDrop} V
+                  </div>
+                </div>
+              </div>
+
+              <!-- Comparison Table -->
+              <div class="p-4 bg-gray-50 rounded-lg">
+                <h4 class="font-semibold mb-2">${isEnglish ? 'Wire Size Comparison' : 'ตารางเปรียบเทียบขนาดสาย'}</h4>
+                <div class="overflow-x-auto">
+                  <table class="w-full text-sm">
+                    <thead>
+                      <tr class="bg-gray-200">
+                        <th class="px-2 py-1 text-left">${isEnglish ? 'Size' : 'ขนาด'}</th>
+                        <th class="px-2 py-1 text-left">${isEnglish ? 'Ampacity' : 'กำลัง'}</th>
+                        <th class="px-2 py-1 text-left">${isEnglish ? 'V-Drop %' : 'แรงดันตก %'}</th>
+                        <th class="px-2 py-1 text-center">${isEnglish ? 'Status' : 'สถานะ'}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      ${calculation.comparisonTable.map(wire => `
+                        <tr class="${wire.suitable ? 'bg-green-50' : 'bg-red-50'}">
+                          <td class="px-2 py-1">${wire.mm2} mm²</td>
+                          <td class="px-2 py-1">${wire.ampacity} A</td>
+                          <td class="px-2 py-1">${wire.voltageDropPercent}%</td>
+                          <td class="px-2 py-1 text-center">
+                            ${wire.suitable ? '✅' : '❌'}
+                          </td>
+                        </tr>
+                      `).join('')}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Warnings -->
+              <div class="space-y-2">
+                ${warningsHTML}
+              </div>
+            </div>
+          `;
+        }
+
+        function displayDistanceResults(result) {
+          const results = document.getElementById('electricalResults');
+          const isEnglish = currentLanguage === 'en';
+          
+          if (result.error) {
+            results.innerHTML = `<p class="text-red-500">${isEnglish ? result.errorEN : result.error}</p>`;
+            return;
+          }
+          
+          const { calculation, warnings } = result;
+          
+          let warningsHTML = warnings.map(w => `
+            <div class="p-2 rounded text-sm ${w.type === 'error' ? 'bg-red-50 text-red-700' : w.type === 'warning' ? 'bg-yellow-50 text-yellow-700' : w.type === 'success' ? 'bg-green-50 text-green-700' : 'bg-blue-50 text-blue-700'}">
+              ${isEnglish ? w.messageEN : w.message}
+            </div>
+          `).join('');
+          
+          results.innerHTML = `
+            <div class="space-y-4 text-left">
+              <!-- Maximum Distance -->
+              <div class="p-4 bg-blue-50 rounded-lg border-l-4 border-blue-400">
+                <h4 class="font-semibold text-lg mb-2">${isEnglish ? 'Maximum Distance' : 'ระยะทางสูงสุด'}</h4>
+                <div class="text-2xl font-bold text-blue-600 mb-2">
+                  ${calculation.maxDistance} ${isEnglish ? 'meters' : 'เมตร'}
+                </div>
+                <div class="text-sm">
+                  <strong>${isEnglish ? 'Wire Size:' : 'ขนาดสาย:'}</strong> ${calculation.wireInfo.mm2} mm²<br>
+                  <strong>${isEnglish ? 'Ampacity:' : 'กำลังขนาด:'}</strong> ${calculation.ampacity} A
+                </div>
+              </div>
+
+              <!-- Distance Table -->
+              <div class="p-4 bg-gray-50 rounded-lg">
+                <h4 class="font-semibold mb-2">${isEnglish ? 'Distance Comparison' : 'ตารางเปรียบเทียบระยะทาง'}</h4>
+                <div class="overflow-x-auto">
+                  <table class="w-full text-sm">
+                    <thead>
+                      <tr class="bg-gray-200">
+                        <th class="px-2 py-1 text-left">${isEnglish ? 'Wire Size' : 'ขนาดสาย'}</th>
+                        <th class="px-2 py-1 text-left">${isEnglish ? 'Ampacity' : 'กำลัง'}</th>
+                        <th class="px-2 py-1 text-left">${isEnglish ? 'Max Distance' : 'ระยะทางสูงสุด'}</th>
+                        <th class="px-2 py-1 text-center">${isEnglish ? 'Recommended' : 'แนะนำ'}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      ${calculation.distanceTable.map(wire => `
+                        <tr class="${wire.recommended ? 'bg-green-50' : ''}">
+                          <td class="px-2 py-1">${wire.mm2} mm²</td>
+                          <td class="px-2 py-1">${wire.ampacity} A</td>
+                          <td class="px-2 py-1">${wire.maxDistance} m</td>
+                          <td class="px-2 py-1 text-center">
+                            ${wire.recommended ? '⭐' : ''}
+                          </td>
+                        </tr>
+                      `).join('')}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Warnings -->
+              <div class="space-y-2">
+                ${warningsHTML}
+              </div>
+            </div>
+          `;
+        }
+
+        function displayVoltageResults(result) {
+          const results = document.getElementById('electricalResults');
+          const isEnglish = currentLanguage === 'en';
+          
+          if (result.error) {
+            results.innerHTML = `<p class="text-red-500">${isEnglish ? result.errorEN : result.error}</p>`;
+            return;
+          }
+          
+          const { calculation, warnings } = result;
+          
+          let warningsHTML = warnings.map(w => `
+            <div class="p-2 rounded text-sm ${w.type === 'error' ? 'bg-red-50 text-red-700' : w.type === 'warning' ? 'bg-yellow-50 text-yellow-700' : w.type === 'success' ? 'bg-green-50 text-green-700' : 'bg-blue-50 text-blue-700'}">
+              ${isEnglish ? w.messageEN : w.message}
+            </div>
+          `).join('');
+          
+          const status = calculation.voltageDropPercentage <= 5 ? 'success' : calculation.voltageDropPercentage <= 10 ? 'warning' : 'error';
+          const statusColors = {
+            success: 'bg-green-50 border-green-400 text-green-600',
+            warning: 'bg-yellow-50 border-yellow-400 text-yellow-600', 
+            error: 'bg-red-50 border-red-400 text-red-600'
+          };
+          
+          results.innerHTML = `
+            <div class="space-y-4 text-left">
+              <!-- Voltage Drop Result -->
+              <div class="p-4 rounded-lg border-l-4 ${statusColors[status]}">
+                <h4 class="font-semibold text-lg mb-2">${isEnglish ? 'Voltage Drop Analysis' : 'การวิเคราะห์แรงดันตก'}</h4>
+                <div class="space-y-2">
+                  <div class="text-2xl font-bold">
+                    ${calculation.voltageDropPercentage}%
+                  </div>
+                  <div class="text-sm">
+                    <strong>${isEnglish ? 'Voltage Drop:' : 'แรงดันตก:'}</strong> ${calculation.voltageDrop} V<br>
+                    <strong>${isEnglish ? 'Remaining Voltage:' : 'แรงดันคงเหลือ:'}</strong> ${calculation.remainingVoltage} V<br>
+                    <strong>${isEnglish ? 'Resistance:' : 'ความต้านทาน:'}</strong> ${calculation.resistance} Ω
+                  </div>
+                </div>
+              </div>
+
+              <!-- Standards Check -->
+              <div class="p-4 bg-gray-50 rounded-lg">
+                <h4 class="font-semibold mb-2">${isEnglish ? 'Standards Compliance' : 'การตรวจสอบมาตรฐาน'}</h4>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
+                  <div class="p-2 rounded ${calculation.standards.residential.total ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}">
+                    <strong>${isEnglish ? 'Residential' : 'ที่อยู่อาศัย'}</strong><br>
+                    ${calculation.standards.residential.total ? '✅ Pass' : '❌ Fail'} (≤5%)
+                  </div>
+                  <div class="p-2 rounded ${calculation.standards.commercial.total ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}">
+                    <strong>${isEnglish ? 'Commercial' : 'พาณิชย์'}</strong><br>
+                    ${calculation.standards.commercial.total ? '✅ Pass' : '❌ Fail'} (≤5%)
+                  </div>
+                  <div class="p-2 rounded ${calculation.standards.industrial.total ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}">
+                    <strong>${isEnglish ? 'Industrial' : 'อุตสาหกรรม'}</strong><br>
+                    ${calculation.standards.industrial.total ? '✅ Pass' : '❌ Fail'} (≤10%)
+                  </div>
+                </div>
+              </div>
+
+              <!-- Distance Comparison -->
+              <div class="p-4 bg-gray-50 rounded-lg">
+                <h4 class="font-semibold mb-2">${isEnglish ? 'Distance vs Voltage Drop' : 'ระยะทาง vs แรงดันตก'}</h4>
+                <div class="overflow-x-auto">
+                  <table class="w-full text-sm">
+                    <thead>
+                      <tr class="bg-gray-200">
+                        <th class="px-2 py-1 text-left">${isEnglish ? 'Distance' : 'ระยะทาง'}</th>
+                        <th class="px-2 py-1 text-left">${isEnglish ? 'V-Drop %' : 'แรงดันตก %'}</th>
+                        <th class="px-2 py-1 text-left">${isEnglish ? 'Remaining V' : 'แรงดันเหลือ'}</th>
+                        <th class="px-2 py-1 text-center">${isEnglish ? 'OK' : 'ผ่าน'}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      ${calculation.distanceComparisonTable.map(row => `
+                        <tr class="${row.acceptable ? 'bg-green-50' : 'bg-red-50'}">
+                          <td class="px-2 py-1">${row.distance} m</td>
+                          <td class="px-2 py-1">${row.voltageDropPercent}%</td>
+                          <td class="px-2 py-1">${row.remainingVoltage} V</td>
+                          <td class="px-2 py-1 text-center">
+                            ${row.acceptable ? '✅' : '❌'}
+                          </td>
+                        </tr>
+                      `).join('')}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Warnings -->
+              <div class="space-y-2">
+                ${warningsHTML}
+              </div>
+            </div>
+          `;
+        }
+
+        // Inline Electrical Calculator Functions for Browser Compatibility
+        function calculateMinimumConductorSizeInline(current, distance, voltage, voltageDropPercent, material = 'copper', phases = 1) {
+          if (current <= 0 || distance <= 0 || voltage <= 0 || voltageDropPercent <= 0) {
+            return {
+              error: 'ข้อมูลไม่ถูกต้อง: กระแส, ระยะทาง, แรงดัน และ % แรงดันตกต้องมากกว่า 0',
+              errorEN: 'Invalid input: Current, distance, voltage, and voltage drop % must be > 0'
+            };
+          }
+
+          const resistivity = material === 'copper' ? 0.0175 : 0.0286;
+          const allowedVoltageDrop = voltage * (voltageDropPercent / 100);
+          
+          let maxResistance;
+          if (phases === 1) {
+            maxResistance = allowedVoltageDrop / current;
+          } else {
+            maxResistance = allowedVoltageDrop / (Math.sqrt(3) * current);
+          }
+
+          const minCrossSection = (resistivity * distance * 2) / maxResistance;
+
+          // Wire sizes table
+          const wireSizes = [
+            { awg: '14', mm2: 2.08, ampacity_cu: 20, ampacity_al: 15 },
+            { awg: '12', mm2: 3.31, ampacity_cu: 25, ampacity_al: 20 },
+            { awg: '10', mm2: 5.26, ampacity_cu: 35, ampacity_al: 25 },
+            { awg: '8', mm2: 8.37, ampacity_cu: 50, ampacity_al: 40 },
+            { awg: '6', mm2: 13.3, ampacity_cu: 65, ampacity_al: 50 },
+            { awg: '4', mm2: 21.2, ampacity_cu: 85, ampacity_al: 65 },
+            { awg: '2', mm2: 33.6, ampacity_cu: 115, ampacity_al: 90 },
+            { awg: '1/0', mm2: 53.5, ampacity_cu: 150, ampacity_al: 120 },
+            { awg: '2/0', mm2: 67.4, ampacity_cu: 175, ampacity_al: 135 },
+            { awg: '3/0', mm2: 85.0, ampacity_cu: 200, ampacity_al: 155 },
+            { awg: '4/0', mm2: 107, ampacity_cu: 230, ampacity_al: 180 },
+            { awg: '-', mm2: 1.5, ampacity_cu: 16, ampacity_al: 12 },
+            { awg: '-', mm2: 2.5, ampacity_cu: 24, ampacity_al: 18 },
+            { awg: '-', mm2: 4.0, ampacity_cu: 32, ampacity_al: 25 },
+            { awg: '-', mm2: 6.0, ampacity_cu: 41, ampacity_al: 32 },
+            { awg: '-', mm2: 10.0, ampacity_cu: 57, ampacity_al: 44 },
+            { awg: '-', mm2: 16.0, ampacity_cu: 76, ampacity_al: 59 },
+            { awg: '-', mm2: 25.0, ampacity_cu: 101, ampacity_al: 78 },
+            { awg: '-', mm2: 35.0, ampacity_cu: 125, ampacity_al: 96 },
+            { awg: '-', mm2: 50.0, ampacity_cu: 151, ampacity_al: 117 },
+            { awg: '-', mm2: 70.0, ampacity_cu: 192, ampacity_al: 148 },
+            { awg: '-', mm2: 95.0, ampacity_cu: 232, ampacity_al: 179 },
+            { awg: '-', mm2: 120.0, ampacity_cu: 269, ampacity_al: 207 },
+            { awg: '-', mm2: 150.0, ampacity_cu: 309, ampacity_al: 238 },
+            { awg: '-', mm2: 185.0, ampacity_cu: 353, ampacity_al: 272 },
+            { awg: '-', mm2: 240.0, ampacity_cu: 415, ampacity_al: 320 }
+          ];
+
+          const suitableWires = wireSizes
+            .filter(wire => wire.mm2 >= minCrossSection)
+            .sort((a, b) => a.mm2 - b.mm2);
+
+          if (suitableWires.length === 0) {
+            return {
+              error: 'ไม่มีขนาดสายที่เหมาะสม กรุณาลดระยะทางหรือเพิ่ม % Voltage Drop ที่ยอมรับได้',
+              errorEN: 'No suitable wire size found. Please reduce distance or increase allowable voltage drop'
+            };
+          }
+
+          const recommendedWire = suitableWires[0];
+          const ampacityProperty = material === 'copper' ? 'ampacity_cu' : 'ampacity_al';
+          const isAmpacitySufficient = recommendedWire[ampacityProperty] >= current;
+
+          const actualResistance = (resistivity * distance * 2) / recommendedWire.mm2;
+          let actualVoltageDrop;
+          if (phases === 1) {
+            actualVoltageDrop = actualResistance * current;
+          } else {
+            actualVoltageDrop = actualResistance * current * Math.sqrt(3);
+          }
+          const actualVoltageDropPercent = (actualVoltageDrop / voltage) * 100;
+
+          const comparisonTable = suitableWires.slice(0, 5).map(wire => {
+            const resistance = (resistivity * distance * 2) / wire.mm2;
+            let voltageDrop;
+            if (phases === 1) {
+              voltageDrop = resistance * current;
+            } else {
+              voltageDrop = resistance * current * Math.sqrt(3);
+            }
+            const voltageDropPercent = (voltageDrop / voltage) * 100;
+            const ampacitySufficient = wire[ampacityProperty] >= current;
+
+            return {
+              awg: wire.awg,
+              mm2: wire.mm2,
+              ampacity: wire[ampacityProperty],
+              voltageDrop: Math.round(voltageDrop * 100) / 100,
+              voltageDropPercent: Math.round(voltageDropPercent * 100) / 100,
+              ampacitySufficient,
+              suitable: voltageDropPercent <= voltageDropPercent && ampacitySufficient
+            };
+          });
+
+          const warnings = [];
+          if (actualVoltageDropPercent > 5) {
+            warnings.push({
+              type: 'warning',
+              message: '⚠️ % แรงดันตกเกิน 5% อาจส่งผลต่อประสิทธิภาพการทำงานของอุปกรณ์',
+              messageEN: '⚠️ Voltage drop exceeds 5%, may affect equipment performance'
+            });
+          }
+          if (actualVoltageDropPercent > 10) {
+            warnings.push({
+              type: 'error',
+              message: '❌ % แรงดันตกเกิน 10% ไม่เหมาะสมสำหรับการใช้งาน',
+              messageEN: '❌ Voltage drop exceeds 10%, unsuitable for operation'
+            });
+          }
+          if (!isAmpacitySufficient) {
+            warnings.push({
+              type: 'error',
+              message: '❌ ขนาดสายไม่เพียงพอสำหรับกระแสที่ใช้งาน (Ampacity)',
+              messageEN: '❌ Wire size insufficient for operating current (Ampacity)'
+            });
+          }
+          if (warnings.length === 0) {
+            warnings.push({
+              type: 'success',
+              message: '✅ การคำนวณผ่านมาตรฐานความปลอดภัย',
+              messageEN: '✅ Calculation meets safety standards'
+            });
+          }
+
+          return {
+            success: true,
+            input: { current, distance, voltage, voltageDropPercent, material, phases },
+            calculation: {
+              minCrossSection: Math.round(minCrossSection * 100) / 100,
+              recommendedWire: {
+                awg: recommendedWire.awg,
+                mm2: recommendedWire.mm2,
+                ampacity: recommendedWire[ampacityProperty],
+                actualVoltageDrop: Math.round(actualVoltageDrop * 100) / 100,
+                actualVoltageDropPercent: Math.round(actualVoltageDropPercent * 100) / 100,
+                isAmpacitySufficient
+              },
+              comparisonTable
+            },
+            warnings
+          };
+        }
+
+        function calculateMaximumCircuitDistanceInline(wireSize, current, voltage, voltageDropPercent, material = 'copper', phases = 1) {
+          if (wireSize <= 0 || current <= 0 || voltage <= 0 || voltageDropPercent <= 0) {
+            return {
+              error: 'ข้อมูลไม่ถูกต้อง: ขนาดสาย, กระแส, แรงดัน และ % แรงดันตกต้องมากกว่า 0',
+              errorEN: 'Invalid input: Wire size, current, voltage, and voltage drop % must be > 0'
+            };
+          }
+
+          const resistivity = material === 'copper' ? 0.0175 : 0.0286;
+          const allowedVoltageDrop = voltage * (voltageDropPercent / 100);
+          
+          let maxResistance;
+          if (phases === 1) {
+            maxResistance = allowedVoltageDrop / current;
+          } else {
+            maxResistance = allowedVoltageDrop / (Math.sqrt(3) * current);
+          }
+
+          const maxDistance = (maxResistance * wireSize) / (resistivity * 2);
+
+          const wireSizes = [
+            { awg: '14', mm2: 2.08, ampacity_cu: 20, ampacity_al: 15 },
+            { awg: '12', mm2: 3.31, ampacity_cu: 25, ampacity_al: 20 },
+            { awg: '10', mm2: 5.26, ampacity_cu: 35, ampacity_al: 25 },
+            { awg: '8', mm2: 8.37, ampacity_cu: 50, ampacity_al: 40 },
+            { awg: '6', mm2: 13.3, ampacity_cu: 65, ampacity_al: 50 },
+            { awg: '4', mm2: 21.2, ampacity_cu: 85, ampacity_al: 65 },
+            { awg: '2', mm2: 33.6, ampacity_cu: 115, ampacity_al: 90 },
+            { awg: '1/0', mm2: 53.5, ampacity_cu: 150, ampacity_al: 120 },
+            { awg: '2/0', mm2: 67.4, ampacity_cu: 175, ampacity_al: 135 },
+            { awg: '3/0', mm2: 85.0, ampacity_cu: 200, ampacity_al: 155 },
+            { awg: '4/0', mm2: 107, ampacity_cu: 230, ampacity_al: 180 },
+            { awg: '-', mm2: 1.5, ampacity_cu: 16, ampacity_al: 12 },
+            { awg: '-', mm2: 2.5, ampacity_cu: 24, ampacity_al: 18 },
+            { awg: '-', mm2: 4.0, ampacity_cu: 32, ampacity_al: 25 },
+            { awg: '-', mm2: 6.0, ampacity_cu: 41, ampacity_al: 32 },
+            { awg: '-', mm2: 10.0, ampacity_cu: 57, ampacity_al: 44 },
+            { awg: '-', mm2: 16.0, ampacity_cu: 76, ampacity_al: 59 },
+            { awg: '-', mm2: 25.0, ampacity_cu: 101, ampacity_al: 78 },
+            { awg: '-', mm2: 35.0, ampacity_cu: 125, ampacity_al: 96 },
+            { awg: '-', mm2: 50.0, ampacity_cu: 151, ampacity_al: 117 },
+            { awg: '-', mm2: 70.0, ampacity_cu: 192, ampacity_al: 148 },
+            { awg: '-', mm2: 95.0, ampacity_cu: 232, ampacity_al: 179 },
+            { awg: '-', mm2: 120.0, ampacity_cu: 269, ampacity_al: 207 },
+            { awg: '-', mm2: 150.0, ampacity_cu: 309, ampacity_al: 238 },
+            { awg: '-', mm2: 185.0, ampacity_cu: 353, ampacity_al: 272 },
+            { awg: '-', mm2: 240.0, ampacity_cu: 415, ampacity_al: 320 }
+          ];
+
+          const wireInfo = wireSizes.find(wire => Math.abs(wire.mm2 - wireSize) < 0.1);
+          const ampacityProperty = material === 'copper' ? 'ampacity_cu' : 'ampacity_al';
+          const ampacity = wireInfo ? wireInfo[ampacityProperty] : null;
+          const isAmpacitySufficient = ampacity ? ampacity >= current : null;
+
+          const distanceTable = wireSizes
+            .filter(wire => wire.mm2 >= wireSize * 0.5)
+            .slice(0, 8)
+            .map(wire => {
+              const wireMaxResistance = phases === 1 ? allowedVoltageDrop / current : allowedVoltageDrop / (Math.sqrt(3) * current);
+              const wireMaxDistance = (wireMaxResistance * wire.mm2) / (resistivity * 2);
+              const wireAmpacitySufficient = wire[ampacityProperty] >= current;
+
+              return {
+                awg: wire.awg,
+                mm2: wire.mm2,
+                ampacity: wire[ampacityProperty],
+                maxDistance: Math.round(wireMaxDistance * 100) / 100,
+                ampacitySufficient: wireAmpacitySufficient,
+                recommended: wireAmpacitySufficient && wireMaxDistance >= maxDistance
+              };
+            })
+            .sort((a, b) => b.maxDistance - a.maxDistance);
+
+          const warnings = [];
+          if (voltageDropPercent > 5) {
+            warnings.push({
+              type: 'warning',
+              message: '⚠️ % แรงดันตกเกิน 5% อาจส่งผลต่อประสิทธิภาพการทำงานของอุปกรณ์',
+              messageEN: '⚠️ Voltage drop exceeds 5%, may affect equipment performance'
+            });
+          }
+          if (!isAmpacitySufficient) {
+            warnings.push({
+              type: 'error',
+              message: '❌ ขนาดสายไม่เพียงพอสำหรับกระแสที่ใช้งาน (Ampacity)',
+              messageEN: '❌ Wire size insufficient for operating current (Ampacity)'
+            });
+          }
+          if (warnings.length === 0) {
+            warnings.push({
+              type: 'success',
+              message: '✅ การคำนวณผ่านมาตรฐานความปลอดภัย',
+              messageEN: '✅ Calculation meets safety standards'
+            });
+          }
+
+          return {
+            success: true,
+            input: { wireSize, current, voltage, voltageDropPercent, material, phases },
+            calculation: {
+              maxDistance: Math.round(maxDistance * 100) / 100,
+              wireInfo: wireInfo || { awg: 'Custom', mm2: wireSize, [ampacityProperty]: 'Unknown' },
+              ampacity,
+              isAmpacitySufficient,
+              distanceTable
+            },
+            warnings
+          };
+        }
+
+        function calculateVoltageDropPercentageInline(wireSize, current, distance, voltage, material = 'copper', phases = 1) {
+          if (wireSize <= 0 || current <= 0 || distance <= 0 || voltage <= 0) {
+            return {
+              error: 'ข้อมูลไม่ถูกต้อง: ขนาดสาย, กระแส, ระยะทาง และแรงดันต้องมากกว่า 0',
+              errorEN: 'Invalid input: Wire size, current, distance, and voltage must be > 0'
+            };
+          }
+
+          const resistivity = material === 'copper' ? 0.0175 : 0.0286;
+          const resistance = (resistivity * distance * 2) / wireSize;
+
+          let voltageDrop;
+          if (phases === 1) {
+            voltageDrop = resistance * current;
+          } else {
+            voltageDrop = resistance * current * Math.sqrt(3);
+          }
+
+          const voltageDropPercentage = (voltageDrop / voltage) * 100;
+          const remainingVoltage = voltage - voltageDrop;
+
+          const wireSizes = [
+            { awg: '14', mm2: 2.08, ampacity_cu: 20, ampacity_al: 15 },
+            { awg: '12', mm2: 3.31, ampacity_cu: 25, ampacity_al: 20 },
+            { awg: '10', mm2: 5.26, ampacity_cu: 35, ampacity_al: 25 },
+            { awg: '8', mm2: 8.37, ampacity_cu: 50, ampacity_al: 40 },
+            { awg: '6', mm2: 13.3, ampacity_cu: 65, ampacity_al: 50 },
+            { awg: '4', mm2: 21.2, ampacity_cu: 85, ampacity_al: 65 },
+            { awg: '2', mm2: 33.6, ampacity_cu: 115, ampacity_al: 90 },
+            { awg: '1/0', mm2: 53.5, ampacity_cu: 150, ampacity_al: 120 },
+            { awg: '2/0', mm2: 67.4, ampacity_cu: 175, ampacity_al: 135 },
+            { awg: '3/0', mm2: 85.0, ampacity_cu: 200, ampacity_al: 155 },
+            { awg: '4/0', mm2: 107, ampacity_cu: 230, ampacity_al: 180 },
+            { awg: '-', mm2: 1.5, ampacity_cu: 16, ampacity_al: 12 },
+            { awg: '-', mm2: 2.5, ampacity_cu: 24, ampacity_al: 18 },
+            { awg: '-', mm2: 4.0, ampacity_cu: 32, ampacity_al: 25 },
+            { awg: '-', mm2: 6.0, ampacity_cu: 41, ampacity_al: 32 },
+            { awg: '-', mm2: 10.0, ampacity_cu: 57, ampacity_al: 44 },
+            { awg: '-', mm2: 16.0, ampacity_cu: 76, ampacity_al: 59 },
+            { awg: '-', mm2: 25.0, ampacity_cu: 101, ampacity_al: 78 },
+            { awg: '-', mm2: 35.0, ampacity_cu: 125, ampacity_al: 96 },
+            { awg: '-', mm2: 50.0, ampacity_cu: 151, ampacity_al: 117 },
+            { awg: '-', mm2: 70.0, ampacity_cu: 192, ampacity_al: 148 },
+            { awg: '-', mm2: 95.0, ampacity_cu: 232, ampacity_al: 179 },
+            { awg: '-', mm2: 120.0, ampacity_cu: 269, ampacity_al: 207 },
+            { awg: '-', mm2: 150.0, ampacity_cu: 309, ampacity_al: 238 },
+            { awg: '-', mm2: 185.0, ampacity_cu: 353, ampacity_al: 272 },
+            { awg: '-', mm2: 240.0, ampacity_cu: 415, ampacity_al: 320 }
+          ];
+
+          const wireInfo = wireSizes.find(wire => Math.abs(wire.mm2 - wireSize) < 0.1);
+          const ampacityProperty = material === 'copper' ? 'ampacity_cu' : 'ampacity_al';
+          const ampacity = wireInfo ? wireInfo[ampacityProperty] : null;
+          const isAmpacitySufficient = ampacity ? ampacity >= current : null;
+
+          const standards = {
+            residential: {
+              branch: voltageDropPercentage <= 3,
+              feeder: voltageDropPercentage <= 5,
+              total: voltageDropPercentage <= 5
+            },
+            commercial: {
+              branch: voltageDropPercentage <= 3,
+              feeder: voltageDropPercentage <= 5,
+              total: voltageDropPercentage <= 5
+            },
+            industrial: {
+              branch: voltageDropPercentage <= 5,
+              feeder: voltageDropPercentage <= 5,
+              total: voltageDropPercentage <= 10
+            }
+          };
+
+          const distanceComparisonTable = [10, 25, 50, 100, 150, 200, 300, 500].map(dist => {
+            const distResistance = (resistivity * dist * 2) / wireSize;
+            let distVoltageDrop;
+            if (phases === 1) {
+              distVoltageDrop = distResistance * current;
+            } else {
+              distVoltageDrop = distResistance * current * Math.sqrt(3);
+            }
+            const distVoltageDropPercent = (distVoltageDrop / voltage) * 100;
+
+            return {
+              distance: dist,
+              voltageDrop: Math.round(distVoltageDrop * 100) / 100,
+              voltageDropPercent: Math.round(distVoltageDropPercent * 100) / 100,
+              remainingVoltage: Math.round((voltage - distVoltageDrop) * 100) / 100,
+              acceptable: distVoltageDropPercent <= 5
+            };
+          });
+
+          const warnings = [];
+          if (voltageDropPercentage > 5) {
+            warnings.push({
+              type: 'warning',
+              message: '⚠️ % แรงดันตกเกิน 5% อาจส่งผลต่อประสิทธิภาพการทำงานของอุปกรณ์',
+              messageEN: '⚠️ Voltage drop exceeds 5%, may affect equipment performance'
+            });
+          }
+          if (voltageDropPercentage > 10) {
+            warnings.push({
+              type: 'error',
+              message: '❌ % แรงดันตกเกิน 10% ไม่เหมาะสมสำหรับการใช้งาน',
+              messageEN: '❌ Voltage drop exceeds 10%, unsuitable for operation'
+            });
+          }
+          if (isAmpacitySufficient === false) {
+            warnings.push({
+              type: 'error',
+              message: '❌ ขนาดสายไม่เพียงพอสำหรับกระแสที่ใช้งาน (Ampacity)',
+              messageEN: '❌ Wire size insufficient for operating current (Ampacity)'
+            });
+          }
+          if (warnings.length === 0) {
+            warnings.push({
+              type: 'success',
+              message: '✅ การคำนวณผ่านมาตรฐานความปลอดภัย',
+              messageEN: '✅ Calculation meets safety standards'
+            });
+          }
+
+          return {
+            success: true,
+            input: { wireSize, current, distance, voltage, material, phases },
+            calculation: {
+              resistance: Math.round(resistance * 10000) / 10000,
+              voltageDrop: Math.round(voltageDrop * 100) / 100,
+              voltageDropPercentage: Math.round(voltageDropPercentage * 100) / 100,
+              remainingVoltage: Math.round(remainingVoltage * 100) / 100,
+              wireInfo: wireInfo || { awg: 'Custom', mm2: wireSize, [ampacityProperty]: 'Unknown' },
+              ampacity,
+              isAmpacitySufficient,
+              standards,
+              distanceComparisonTable
+            },
+            warnings
           };
         }
 

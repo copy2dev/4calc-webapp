@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เกี่ยวกับเรา - 4Calc</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', 'Noto Sans Thai', sans-serif; }
+        .lang-btn { position: relative; }
+        .lang-dropdown { display: none; position: absolute; top: 100%; right: 0; background: white; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 50; min-width: 120px; }
+        .lang-dropdown.show { display: block; }
+        .feature-card:hover { transform: translateY(-2px); transition: transform 0.2s ease; }
+        .copy-animation { animation: copySuccess 2s ease-in-out; }
+        @keyframes copySuccess {
+            0% { background-color: #10b981; color: white; }
+            100% { background-color: transparent; }
+        }
+    </style>
+
+<!-- 4Calc v1.1.0 -->
+<!-- Built: 2025-07-06T02:15:00.000Z -->
+<!-- Environment: production -->
+<!-- Branch: main -->
+<!-- Commit: enhanced-electrical-calculator -->
+<!-- Deployed on Netlify -->
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-6">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-bold text-gray-900 hover:text-blue-600 transition-colors">
+                        <span class="text-blue-600">4</span>Calc
+                    </a>
+                    <span id="siteSubtitle" class="ml-2 text-sm text-gray-500">
+                        ศูนย์รวมเครื่องคิดเลขครบครัน
+                    </span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <nav class="hidden md:flex space-x-8">
+                        <a href="index.html" id="nav-home" class="text-gray-700 hover:text-blue-600 transition-colors">หน้าแรก</a>
+                        <a href="index.html#categories" id="nav-categories" class="text-gray-700 hover:text-blue-600 transition-colors">หมวดหมู่</a>
+                        <a href="about.html" id="nav-about" class="text-blue-600 font-medium">เกี่ยวกับเรา</a>
+                    </nav>
+                    
+                    <!-- Language Switcher -->
+                    <div class="lang-btn">
+                        <button id="langButton" class="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 transition-colors">
+                            <span id="currentFlag">🇹🇭</span>
+                            <span id="currentLang">ไทย</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div id="langDropdown" class="lang-dropdown">
+                            <button onclick="switchLanguage('th')" class="w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-gray-50 transition-colors rounded-t-lg">
+                                <span>🇹🇭</span>
+                                <span>ไทย</span>
+                            </button>
+                            <button onclick="switchLanguage('en')" class="w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-gray-50 transition-colors rounded-b-lg">
+                                <span>🇺🇸</span>
+                                <span>English</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        
+        <!-- Hero Section -->
+        <div class="text-center mb-16">
+            <h1 class="text-4xl font-bold text-gray-900 mb-4">
+                <span id="aboutTitle">เกี่ยวกับ</span> <span class="text-blue-600">4Calc</span>
+            </h1>
+            <p id="aboutSubtitle" class="text-xl text-gray-600 mb-8">
+                ศูนย์รวมเครื่องคิดเลขครบครันสำหรับการคำนวณในชีวิตประจำวันของคุณ
+            </p>
+        </div>
+
+        <!-- Mission Section -->
+        <div class="bg-white rounded-lg shadow-lg p-8 mb-12">
+            <div class="text-center mb-8">
+                <h2 id="missionTitle" class="text-2xl font-bold text-gray-900 mb-4">พันธกิจของเรา</h2>
+                <p id="missionText" class="text-lg text-gray-700 leading-relaxed">
+                    เราสร้าง 4Calc ขึ้นมาเพื่อเป็นศูนย์รวมเครื่องคิดเลขที่ครบครันและใช้งานง่าย 
+                    โดยมุ่งเน้นการให้บริการเครื่องมือคำนวณที่จำเป็นในชีวิตประจำวัน 
+                    ทั้งด้านการเดินทาง สุขภาพ การเงิน และสาธารณูปโภค 
+                    พร้อมรองรับทั้งภาษาไทยและอังกฤษอย่างสมบูรณ์
+                </p>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="mb-12">
+            <h2 id="featuresTitle" class="text-2xl font-bold text-gray-900 text-center mb-8">จุดเด่นของ 4Calc</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <!-- Feature 1 -->
+                <div class="feature-card bg-white p-6 rounded-lg shadow-md">
+                    <div class="text-3xl mb-4">🌏</div>
+                    <h3 id="feature1Title" class="text-lg font-semibold mb-2">รองรับสองภาษา</h3>
+                    <p id="feature1Text" class="text-gray-600">
+                        รองรับภาษาไทยและอังกฤษอย่างสมบูรณ์ สลับภาษาได้อย่างสะดวก
+                    </p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="feature-card bg-white p-6 rounded-lg shadow-md">
+                    <div class="text-3xl mb-4">📱</div>
+                    <h3 id="feature2Title" class="text-lg font-semibold mb-2">ใช้งานง่าย</h3>
+                    <p id="feature2Text" class="text-gray-600">
+                        ออกแบบให้ใช้งานง่าย รองรับทุกอุปกรณ์ ทั้งมือถือ แท็บเล็ต และคอมพิวเตอร์
+                    </p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="feature-card bg-white p-6 rounded-lg shadow-md">
+                    <div class="text-3xl mb-4">🧮</div>
+                    <h3 id="feature3Title" class="text-lg font-semibold mb-2">เครื่องคิดเลขครบครัน</h3>
+                    <p id="feature3Text" class="text-gray-600">
+                        รวมเครื่องคิดเลขที่จำเป็นในชีวิตประจำวัน ตั้งแต่การเดินทางไปจนถึงการเงิน
+                    </p>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="feature-card bg-white p-6 rounded-lg shadow-md">
+                    <div class="text-3xl mb-4">⚡</div>
+                    <h3 id="feature4Title" class="text-lg font-semibold mb-2">รวดเร็วแม่นยำ</h3>
+                    <p id="feature4Text" class="text-gray-600">
+                        คำนวณผลลัพธ์ได้อย่างรวดเร็วและแม่นยำ พร้อมรายละเอียดที่ครบถ้วน
+                    </p>
+                </div>
+
+                <!-- Feature 5 -->
+                <div class="feature-card bg-white p-6 rounded-lg shadow-md">
+                    <div class="text-3xl mb-4">🆓</div>
+                    <h3 id="feature5Title" class="text-lg font-semibold mb-2">ใช้งานฟรี</h3>
+                    <p id="feature5Text" class="text-gray-600">
+                        ไม่เสียค่าใช้จ่าย ไม่ต้องสมัครสมาชิก เข้าใช้งานได้ทันที
+                    </p>
+                </div>
+
+                <!-- Feature 6 -->
+                <div class="feature-card bg-white p-6 rounded-lg shadow-md">
+                    <div class="text-3xl mb-4">🔄</div>
+                    <h3 id="feature6Title" class="text-lg font-semibold mb-2">อัพเดทสม่ำเสมอ</h3>
+                    <p id="feature6Text" class="text-gray-600">
+                        พัฒนาเครื่องคิดเลขใหม่ๆ และปรับปรุงฟีเจอร์อย่างต่อเนื่อง
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Available Calculators -->
+        <div class="bg-white rounded-lg shadow-lg p-8 mb-12">
+            <h2 id="calculatorsTitle" class="text-2xl font-bold text-gray-900 text-center mb-8">เครื่องคิดเลขที่มีให้บริการ</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                
+                <div class="flex items-center p-4 bg-gray-50 rounded-lg">
+                    <span class="text-2xl mr-4">🚇</span>
+                    <div>
+                        <h3 id="calc1Title" class="font-semibold">คำนวณเวลาเดินทาง MRT</h3>
+                        <p id="calc1Desc" class="text-sm text-gray-600">คำนวณเวลาและค่าโดยสารระหว่างสถานี</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center p-4 bg-gray-50 rounded-lg">
+                    <span class="text-2xl mr-4">🚕</span>
+                    <div>
+                        <h3 id="calc2Title" class="font-semibold">คำนวณค่าแท็กซี่</h3>
+                        <p id="calc2Desc" class="text-sm text-gray-600">คำนวณค่าแท็กซี่ตามระยะทางและเวลา</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center p-4 bg-gray-50 rounded-lg">
+                    <span class="text-2xl mr-4">⚡</span>
+                    <div>
+                        <h3 id="calc3Title" class="font-semibold">คำนวณทางไฟฟ้า</h3>
+                        <p id="calc3Desc" class="text-sm text-gray-600">คำนวณขนาดสาย ระยะทาง และแรงดันตก</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center p-4 bg-gray-50 rounded-lg">
+                    <span class="text-2xl mr-4">☀️</span>
+                    <div>
+                        <h3 id="calc4Title" class="font-semibold">คำนวณโซลาร์เซลล์</h3>
+                        <p id="calc4Desc" class="text-sm text-gray-600">คำนวณผลตอบแทนและความคุ้มค่า</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center p-4 bg-gray-50 rounded-lg">
+                    <span class="text-2xl mr-4">🤱</span>
+                    <div>
+                        <h3 id="calc5Title" class="font-semibold">คำนวณอายุครรภ์</h3>
+                        <p id="calc5Desc" class="text-sm text-gray-600">คำนวณกำหนดคลอดและไมล์สโตน</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center p-4 bg-gray-50 rounded-lg">
+                    <span class="text-2xl mr-4">💰</span>
+                    <div>
+                        <h3 id="calc6Title" class="font-semibold">คำนวณดอกเบี้ย</h3>
+                        <p id="calc6Desc" class="text-sm text-gray-600">ดอกเบี้ยธรรมดา ทบต้น และเงินฝาก</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center p-4 bg-gray-50 rounded-lg">
+                    <span class="text-2xl mr-4">❄️</span>
+                    <div>
+                        <h3 id="calc7Title" class="font-semibold">คำนวณ BTU</h3>
+                        <p id="calc7Desc" class="text-sm text-gray-600">คำนวณความต้องการ BTU เครื่องปรับอากาศ</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center p-4 bg-gray-50 rounded-lg">
+                    <span class="text-2xl mr-4">📍</span>
+                    <div>
+                        <h3 id="calc8Title" class="font-semibold">คำนวณระยะทาง</h3>
+                        <p id="calc8Desc" class="text-sm text-gray-600">คำนวณระยะทางระหว่างสองจุด</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Contact Section -->
+        <div class="bg-white rounded-lg shadow-lg p-8 mb-12">
+            <div class="text-center">
+                <h2 id="contactTitle" class="text-2xl font-bold text-gray-900 mb-6">ติดต่อเรา</h2>
+                <p id="contactText" class="text-gray-700 mb-6">
+                    หากคุณมีข้อเสนอแนะ ต้องการเครื่องคิดเลขใหม่ หรือพบปัญหาการใช้งาน กรุณาติดต่อเราที่
+                </p>
+                
+                <!-- Email Contact -->
+                <div class="bg-gray-50 p-6 rounded-lg inline-block">
+                    <div class="flex items-center justify-center space-x-3">
+                        <span class="text-2xl">📧</span>
+                        <div>
+                            <p id="emailLabel" class="text-sm text-gray-600 mb-1">อีเมล</p>
+                            <button id="emailButton" onclick="copyEmail()" class="text-lg font-semibold text-blue-600 hover:text-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-1">
+                                4calc4contact@gmail.com
+                            </button>
+                        </div>
+                        <button onclick="copyEmail()" class="p-2 text-gray-500 hover:text-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <p id="copyHint" class="text-xs text-gray-500 mt-2">คลิกเพื่อคัดลอกอีเมล</p>
+                </div>
+
+                <!-- Toast Message -->
+                <div id="copyToast" class="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 transform translate-x-full transition-transform duration-300">
+                    <div class="flex items-center space-x-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span id="toastMessage">คัดลอกอีเมลเรียบร้อยแล้ว!</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Back to Home -->
+        <div class="text-center">
+            <a href="index.html" class="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                <span id="backToHome">กลับสู่หน้าแรก</span>
+            </a>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <p id="footerText" class="text-gray-600">
+                    © 2024 4Calc. สงวนลิขสิทธิ์ทั้งหมด | ออกแบบและพัฒนาเพื่อความสะดวกในชีวิตประจำวัน
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Language Management
+        let currentLanguage = localStorage.getItem('language') || 'th';
+
+        const translations = {
+            th: {
+                siteSubtitle: 'ศูนย์รวมเครื่องคิดเลขครบครัน',
+                navHome: 'หน้าแรก',
+                navCategories: 'หมวดหมู่',
+                navAbout: 'เกี่ยวกับเรา',
+                aboutTitle: 'เกี่ยวกับ',
+                aboutSubtitle: 'ศูนย์รวมเครื่องคิดเลขครบครันสำหรับการคำนวณในชีวิตประจำวันของคุณ',
+                missionTitle: 'พันธกิจของเรา',
+                missionText: 'เราสร้าง 4Calc ขึ้นมาเพื่อเป็นศูนย์รวมเครื่องคิดเลขที่ครบครันและใช้งานง่าย โดยมุ่งเน้นการให้บริการเครื่องมือคำนวณที่จำเป็นในชีวิตประจำวัน ทั้งด้านการเดินทาง สุขภาพ การเงิน และสาธารณูปโภค พร้อมรองรับทั้งภาษาไทยและอังกฤษอย่างสมบูรณ์',
+                featuresTitle: 'จุดเด่นของ 4Calc',
+                feature1Title: 'รองรับสองภาษา',
+                feature1Text: 'รองรับภาษาไทยและอังกฤษอย่างสมบูรณ์ สลับภาษาได้อย่างสะดวก',
+                feature2Title: 'ใช้งานง่าย',
+                feature2Text: 'ออกแบบให้ใช้งานง่าย รองรับทุกอุปกรณ์ ทั้งมือถือ แท็บเล็ต และคอมพิวเตอร์',
+                feature3Title: 'เครื่องคิดเลขครบครัน',
+                feature3Text: 'รวมเครื่องคิดเลขที่จำเป็นในชีวิตประจำวัน ตั้งแต่การเดินทางไปจนถึงการเงิน',
+                feature4Title: 'รวดเร็วแม่นยำ',
+                feature4Text: 'คำนวณผลลัพธ์ได้อย่างรวดเร็วและแม่นยำ พร้อมรายละเอียดที่ครบถ้วน',
+                feature5Title: 'ใช้งานฟรี',
+                feature5Text: 'ไม่เสียค่าใช้จ่าย ไม่ต้องสมัครสมาชิก เข้าใช้งานได้ทันที',
+                feature6Title: 'อัพเดทสม่ำเสมอ',
+                feature6Text: 'พัฒนาเครื่องคิดเลขใหม่ๆ และปรับปรุงฟีเจอร์อย่างต่อเนื่อง',
+                calculatorsTitle: 'เครื่องคิดเลขที่มีให้บริการ',
+                calc1Title: 'คำนวณเวลาเดินทาง MRT',
+                calc1Desc: 'คำนวณเวลาและค่าโดยสารระหว่างสถานี',
+                calc2Title: 'คำนวณค่าแท็กซี่',
+                calc2Desc: 'คำนวณค่าแท็กซี่ตามระยะทางและเวลา',
+                calc3Title: 'คำนวณทางไฟฟ้า',
+                calc3Desc: 'คำนวณขนาดสาย ระยะทาง และแรงดันตก',
+                calc4Title: 'คำนวณโซลาร์เซลล์',
+                calc4Desc: 'คำนวณผลตอบแทนและความคุ้มค่า',
+                calc5Title: 'คำนวณอายุครรภ์',
+                calc5Desc: 'คำนวณกำหนดคลอดและไมล์สโตน',
+                calc6Title: 'คำนวณดอกเบี้ย',
+                calc6Desc: 'ดอกเบี้ยธรรมดา ทบต้น และเงินฝาก',
+                calc7Title: 'คำนวณ BTU',
+                calc7Desc: 'คำนวณความต้องการ BTU เครื่องปรับอากาศ',
+                calc8Title: 'คำนวณระยะทาง',
+                calc8Desc: 'คำนวณระยะทางระหว่างสองจุด',
+                contactTitle: 'ติดต่อเรา',
+                contactText: 'หากคุณมีข้อเสนอแนะ ต้องการเครื่องคิดเลขใหม่ หรือพบปัญหาการใช้งาน กรุณาติดต่อเราที่',
+                emailLabel: 'อีเมล',
+                copyHint: 'คลิกเพื่อคัดลอกอีเมล',
+                toastMessage: 'คัดลอกอีเมลเรียบร้อยแล้ว!',
+                backToHome: 'กลับสู่หน้าแรก',
+                footerText: '© 2024 4Calc. สงวนลิขสิทธิ์ทั้งหมด | ออกแบบและพัฒนาเพื่อความสะดวกในชีวิตประจำวัน'
+            },
+            en: {
+                siteSubtitle: 'All-in-One Calculator Hub',
+                navHome: 'Home',
+                navCategories: 'Categories',
+                navAbout: 'About Us',
+                aboutTitle: 'About',
+                aboutSubtitle: 'All-in-One Calculator Hub for Your Daily Calculations',
+                missionTitle: 'Our Mission',
+                missionText: 'We created 4Calc to be a comprehensive and easy-to-use calculator hub, focusing on providing essential calculation tools for daily life, including transportation, health, finance, and utilities, with full support for both Thai and English languages.',
+                featuresTitle: '4Calc Features',
+                feature1Title: 'Bilingual Support',
+                feature1Text: 'Full support for Thai and English languages with convenient language switching',
+                feature2Title: 'Easy to Use',
+                feature2Text: 'Designed for ease of use, supports all devices including mobile, tablet, and computer',
+                feature3Title: 'Comprehensive Calculators',
+                feature3Text: 'Includes essential calculators for daily life, from transportation to finance',
+                feature4Title: 'Fast & Accurate',
+                feature4Text: 'Calculate results quickly and accurately with comprehensive details',
+                feature5Title: 'Free to Use',
+                feature5Text: 'No cost, no registration required, access immediately',
+                feature6Title: 'Regular Updates',
+                feature6Text: 'Continuously developing new calculators and improving features',
+                calculatorsTitle: 'Available Calculators',
+                calc1Title: 'MRT Time Calculator',
+                calc1Desc: 'Calculate travel time and fare between stations',
+                calc2Title: 'Taxi Fare Calculator',
+                calc2Desc: 'Calculate taxi fare based on distance and time',
+                calc3Title: 'Electrical Calculator',
+                calc3Desc: 'Calculate wire size, distance, and voltage drop',
+                calc4Title: 'Solar Calculator',
+                calc4Desc: 'Calculate ROI and cost-effectiveness',
+                calc5Title: 'Pregnancy Calculator',
+                calc5Desc: 'Calculate due date and milestones',
+                calc6Title: 'Interest Calculator',
+                calc6Desc: 'Simple interest, compound, and savings',
+                calc7Title: 'BTU Calculator',
+                calc7Desc: 'Calculate BTU requirements for air conditioning',
+                calc8Title: 'Distance Calculator',
+                calc8Desc: 'Calculate distance between two points',
+                contactTitle: 'Contact Us',
+                contactText: 'If you have suggestions, need new calculators, or encounter any issues, please contact us at',
+                emailLabel: 'Email',
+                copyHint: 'Click to copy email',
+                toastMessage: 'Email copied successfully!',
+                backToHome: 'Back to Home',
+                footerText: '© 2024 4Calc. All rights reserved | Designed and developed for daily convenience'
+            }
+        };
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            updateLanguage();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            // Language dropdown
+            document.getElementById('langButton').addEventListener('click', function() {
+                const dropdown = document.getElementById('langDropdown');
+                dropdown.classList.toggle('show');
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!event.target.closest('.lang-btn')) {
+                    document.getElementById('langDropdown').classList.remove('show');
+                }
+            });
+        }
+
+        function switchLanguage(lang) {
+            currentLanguage = lang;
+            localStorage.setItem('language', lang);
+            
+            const flagMap = { th: '🇹🇭', en: '🇺🇸' };
+            const nameMap = { th: 'ไทย', en: 'English' };
+            
+            document.getElementById('currentFlag').textContent = flagMap[lang];
+            document.getElementById('currentLang').textContent = nameMap[lang];
+            document.getElementById('langDropdown').classList.remove('show');
+            
+            updateLanguage();
+        }
+
+        function updateLanguage() {
+            const t = translations[currentLanguage];
+            
+            // Update all text elements
+            Object.keys(t).forEach(key => {
+                const element = document.getElementById(key);
+                if (element) {
+                    element.textContent = t[key];
+                }
+            });
+        }
+
+        // Copy email function
+        function copyEmail() {
+            const email = '4calc4contact@gmail.com';
+            
+            // Modern API
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(email).then(() => {
+                    showCopyToast();
+                }).catch(() => {
+                    fallbackCopyTextToClipboard(email);
+                });
+            } else {
+                // Fallback for older browsers
+                fallbackCopyTextToClipboard(email);
+            }
+        }
+
+        function fallbackCopyTextToClipboard(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.top = "0";
+            textArea.style.left = "0";
+            textArea.style.position = "fixed";
+            textArea.style.opacity = "0";
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+                showCopyToast();
+            } catch (err) {
+                console.error('Fallback: Unable to copy', err);
+            }
+            
+            document.body.removeChild(textArea);
+        }
+
+        function showCopyToast() {
+            const toast = document.getElementById('copyToast');
+            const emailButton = document.getElementById('emailButton');
+            
+            // Show toast
+            toast.classList.remove('translate-x-full');
+            toast.classList.add('translate-x-0');
+            
+            // Add visual feedback to button
+            emailButton.classList.add('copy-animation');
+            
+            // Hide toast after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove('translate-x-0');
+                toast.classList.add('translate-x-full');
+                emailButton.classList.remove('copy-animation');
+            }, 3000);
+        }
+    </script>
+
+    <!-- Netlify Analytics -->
+    <script defer src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+</body>
+</html>

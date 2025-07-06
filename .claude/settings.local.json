@@ -28,7 +28,8 @@
       "Bash(echo:*)",
       "WebFetch(domain:th.wikipedia.org)",
       "Bash(grep:*)",
-      "Bash(sed:*)"
+      "Bash(sed:*)",
+      "Bash(tree:*)"
     ],
     "deny": []
   }

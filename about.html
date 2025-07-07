@@ -3,7 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>เกี่ยวกับเรา - 4Calc</title>
+    <title>เกี่ยวกับเรา - 4Calc | About Us - All-in-One Calculator Hub</title>
+    <meta name="description" content="เรียนรู้เกี่ยวกับ 4Calc ศูนย์รวมเครื่องคิดเลขครบครันที่ให้บริการฟรี รองรับไทย-อังกฤษ พร้อมเครื่องคิดเลขหลากหลายสำหรับการคำนวณในชีวิตประจำวัน">
+    <meta name="keywords" content="เกี่ยวกับ 4Calc, about 4Calc, calculator hub, เครื่องคิดเลขไทย, Thai calculator, free calculator">
+    <meta name="author" content="4Calc Team">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://4calc.netlify.app/about.html">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://4calc.netlify.app/about.html">
+    <meta property="og:title" content="เกี่ยวกับเรา - 4Calc">
+    <meta property="og:description" content="เรียนรู้เกี่ยวกับ 4Calc ศูนย์รวมเครื่องคิดเลขครบครันที่ให้บริการฟรี รองรับไทย-อังกฤษ พร้อมเครื่องคิดเลขหลากหลายสำหรับการคำนวณในชีวิตประจำวัน">
+    <meta property="og:image" content="https://4calc.netlify.app/og-image.jpg">
+    <meta property="og:site_name" content="4Calc">
+    <meta property="og:locale" content="th_TH">
+    <meta property="og:locale:alternate" content="en_US">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://4calc.netlify.app/about.html">
+    <meta property="twitter:title" content="เกี่ยวกับเรา - 4Calc">
+    <meta property="twitter:description" content="เรียนรู้เกี่ยวกับ 4Calc ศูนย์รวมเครื่องคิดเลขครบครันที่ให้บริการฟรี รองรับไทย-อังกฤษ พร้อมเครื่องคิดเลขหลากหลายสำหรับการคำนวณในชีวิตประจำวัน">
+    <meta property="twitter:image" content="https://4calc.netlify.app/og-image.jpg">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -25,6 +47,35 @@
 <!-- Branch: main -->
 <!-- Commit: enhanced-electrical-calculator -->
 <!-- Deployed on Netlify -->
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "AboutPage",
+        "name": "เกี่ยวกับ 4Calc",
+        "url": "https://4calc.netlify.app/about.html",
+        "description": "เรียนรู้เกี่ยวกับ 4Calc ศูนย์รวมเครื่องคิดเลขครบครันที่ให้บริการฟรี รองรับไทย-อังกฤษ พร้อมเครื่องคิดเลขหลากหลายสำหรับการคำนวณในชีวิตประจำวัน",
+        "mainEntity": {
+            "@type": "WebApplication",
+            "name": "4Calc",
+            "url": "https://4calc.netlify.app/",
+            "description": "ศูนย์รวมเครื่องคิดเลขครบครันสำหรับคำนวณในชีวิตประจำวัน",
+            "applicationCategory": "Calculator",
+            "operatingSystem": "All",
+            "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "USD"
+            },
+            "author": {
+                "@type": "Organization",
+                "name": "4Calc Team"
+            },
+            "inLanguage": ["th", "en"]
+        }
+    }
+    </script>
 </head>
 <body class="bg-gray-50 min-h-screen">
     <!-- Header -->
@@ -72,20 +123,20 @@
     </header>
 
     <!-- Main Content -->
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         
         <!-- Hero Section -->
-        <div class="text-center mb-16">
+        <header class="text-center mb-16">
             <h1 class="text-4xl font-bold text-gray-900 mb-4">
                 <span id="aboutTitle">เกี่ยวกับ</span> <span class="text-blue-600">4Calc</span>
             </h1>
             <p id="aboutSubtitle" class="text-xl text-gray-600 mb-8">
                 ศูนย์รวมเครื่องคิดเลขครบครันสำหรับการคำนวณในชีวิตประจำวันของคุณ
             </p>
-        </div>
+        </header>
 
         <!-- Mission Section -->
-        <div class="bg-white rounded-lg shadow-lg p-8 mb-12">
+        <section class="bg-white rounded-lg shadow-lg p-8 mb-12">
             <div class="text-center mb-8">
                 <h2 id="missionTitle" class="text-2xl font-bold text-gray-900 mb-4">พันธกิจของเรา</h2>
                 <p id="missionText" class="text-lg text-gray-700 leading-relaxed">
@@ -95,10 +146,10 @@
                     พร้อมรองรับทั้งภาษาไทยและอังกฤษอย่างสมบูรณ์
                 </p>
             </div>
-        </div>
+        </section>
 
         <!-- Features Section -->
-        <div class="mb-12">
+        <section class="mb-12">
             <h2 id="featuresTitle" class="text-2xl font-bold text-gray-900 text-center mb-8">จุดเด่นของ 4Calc</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 
@@ -157,10 +208,10 @@
                 </div>
 
             </div>
-        </div>
+        </section>
 
         <!-- Available Calculators -->
-        <div class="bg-white rounded-lg shadow-lg p-8 mb-12">
+        <section class="bg-white rounded-lg shadow-lg p-8 mb-12">
             <h2 id="calculatorsTitle" class="text-2xl font-bold text-gray-900 text-center mb-8">เครื่องคิดเลขที่มีให้บริการ</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 
@@ -229,10 +280,10 @@
                 </div>
 
             </div>
-        </div>
+        </section>
 
         <!-- Contact Section -->
-        <div class="bg-white rounded-lg shadow-lg p-8 mb-12">
+        <section class="bg-white rounded-lg shadow-lg p-8 mb-12">
             <div class="text-center">
                 <h2 id="contactTitle" class="text-2xl font-bold text-gray-900 mb-6">ติดต่อเรา</h2>
                 <p id="contactText" class="text-gray-700 mb-6">
@@ -268,7 +319,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
 
         <!-- Back to Home -->
         <div class="text-center">
@@ -280,7 +331,7 @@
             </a>
         </div>
 
-    </div>
+    </main>
 
     <!-- Footer -->
     <footer class="bg-white border-t border-gray-200 py-8">

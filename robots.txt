@@ -1,0 +1,40 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://4calc.netlify.app/sitemap.xml
+
+# Crawl delay (optional)
+Crawl-delay: 1
+
+# Specific rules for search engines
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+# Disallow any potential sensitive files
+Disallow: /server.js
+Disallow: /package.json
+Disallow: /package-lock.json
+Disallow: /node_modules/
+Disallow: /*.js$
+Disallow: /deployment/
+Disallow: /netlify.toml
+Disallow: /_headers
+Disallow: /_redirects
+
+# Allow important files
+Allow: /index.html
+Allow: /about.html
+Allow: /sitemap.xml
+Allow: /robots.txt

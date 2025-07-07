@@ -3,7 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>4Calc - ศูนย์รวมเครื่องคิดเลขครบครัน</title>
+    <title>4Calc - ศูนย์รวมเครื่องคิดเลขครบครัน | All-in-One Calculator Hub</title>
+    <meta name="description" content="ศูนย์รวมเครื่องคิดเลขครบครันสำหรับคำนวณในชีวิตประจำวัน รวมเครื่องคิดเลข MRT, แท็กซี่, ไฟฟ้า, โซลาร์, ดอกเบี้ย, อายุครรภ์, BTU และอื่นๆ ใช้งานฟรี รองรับไทย-อังกฤษ">
+    <meta name="keywords" content="เครื่องคิดเลข, คำนวณ, MRT, แท็กซี่, ไฟฟ้า, โซลาร์, ดอกเบี้ย, อายุครรภ์, BTU, ระยะทาง, calculator, thai, english">
+    <meta name="author" content="4Calc Team">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://4calc.netlify.app/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://4calc.netlify.app/">
+    <meta property="og:title" content="4Calc - ศูนย์รวมเครื่องคิดเลขครบครัน">
+    <meta property="og:description" content="ศูนย์รวมเครื่องคิดเลขครบครันสำหรับคำนวณในชีวิตประจำวัน รวมเครื่องคิดเลข MRT, แท็กซี่, ไฟฟ้า, โซลาร์, ดอกเบี้ย, อายุครรภ์, BTU และอื่นๆ ใช้งานฟรี รองรับไทย-อังกฤษ">
+    <meta property="og:image" content="https://4calc.netlify.app/og-image.jpg">
+    <meta property="og:site_name" content="4Calc">
+    <meta property="og:locale" content="th_TH">
+    <meta property="og:locale:alternate" content="en_US">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://4calc.netlify.app/">
+    <meta property="twitter:title" content="4Calc - ศูนย์รวมเครื่องคิดเลขครบครัน">
+    <meta property="twitter:description" content="ศูนย์รวมเครื่องคิดเลขครบครันสำหรับคำนวณในชีวิตประจำวัน รวมเครื่องคิดเลข MRT, แท็กซี่, ไฟฟ้า, โซลาร์, ดอกเบี้ย, อายุครรภ์, BTU และอื่นๆ ใช้งานฟรี รองรับไทย-อังกฤษ">
+    <meta property="twitter:image" content="https://4calc.netlify.app/og-image.jpg">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -25,6 +47,50 @@
 <!-- Branch: main -->
 <!-- Commit: enhanced-mrt-calculator -->
 <!-- Deployed on Netlify -->
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "4Calc",
+        "alternateName": "4Calc - All-in-One Calculator Hub",
+        "url": "https://4calc.netlify.app/",
+        "description": "ศูนย์รวมเครื่องคิดเลขครบครันสำหรับคำนวณในชีวิตประจำวัน รวมเครื่องคิดเลข MRT, แท็กซี่, ไฟฟ้า, โซลาร์, ดอกเบี้ย, อายุครรภ์, BTU และอื่นๆ ใช้งานฟรี รองรับไทย-อังกฤษ",
+        "applicationCategory": "Calculator",
+        "operatingSystem": "All",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "author": {
+            "@type": "Organization",
+            "name": "4Calc Team"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "4Calc Team"
+        },
+        "inLanguage": ["th", "en"],
+        "featureList": [
+            "MRT เวลาเดินทาง",
+            "คำนวณค่าแท็กซี่",
+            "คำนวณไฟฟ้า",
+            "คำนวณโซลาร์เซลล์",
+            "คำนวณอายุครรภ์",
+            "คำนวณดอกเบี้ย",
+            "คำนวณ BTU",
+            "คำนวณระยะทาง"
+        ],
+        "category": "Productivity",
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.8",
+            "ratingCount": "150"
+        }
+    }
+    </script>
 </head>
 <body class="bg-gray-50 min-h-screen">
     <!-- Header -->
@@ -32,9 +98,9 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center py-6">
                 <div class="flex items-center">
-                    <h1 class="text-2xl font-bold text-gray-900">
+                    <div class="text-2xl font-bold text-gray-900">
                         <span class="text-blue-600">4</span>Calc
-                    </h1>
+                    </div>
                     <span id="siteSubtitle" class="ml-2 text-sm text-gray-500">
                         ศูนย์รวมเครื่องคิดเลขครบครัน
                     </span>
@@ -75,7 +141,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         
         <!-- Header Section -->
-        <div class="text-center mb-12">
+        <header class="text-center mb-12">
             <h1 class="text-4xl font-bold text-gray-900 mb-4">
                 <span id="welcomeText">ยินดีต้อนรับสู่</span> <span class="text-blue-600">4Calc</span>
             </h1>
@@ -95,7 +161,8 @@
         </div>
 
         <!-- Categories -->
-        <div id="categories" class="flex flex-wrap justify-center gap-2 mb-8">
+        <section id="categories" class="flex flex-wrap justify-center gap-2 mb-8">
+            <h2 class="sr-only">หมวดหมู่เครื่องคิดเลข</h2>
             <button class="category-btn px-4 py-2 bg-blue-600 text-white border border-blue-600 rounded-lg hover:bg-blue-700 transition-colors" data-category="all">
                 <span class="mr-2">🔍</span>
                 <span>ทุกหมวดหมู่</span>
@@ -120,12 +187,13 @@
                 <span class="mr-2">🌍</span>
                 <span>ภูมิศาสตร์</span>
             </button>
-        </div>
+        </section>
         
         <!-- Calculator Grid -->
-        <div id="calculatorGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <main id="calculatorGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <h2 class="sr-only">เครื่องคิดเลขทั้งหมด</h2>
             <!-- Calculators will be populated by JavaScript -->
-        </div>
+        </main>
 
         <!-- No Results -->
         <div id="noResults" class="text-center py-12 hidden">

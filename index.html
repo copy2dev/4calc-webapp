@@ -677,11 +677,14 @@
         }
 
         function calculateMRT() {
+          console.log('calculateMRT function called');
           const fromStationId = document.getElementById('fromStation').value;
           const toStationId = document.getElementById('toStation').value;
           const isPeakHour = document.getElementById('isPeakHour').checked;
           const results = document.getElementById('mrtResults');
           const isEnglish = currentLanguage === 'en';
+          
+          console.log('Input values:', { fromStationId, toStationId, isPeakHour, isEnglish });
           
           // Reset route details state
           currentRouteData = null;
@@ -755,6 +758,8 @@
           const time = calculateTravelTime(distance, isPeakHour);
           const fare = calculateFare(distance);
           
+          console.log('Calculated values:', { distance, time, fare });
+          
           const fromName = isEnglish ? fromStation.nameEN : fromStation.nameTH;
           const toName = isEnglish ? toStation.nameEN : toStation.nameTH;
           const fromLineDisplay = isEnglish ? MRT_LINES[fromLine].nameEN : MRT_LINES[fromLine].nameTH;
@@ -797,6 +802,8 @@
               </div>
             </div>
           `;
+          
+          console.log('MRT calculation completed and results displayed');
         }
 
         // ======================
@@ -2713,7 +2720,7 @@
                     </div>
                   </div>
                   
-                  <button onclick="calculateDistance()" class="w-full px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700">
+                  <button onclick="calculateDistanceMap()" class="w-full px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700">
                     📏 ${isEnglish ? 'Calculate Distance' : 'คำนวณระยะทาง'}
                   </button>
                   
@@ -2857,7 +2864,7 @@
           }
         }
 
-        function calculateDistance() {
+        function calculateDistanceMap() {
           const results = document.getElementById('distanceResults');
           const isEnglish = currentLanguage === 'en';
           
